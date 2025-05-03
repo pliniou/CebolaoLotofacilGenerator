@@ -29,6 +29,11 @@ fun WelcomeScreen(navController: NavHostController, modifier: Modifier = Modifie
         verticalArrangement = Arrangement.Center
     ) {
         Text(
+            text = stringResource(R.string.home_screen_title),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        Text(text = stringResource(R.string.welcome_message))
+        Text(
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,

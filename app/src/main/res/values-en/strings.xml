@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_message">Welcome to the Lotofácil Game Generator!</string>
+    <string name="generate_games_button">Generate Games</string>
+    <string name="filter_menu">Filters</string>
+    <string name="initial_explanation">This app helps you generate games for Lotofácil.</string>
+    <string name="home_screen_title">Home Screen</string>
+</resources>
