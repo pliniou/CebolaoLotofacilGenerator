@@ -47,17 +47,13 @@ class JogoRepository(private val jogoDao: JogoDao) {
             return withContext(Dispatchers.IO) {
                 jogoDao.getFavoritos()
 
-            }
-
+            }            
         } catch (e: Exception) {
             Log.e("JogoRepository", "Erro ao recuperar favoritos: ${e.message}", e)
             return emptyList()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            throw e
         }
     }
+    
     suspend fun updateJogo(jogoEntity: JogoEntity){
         try {
             jogoDao.updateJogo(jogoEntity)

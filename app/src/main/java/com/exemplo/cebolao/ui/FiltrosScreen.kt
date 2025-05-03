@@ -41,7 +41,7 @@ fun FiltrosScreen(navController: NavHostController, viewModel: MainViewModel = v
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp),
             color = MaterialTheme.colorScheme.primary
-    ) {
+    ) { // Add closing brace here
         val filters = listOf(
             "Primos",
             "Pares",
@@ -91,7 +91,7 @@ fun FiltrosScreen(navController: NavHostController, viewModel: MainViewModel = v
             )
         ) {
             Text(
-                text = "Aplicar",
+                text = "Aplicar", 
                 fontWeight = FontWeight.Bold
             )
         }

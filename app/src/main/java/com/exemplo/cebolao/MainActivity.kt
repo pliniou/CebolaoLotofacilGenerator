@@ -112,10 +112,11 @@ fun Navigation(navController: NavHostController, appDataStore: AppDataStore, vie
         composable("filtros") {
             FiltrosScreen(navController = navController, viewModel = viewModel)
         }
+        composable("jogosGerados") {
             JogosGeradosScreen(navController)
         }
         composable("favoritos") {
-            FavoritosScreen(navController)
+           FavoritosScreen(navController)
         }
         composable("settings") {
             SettingsScreen(navController)
