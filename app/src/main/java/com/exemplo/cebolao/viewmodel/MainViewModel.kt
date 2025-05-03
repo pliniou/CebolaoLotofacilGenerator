@@ -1,20 +1,19 @@
 package com.exemplo.cebolao.viewmodel
 
 import android.util.Log
+import androidx.constraintlayout.core.motion.utils.Utils
 import androidx.lifecycle.ViewModel
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.repository.JogoRepository
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import com.exemplo.cebolao.data.*
-import com.exemplo.cebolao.utils.Utils
 import com.exemplo.cebolao.utils.LotofacilUtils
+import com.exemplo.cebolao.utils.LotofacilUtils.calculateSum
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.collectLatest
 import java.lang.Exception
 import java.lang.RuntimeException
 
@@ -165,8 +164,8 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
                 "Progressão Aritmética" -> if (LotofacilUtils.countArithmeticProgression(game) !in 5..6) return false
                 "Sequência" -> if (LotofacilUtils.countSequence(game) !in 3..5) return false
                 "Linha" -> if (LotofacilUtils.countLine(game) !in 2..4) return false
-                "Coluna" -> if (LotofacilUtils.countColumn(game) !in 2..4) return false
-                "Soma" -> if (LotofacilUtils.calculateSum(game) !in 170..225) return false
+                "Coluna" -> if (LotofacilUtils.countColumn(game) !in (2..4)) return false
+                "Soma" -> if (calculateSum(game) !in (170..225)) return false
             }
         }
         return true

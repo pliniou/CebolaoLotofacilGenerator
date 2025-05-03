@@ -49,22 +49,23 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.constraintlayout.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation("androidx.room:room-runtime:2.5.2")
-    implementation("androidx.room:room-ktx:2.5.2")
-    kapt("androidx.room:room-compiler:2.5.2")
-    implementation("androidx.compose.material3:material3:1.2.0")
-    implementation("androidx.datastore:datastore-preferences:1.1.5")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("androidx.activity:activity-ktx:1.8.2") // Or the latest version
-    implementation("androidx.appcompat:appcompat:1.6.1") // Or the latest version
-    implementation("com.google.android.material:material:1.11.0") // Or the latest version
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+    //noinspection implementation("androidx.room:room-runtime:2.7.1")
+    //noinspection implementation("androidx.room:room-ktx:2.7.1")
+    //noinspection kapt("androidx.room:room-compiler:2.7.1")
+    //noinspection implementation("androidx.compose.material3:material3:1.3.2")
+    //noinspection implementation("androidx.datastore:datastore-preferences:1.1.5")
+    //noinspection implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    //noinspection implementation("androidx.navigation:navigation-compose:2.8.9")
+    //noinspection implementation("androidx.activity:activity-ktx:1.10.1")
+    //noinspection implementation("androidx.appcompat:appcompat:1.7.0")
+    //noinspection implementation("com.google.android.material:material:1.12.0")
+    //noinspection implementation("androidx.navigation:navigation-fragment-ktx:2.8.9")
+    //noinspection implementation("androidx.navigation:navigation-ui-ktx:2.8.9")
 
-    debugImplementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
+    debugImplementation(libs.androidx.ui.tooling.preview)
 }
