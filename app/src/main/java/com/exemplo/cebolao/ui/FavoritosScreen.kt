@@ -10,8 +10,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarBorder
+
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -78,7 +79,7 @@ fun LazyListScope.favoritesItems(jogos: List<Jogo>, viewModel: MainViewModel) {
                         viewModel.updateJogo(jogo.copy(favorito = !jogo.favorito))
                     }) {
                         Icon(
-                            imageVector = if (jogo.favorito) Icons.Filled.Star else Icons.Filled.StarBorder,
+                            imageVector = if (jogo.favorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
                             contentDescription = if (jogo.favorito) "Remover dos Favoritos" else "Adicionar aos Favoritos"
                         )
                         }

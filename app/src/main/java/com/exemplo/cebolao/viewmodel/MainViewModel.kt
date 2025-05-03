@@ -1,17 +1,18 @@
 package com.exemplo.cebolao.viewmodel
 
 import android.util.Log
-import androidx.constraintlayout.core.motion.utils.Utils
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.repository.JogoRepository
-import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.exemplo.cebolao.data.*
 import com.exemplo.cebolao.utils.LotofacilUtils
 import com.exemplo.cebolao.utils.LotofacilUtils.calculateSum
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import androidx.lifecycle.ViewModel
+import com.exemplo.cebolao.utils.LotofacilUtils.numbersToString
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.lang.Exception
@@ -40,7 +41,7 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
         loadFavoritos()
     } 
     fun insertJogo(jogo: Jogo) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try{
                 val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)
                 repository.insertJogo(jogoEntity)                
@@ -61,7 +62,7 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
     }
 
     fun loadGames() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.update { true }
             try {
                val jogos = repository.getAllJogos()
@@ -82,7 +83,7 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
     }
 
     fun loadFavoritos() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
            _isLoading.update { true }
             try{
                 val favoritos = repository.getFavoritos()
@@ -105,7 +106,7 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
     }
 
     fun generateGames(numberOfGames: Int, filters: List<String>) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
              try {
                 for (i in 0 until numberOfGames) {
                     var game: List<Int>
@@ -114,7 +115,7 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
                         game = LotofacilUtils.generateGame()                        
                     }while (!checkFilters(game, filters))
 
-                        jogoEntity = JogoEntity(0, Utils.numbersToString(game), System.currentTimeMillis(), false)
+                        jogoEntity = JogoEntity(0, numbersToString(game), System.currentTimeMillis(), false)
                         val jogo = Jogo(jogoEntity.id, game, jogoEntity.date, false)
                         try {
                             insertJogo(jogo)
@@ -131,8 +132,8 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
         } 
     }
 
-    fun updateJogo(jogo: Jogo){
-        viewModelScope.launch {
+    fun updateJogo(jogo: Jogo) {
+        viewModelScope.launch(Dispatchers.IO) {
             val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)
                         
             val currentGames = _games.value.toMutableList()
@@ -151,6 +152,19 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
             }
         }
     }
+
+    fun deleteJogo(jogo: Jogo) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)
+            try{
+                repository.deleteJogo(jogoEntity)
+            }catch (e: Exception){
+                Log.e("MainViewModel", "Erro ao deletar jogo: ${e.message}")
+                //Implementar alguma tratativa se o erro acontecer. Pode ser uma mensagem pra UI, por exemplo.
+            }
+        }
+    }
+
     
 
     private fun checkFilters(game: List<Int>, filters: List<String>): Boolean {
@@ -180,4 +194,16 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
         _isLoading.value = isLoading
     }
 
+
+    companion object {
+        fun MainViewModelFactory(appDatabaseInstance: AppDatabaseInstance):
+                ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    val repository = JogoRepository(appDatabaseInstance)
+                    return MainViewModel(repository) as T
+                }
+            }
+        }
+    }
 }

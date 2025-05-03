@@ -1,5 +1,6 @@
 package com.exemplo.cebolao
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,13 +20,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.exemplo.cebolao.data.AppDataStore
 import com.exemplo.cebolao.data.AppDatabaseInstance
 import com.exemplo.cebolao.ui.FavoritosScreen
@@ -34,8 +34,10 @@ import com.exemplo.cebolao.ui.MenuScreen
 import com.exemplo.cebolao.ui.SettingsScreen
 import com.exemplo.cebolao.ui.WelcomeScreen
 import com.exemplo.cebolao.ui.theme.CebolaoLotofacilGeneratorTheme
+import com.exemplo.cebolao.data.AppDataStore
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
+import androidx.navigation.compose.NavHost
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
@@ -59,7 +61,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     val appDataStore = AppDataStore(this)
-                    var selectedTheme by remember { mutableStateOf("system") }
+                    var selectedTheme by remember { mutableStateOf("system" as String) }
                     appDatabaseInstance = AppDatabaseInstance(applicationContext)
 
                     val viewModel: MainViewModel = viewModel(
@@ -107,19 +109,19 @@ class MainActivity : ComponentActivity() {
 fun Navigation(navController: NavHostController, appDataStore: AppDataStore, viewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = "welcome") {
         composable("welcome") { WelcomeScreen(navController = navController)
-            WelcomeScreen(navController)
+            WelcomeScreen(navController, appDataStore)
         }
         composable("menu") {
-            MenuScreen(navController = navController)
+            MenuScreen(navController = navController, appDataStore = appDataStore)
         }
         composable("filtros") {
-            FiltrosScreen(navController = navController, viewModel = viewModel)
+            FiltrosScreen(navController = navController, viewModel = viewModel, appDataStore = appDataStore)
         }
         composable("jogosGerados") {
             JogosGeradosScreen(navController)
         }
         composable("favoritos") {
-           FavoritosScreen(navController)
+            FavoritosScreen(navController)
         }
         composable("settings") {
             SettingsScreen(navController)

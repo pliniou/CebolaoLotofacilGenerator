@@ -18,16 +18,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.exemplo.cebolao.navigation.Screen
+import com.exemplo.cebolao.Screen
 
-data class MenuItem(val title: String, val route: String)
+
+
 
 @Composable
 fun MenuScreen(navController: NavHostController) {
     val menuItems = listOf(
-        MenuItem("Filtros Selecionáveis", Screen.FiltrosScreen.route),
-        MenuItem("Jogos Gerados", Screen.JogosGeradosScreen.route),
-        MenuItem("Jogos Favoritos", Screen.FavoritosScreen.route),
-        MenuItem("Configurações", Screen.SettingsScreen.route)
+        Screen("Bem-vindo", "welcome"),
+        Screen("Menu", "menu"),
+        Screen("Filtros", "filtros"),
+        Screen("Jogos Gerados", "jogosGerados"),
+        Screen("Favoritos", "favoritos"),
+        Screen("Configurações", "settings"),
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -49,12 +53,11 @@ fun MenuScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(menuItems) { menuItem ->
-                    Text(
-                        text = menuItem.title,
+                    Text(text = menuItem.name,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier
                             .fillMaxSize()
-                            .clickable { navController.navigate(menuItem.route) }
+                            .clickable { navController.navigate(menuItem.route)}
                             .padding(8.dp)
                     )
                     Divider(color = Color.LightGray, thickness = 1.dp)
