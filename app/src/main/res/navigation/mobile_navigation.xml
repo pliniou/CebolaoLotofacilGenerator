@@ -13,8 +13,7 @@
                 android:id="@+id/action_welcomeScreen_to_menuScreen"
                 app:destination="@id/menuScreen" />
     </composable>
-
-
+    <composable
         android:id="@+id/menuScreen"
         android:name="com.exemplo.cebolao.ui.MenuScreen"
         android:label="MenuScreen">
