@@ -1,4 +1,4 @@
-package com.example.cebolaolotofacilgenerator
+package com.exemplo.cebolao
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
