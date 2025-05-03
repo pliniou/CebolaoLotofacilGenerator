@@ -10,9 +10,10 @@
             android:name="com.exemplo.cebolao.ui.WelcomeScreen"
             android:label="WelcomeScreen">
         <action
-            android:id="@+id/action_welcomeScreen_to_menuScreen"
-            app:destination="@id/menuScreen" />
+                android:id="@+id/action_welcomeScreen_to_menuScreen"
+                app:destination="@id/menuScreen" />
     </composable>
+
 
         android:id="@+id/menuScreen"
         android:name="com.exemplo.cebolao.ui.MenuScreen"
@@ -31,18 +32,18 @@
             app:destination="@id/settingsScreen" />
     </composable>
 
-        <composable
-            android:id="@+id/filtrosScreen"
-            android:name="com.exemplo.cebolao.ui.FiltrosScreen"
-            android:label="FiltrosScreen" />
+    <composable
+        android:id="@+id/filtrosScreen"
+        android:name="com.exemplo.cebolao.ui.FiltrosScreen"
+        android:label="FiltrosScreen" />
 
-        <composable android:id="@+id/favoritosScreen"
-            android:name="com.exemplo.cebolao.ui.FavoritosScreen"
-            android:label="FavoritosScreen" />
-        <composable android:id="@+id/jogosGeradosScreen"
-            android:name="com.exemplo.cebolao.ui.JogosGeradosScreen"
-            android:label="JogosGeradosScreen" />
-        <composable android:id="@+id/settingsScreen"
-            android:name="com.exemplo.cebolao.ui.SettingsScreen"
-            android:label="SettingsScreen" />
+    <composable android:id="@+id/favoritosScreen"
+                android:name="com.exemplo.cebolao.ui.FavoritosScreen"
+                android:label="FavoritosScreen" />
+    <composable android:id="@+id/jogosGeradosScreen"
+                android:name="com.exemplo.cebolao.ui.JogosGeradosScreen"
+                android:label="JogosGeradosScreen" />
+    <composable android:id="@+id/settingsScreen"
+                android:name="com.exemplo.cebolao.ui.SettingsScreen"
+                android:label="SettingsScreen" />
 </navigation>
