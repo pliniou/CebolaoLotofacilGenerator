@@ -60,4 +60,11 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.5")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.activity:activity-ktx:1.8.2") // Or the latest version
+    implementation("androidx.appcompat:appcompat:1.6.1") // Or the latest version
+    implementation("com.google.android.material:material:1.11.0") // Or the latest version
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+
+    debugImplementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
 }
