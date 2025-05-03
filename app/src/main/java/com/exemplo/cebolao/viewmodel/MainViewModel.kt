@@ -1,5 +1,6 @@
 package com.exemplo.cebolao.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.repository.JogoRepository
@@ -11,6 +12,11 @@ import com.exemplo.cebolao.utils.LotofacilUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.collectLatest
+import java.lang.Exception
+import java.lang.RuntimeException
 
 class MainViewModel(private val repository: JogoRepository) : ViewModel() {
 
@@ -18,17 +24,31 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
     private val _games = MutableStateFlow<List<Jogo>>(emptyList())
     val games: StateFlow<List<Jogo>> = _games
 
+
     private val _selectedFilters = MutableStateFlow<List<String>>(emptyList())
-    val selectedFilters: StateFlow<List<String>> = _selectedFilters
+    val selectedFilters: StateFlow<List<String>> = _selectedFilters.asStateFlow()
 
     private val _filtersStatus = MutableStateFlow<Boolean>(false)
     val filtersStatus: StateFlow<Boolean> = _filtersStatus.asStateFlow()
 
+    private val _jogosFavoritos = MutableStateFlow<List<Jogo>>(emptyList())
+    val jogosFavoritos: StateFlow<List<Jogo>> = _jogosFavoritos.asStateFlow()
 
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    init {
+        loadFavoritos()
+    } 
     fun insertJogo(jogo: Jogo) {
         viewModelScope.launch {
-            val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)
-            repository.insertJogo(jogoEntity)
+            try{
+                val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)
+                repository.insertJogo(jogoEntity)                
+            }catch (e: Exception){
+                Log.e("MainViewModel", "Erro ao inserir jogo: ${e.message}")
+                throw RuntimeException("Erro ao inserir jogo", e)
+            }
         }
     }
 
@@ -42,66 +62,98 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
     }
 
     fun loadGames() {
-        
         viewModelScope.launch {
-            repository.getAllJogos().collect{ jogosEntities -> 
-                _games.emit(jogosEntities.map { jogoEntity ->
-                        mapJogoEntityToJogo(jogoEntity)
-                    })
-                }
+            _isLoading.update { true }
+            try {
+               val jogos = repository.getAllJogos()
+                val jogosMapped = jogos.map { jogoEntity -> mapJogoEntityToJogo(jogoEntity) }
+                _games.value = jogosMapped
+           } catch (e: Exception) {
+                Log.e("MainViewModel", "Erro ao carregar jogos: ${e.message}")                                                
+                _games.update {
+                    emptyList()
+                
+                        throw RuntimeException("Erro ao carregar jogos", e)
+                        }
+           }catch (e: Exception){
+                Log.e("MainViewModel", "Erro ao carregar jogos: ${e.message}")
+               throw RuntimeException("Erro ao carregar jogos", e)
+            }
         }
     }
 
     fun loadFavoritos() {
         viewModelScope.launch {
-           repository.getFavoritos().collect{ jogosEntities -> 
+           _isLoading.update { true }
+            try{
+                val favoritos = repository.getFavoritos()
+                val favoritosMapped = favoritos.map { jogoEntity -> mapJogoEntityToJogo(jogoEntity) }
+                _jogosFavoritos.value = favoritosMapped
                
-               _games.emit(jogosEntities.map { jogoEntity ->
                 
-                    mapJogoEntityToJogo(jogoEntity)
-                }
+            }catch (e: Exception){
+                 _jogosFavoritos.update {
+                     emptyList()
+                        Log.e("MainViewModel", "Erro ao carregar jogos favoritos: ${e.message}")
+                throw RuntimeException("Erro ao carregar favoritos", e)
+                        }
+
+            }catch (e: Exception){
+                Log.e("MainViewModel", "Erro ao carregar jogos favoritos: ${e.message}")
+                throw RuntimeException("Erro ao carregar favoritos", e)
             }
         }
     }
 
     fun generateGames(numberOfGames: Int, filters: List<String>) {
-        val newGames = mutableListOf<Jogo>()
         viewModelScope.launch {
-            for (i in 0 until numberOfGames) {
-                var game: List<Int>
-                var jogoEntity: JogoEntity
-                do {
-                    game = LotofacilUtils.generateGame()
-                    val checkFilters = checkFilters(game, filters)
-                    if(checkFilters){
-                        jogoEntity = JogoEntity(0, Utils.numbersToString(game), System.currentTimeMillis(), false)
-                        newGames.add(Jogo(jogoEntity.id, game, jogoEntity.date, false))
-                        repository.insertJogo(jogoEntity)
-                    }
-                } while (!checkFilters(game, filters))
+             try {
+                for (i in 0 until numberOfGames) {
+                    var game: List<Int>
+                    var jogoEntity: JogoEntity
+                    do{
+                        game = LotofacilUtils.generateGame()                        
+                    }while (!checkFilters(game, filters))
 
+                        jogoEntity = JogoEntity(0, Utils.numbersToString(game), System.currentTimeMillis(), false)
+                        val jogo = Jogo(jogoEntity.id, game, jogoEntity.date, false)
+                        try {
+                            insertJogo(jogo)
+                        } catch (e: Exception) {
+                            Log.e("MainViewModel", "Erro ao inserir jogo: ${e.message}")
+                        }
                 }
+            }catch (e: Exception){
+                Log.e("MainViewModel", "Erro ao gerar jogos: ${e.message}")
+               throw RuntimeException("Erro ao gerar jogos", e)
+            } catch (e: Exception) {
+                throw RuntimeException("Erro ao gerar jogos", e)
+            }
         } 
     }
 
     fun updateJogo(jogo: Jogo){
         viewModelScope.launch {
             val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)
-            
-            
+                        
             val currentGames = _games.value.toMutableList()
             val index = currentGames.indexOfFirst { it.id == jogo.id }
             if (index != -1) {
                 currentGames[index] = jogo
-                _games.emit(currentGames)
+                _games.value = currentGames
             }
-            
-            repository.updateJogo(jogoEntity)
-            
-            
+            try{
+                repository.updateJogo(jogoEntity)
+                
+                
+            }catch (e: Exception){
+                Log.e("MainViewModel", "Erro ao atualizar jogo: ${e.message}")
+                //Implementar alguma tratativa se o erro acontecer. Pode ser uma mensagem pra UI, por exemplo.
+            }
         }
     }
     
+
     private fun checkFilters(game: List<Int>, filters: List<String>): Boolean {
         for (filter in filters) {
             when (filter) {
@@ -123,6 +175,10 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
     fun setFilters(filters: List<String>){
         _selectedFilters.value = filters
         _filtersStatus.value = filters.isNotEmpty()
+    }
+
+    fun setLoad(isLoading : Boolean){
+        _isLoading.value = isLoading
     }
 
 }

@@ -1,6 +1,7 @@
 package com.exemplo.cebolao.utils
 
 import kotlin.random.Random
+import kotlin.math.abs
 
 object LotofacilUtils {
 
@@ -86,4 +87,65 @@ object LotofacilUtils {
     fun calculateSum(game: List<Int>): Int {
         return game.sum()
     }
+
+    fun filterByParImpar(game: List<Int>, paresMin: Int, paresMax: Int, imparesMin: Int, imparesMax: Int): Boolean{
+        val pares = game.count { it % 2 == 0 }
+        val impares = game.count { it % 2 != 0 }
+        return pares in paresMin..paresMax && impares in imparesMin..imparesMax
+    }
+
+    fun filterBySoma(game: List<Int>, somaMin: Int, somaMax: Int): Boolean {
+        val soma = calculateSum(game)
+        return soma in somaMin..somaMax
+    }
+
+    fun filterByMultiplo(game: List<Int>, multiplo: Int, quantidadeMin: Int, quantidadeMax: Int): Boolean {
+        val multiplos = game.count { it % multiplo == 0 }
+        return multiplos in quantidadeMin..quantidadeMax
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

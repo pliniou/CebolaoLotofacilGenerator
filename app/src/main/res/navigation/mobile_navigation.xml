@@ -3,23 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/welcomeScreen">
 
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.cebolaolotofacilgenerator.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+    <composable
+            android:id="@+id/welcomeScreen"
+            android:name="com.exemplo.cebolao.ui.WelcomeScreen"
+            android:label="WelcomeScreen">
+        <action
+            android:id="@+id/action_welcomeScreen_to_menuScreen"
+            app:destination="@id/menuScreen" />
+    </composable>
 
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.cebolaolotofacilgenerator.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/menuScreen"
+        android:name="com.exemplo.cebolao.ui.MenuScreen"
+        android:label="MenuScreen">
+        <action
+            android:id="@+id/action_menuScreen_to_filtrosScreen"
+            app:destination="@id/filtrosScreen" />
+        <action
+            android:id="@+id/action_menuScreen_to_jogosGeradosScreen"
+            app:destination="@id/jogosGeradosScreen" />
+        <action
+            android:id="@+id/action_menuScreen_to_favoritosScreen"
+            app:destination="@id/favoritosScreen" />
+        <action
+            android:id="@+id/action_menuScreen_to_settingsScreen"
+            app:destination="@id/settingsScreen" />
+    </composable>
 
-    <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.cebolaolotofacilgenerator.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        <composable
+            android:id="@+id/filtrosScreen"
+            android:name="com.exemplo.cebolao.ui.FiltrosScreen"
+            android:label="FiltrosScreen" />
+
+        <composable android:id="@+id/favoritosScreen"
+            android:name="com.exemplo.cebolao.ui.FavoritosScreen"
+            android:label="FavoritosScreen" />
+        <composable android:id="@+id/jogosGeradosScreen"
+            android:name="com.exemplo.cebolao.ui.JogosGeradosScreen"
+            android:label="JogosGeradosScreen" />
+        <composable android:id="@+id/settingsScreen"
+            android:name="com.exemplo.cebolao.ui.SettingsScreen"
+            android:label="SettingsScreen" />
 </navigation>
