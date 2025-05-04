@@ -28,19 +28,19 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
     private val _selectedFilters = MutableStateFlow<List<String>>(emptyList())
     val selectedFilters: StateFlow<List<String>> = _selectedFilters.asStateFlow()
 
-    private val _filtersStatus = MutableStateFlow<Boolean>(false)
+    private val _filtersStatus = MutableStateFlow(false)
     val filtersStatus: StateFlow<Boolean> = _filtersStatus.asStateFlow()
 
     private val _jogosFavoritos = MutableStateFlow<List<Jogo>>(emptyList())
     val jogosFavoritos: StateFlow<List<Jogo>> = _jogosFavoritos.asStateFlow()
 
-    private val _isLoading = MutableStateFlow<Boolean>(false)
+    private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     init {
         loadFavoritos()
     } 
-    fun insertJogo(jogo: Jogo) {
+    private fun insertJogo(jogo: Jogo) {
         viewModelScope.launch(Dispatchers.IO) {
             try{
                 val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)

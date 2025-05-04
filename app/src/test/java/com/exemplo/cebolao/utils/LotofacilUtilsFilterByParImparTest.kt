@@ -44,11 +44,10 @@ class LotofacilUtilsFilterByParImparTest {
             listOf(12, 14, 16, 18, 20),
             listOf(22, 24, 26, 28, 30)
         )
-        val expected = jogos
 
         val result = LotofacilUtils.filterByParImpar(jogos, 5)
 
-        assertEquals(expected.size, result.size)
+        assertEquals(jogos.size, result.size)
     }
 
     @Test
@@ -58,11 +57,10 @@ class LotofacilUtilsFilterByParImparTest {
             listOf(11, 13, 15, 17, 19),
             listOf(21, 23, 25, 27, 29)
         )
-        val expected = jogos
 
         val result = LotofacilUtils.filterByParImpar(jogos, 5)
 
-        assertEquals(expected.size, result.size)
+        assertEquals(jogos.size, result.size)
     }
 
     @Test

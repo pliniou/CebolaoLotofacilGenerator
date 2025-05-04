@@ -1,6 +1,5 @@
 package com.exemplo.cebolao
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,7 +11,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +18,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -38,9 +35,7 @@ import com.exemplo.cebolao.data.AppDataStore
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 import androidx.navigation.compose.NavHost
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.navigation.compose.composable
 
 val Context.dataStore by preferencesDataStore(name = "app_preferences")
 
@@ -61,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     val appDataStore = AppDataStore(this)
-                    var selectedTheme by remember { mutableStateOf("system" as String) }
+                    var selectedTheme by remember { mutableStateOf("system") }
                     appDatabaseInstance = AppDatabaseInstance(applicationContext)
 
                     val viewModel: MainViewModel = viewModel(
@@ -72,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
                     LaunchedEffect(Unit) {
                         coroutineScope.launch {
-                           selectedTheme = appDataStore.getThemePreference()?: "system"
+                           selectedTheme = appDataStore.getThemePreference()
                         }
                     }
 
@@ -98,18 +93,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-
-
-        }
     }
 }
+
+import androidx.navigation.compose.rememberNavController
+
 
 @Composable
 fun Navigation(navController: NavHostController, appDataStore: AppDataStore, viewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = "welcome") {
-        composable("welcome") { WelcomeScreen(navController = navController)
-            WelcomeScreen(navController, appDataStore)
+        composable("welcome") { WelcomeScreen(navController, appDataStore)
         }
         composable("menu") {
             MenuScreen(navController = navController, appDataStore = appDataStore)

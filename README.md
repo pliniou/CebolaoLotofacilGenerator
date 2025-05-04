@@ -134,4 +134,4 @@ O Gerador Cebolão LotoFácil foi criado com a missão de fornecer uma ferrament
 
 ## Licença
 
-Este projeto é licenciado sob a [Licença MIT](LICENSE) - veja o arquivo `LICENSE` para detalhes.
+Este projeto é licenciado sob a Licença MIT - veja o arquivo `LICENSE` para detalhes.
