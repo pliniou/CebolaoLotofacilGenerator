@@ -48,14 +48,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     testImplementation(libs.junit)
+
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    testImplementation(libs.androidx.test.ext.junit)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.activity.ktx)
 
@@ -63,4 +63,7 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
     debugImplementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.datastore.preferences)
+    testImplementation(libs.androidx.test.ext.junit)
+
 }
