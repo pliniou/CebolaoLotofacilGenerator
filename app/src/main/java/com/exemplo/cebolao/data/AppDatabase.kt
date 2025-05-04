@@ -5,5 +5,4 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [JogoEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun jogoDao(): JogoDao
 }

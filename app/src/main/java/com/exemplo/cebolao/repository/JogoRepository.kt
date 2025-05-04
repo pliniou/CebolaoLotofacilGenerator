@@ -4,8 +4,6 @@ import android.util.Log
 import com.exemplo.cebolao.data.JogoDao
 import com.exemplo.cebolao.data.JogoEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class JogoRepository(private val jogoDao: JogoDao) {
@@ -32,16 +30,6 @@ class JogoRepository(private val jogoDao: JogoDao) {
         }
     }
 
-    suspend fun clearJogos() {
-       try {
-           withContext(Dispatchers.IO) {
-               jogoDao.clearJogos()
-           }
-       }catch (e: Exception) {
-           Log.e("JogoRepository", "Erro ao limpar jogos: ${e.message}", e)
-       }
-    }
-
     suspend fun getFavoritos(): List<JogoEntity> {
         try {
             return withContext(Dispatchers.IO) {
@@ -54,7 +42,7 @@ class JogoRepository(private val jogoDao: JogoDao) {
         }
     }
     
-    suspend fun updateJogo(jogoEntity: JogoEntity){
+    fun updateJogo(jogoEntity: JogoEntity){
         try {
             jogoDao.updateJogo(jogoEntity)
         }catch (e: Exception){

@@ -1,6 +1,5 @@
 package com.exemplo.cebolao.ui
 
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,92 +7,42 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.utils.Utils
 import com.exemplo.cebolao.viewmodel.MainViewModel
-
-fun LazyListScope.jogoItens(jogos: List<Jogo>, mainViewModel: MainViewModel) {
-    games.forEach {jogo ->
-        JogoItem(jogo = jogo, mainViewModel)
-
-    }
-}
+import androidx.compose.material.icons.Icons.Filled
 
 
 @Composable
-fun JogoItem(jogo: Jogo, mainViewModel: MainViewModel) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "Jogo ${jogo.id}",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
-            Text(
-                text = Utils.numbersToString(jogo.numbers),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
-            Row (verticalAlignment = Alignment.CenterVertically){
-                Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Date Icon", modifier = Modifier.size(20.dp))
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Data: ${jogo.date}",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = {
-                    val newJogo = jogo.copy(favorito = !jogo.favorito)
-                    mainViewModel.updateJogo(newJogo)
-                }) {
-                    Icon(
-                        imageVector = if (jogo.favorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                        contentDescription = "Favorite",
-                        tint = if (jogo.favorito) androidx.compose.ui.graphics.Color.Yellow else androidx.compose.ui.graphics.Color.Gray
-                    )
-                }
-            }
-        }
-    }
-}
+fun JogosGeradosScreen(mainViewModel: MainViewModel) {
 
-        LazyColumn(
-            modifier = Modifier.weight(1f).fillMaxWidth(),
-            contentPadding = PaddingValues(bottom = 16.dp),
+    val jogos = mainViewModel.jogos.collectAsState().value
+    var showDialog by remember { mutableStateOf(false) }
+    var numberOfGames by remember { mutableStateOf("10") }
+
+    androidx.compose.foundation.layout.Column(modifier = Modifier.padding(16.dp)) {
+
+        androidx.compose.foundation.lazy.LazyColumn(modifier = Modifier.weight(1f).fillMaxWidth(),
+
         ) {
-            jogoItens(jogos, mainViewModel)
+            items(jogos.size) { index ->
+                JogoItem(jogo = jogos[index], mainViewModel)
+            }
+            
+            
         }
 
         FloatingActionButton(
@@ -127,7 +76,7 @@ fun JogoItem(jogo: Jogo, mainViewModel: MainViewModel) {
                             ).forEach { jogo ->
                                 mainViewModel.insertJogo(jogo)
 
-                                }
+                            }
                         }
                     ) {
                         Text("Gerar")
@@ -138,15 +87,11 @@ fun JogoItem(jogo: Jogo, mainViewModel: MainViewModel) {
     }
 }
 
-fun LazyListScope.jogoItens(jogos: List<Jogo>, mainViewModel: MainViewModel) {
-    items(jogos) { jogo ->
-        JogoItem(jogo = jogo, mainViewModel)
-    }
-}
 
 @Composable
 fun JogoItem(jogo: Jogo, mainViewModel: MainViewModel) {
     Card(
+        colors = CardDefaults.cardColors(containerColor = Color.LightGray),
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth(),
@@ -177,11 +122,11 @@ fun JogoItem(jogo: Jogo, mainViewModel: MainViewModel) {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = {
-                    val newJogo = jogo.copy(favorito = !jogo.favorito)
+                    val newJogo = jogo.copy(favorito = !jogo.favorito )
                     mainViewModel.updateJogo(newJogo)
                 }) {
                     Icon(
-                        imageVector = if (jogo.favorito) Filled.Star else Icons.Filled.StarBorder,
+                        imageVector = if (jogo.favorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
                         contentDescription = "Favorite",
                         tint = if (jogo.favorito) androidx.compose.ui.graphics.Color.Yellow else androidx.compose.ui.graphics.Color.Gray
                     )

@@ -1,3 +1,5 @@
+package com.exemplo.cebolao.utils
+
 import com.exemplo.cebolao.utils.LotofacilUtils
 import org.junit.Assert.assertEquals
 import org.junit.Test
