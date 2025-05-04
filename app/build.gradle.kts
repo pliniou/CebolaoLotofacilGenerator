@@ -48,7 +48,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     testImplementation(libs.junit)
-
+    testImplementation(libs.androidx.test.ext.junit)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -64,6 +64,5 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     debugImplementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.datastore.preferences)
-    testImplementation(libs.androidx.test.ext.junit)
 
 }
