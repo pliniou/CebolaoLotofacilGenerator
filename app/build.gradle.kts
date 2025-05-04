@@ -47,11 +47,11 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    testImplementation(libs.junit)
-    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation("androidx.test.ext:junit")
 
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation("androidx.test.ext:junit")
+    androidTestImplementation(libs.androidx.espresso.espresso.core)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
