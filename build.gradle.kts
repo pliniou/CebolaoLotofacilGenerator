@@ -6,9 +6,9 @@ plugins {
 }
 
 configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == "org.jetbrains.kotlin") {
-            details.useVersion "1.9.0"
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains.kotlin") {
+            useVersion("1.9.0")
         }
     }
 }
