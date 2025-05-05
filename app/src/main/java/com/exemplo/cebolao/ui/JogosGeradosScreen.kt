@@ -1,6 +1,8 @@
 package com.exemplo.cebolao.ui
 
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.StarBorder
@@ -25,6 +26,7 @@ import com.exemplo.cebolao.utils.Utils
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import androidx.compose.material.icons.Icons.Filled
 
+import androidx.compose.material.icons.filled.DateRange
 
 @Composable
 fun JogosGeradosScreen(mainViewModel: MainViewModel) {
@@ -32,10 +34,9 @@ fun JogosGeradosScreen(mainViewModel: MainViewModel) {
     val jogos = mainViewModel.jogos.collectAsState().value
     var showDialog by remember { mutableStateOf(false) }
     var numberOfGames by remember { mutableStateOf("10") }
-
-    androidx.compose.foundation.layout.Column(modifier = Modifier.padding(16.dp)) {
-
-        androidx.compose.foundation.lazy.LazyColumn(modifier = Modifier.weight(1f).fillMaxWidth(),
+    
+    Column(modifier = Modifier.padding(16.dp)) {
+        LazyColumn(modifier = Modifier.weight(1f).fillMaxWidth(),
 
         ) {
             items(jogos.size) { index ->
@@ -122,7 +123,7 @@ fun JogoItem(jogo: Jogo, mainViewModel: MainViewModel) {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = {
-                    val newJogo = jogo.copy(favorito = !jogo.favorito )
+                    val newJogo = jogo.copy(favorito = !jogo.favorito)
                     mainViewModel.updateJogo(newJogo)
                 }) {
                     Icon(
@@ -135,3 +136,4 @@ fun JogoItem(jogo: Jogo, mainViewModel: MainViewModel) {
         }
     }
 }
+

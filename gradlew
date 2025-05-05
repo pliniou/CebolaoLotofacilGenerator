@@ -114,13 +114,11 @@ if [ "$cygwin" = "false" ] && [ "$darwin" = "false" ] && [ "$nonstop" = "false" 
         fi
         ulimit -n "$MAX_FD"
         if ! ulimit -n "$MAX_FD" > /dev/null 2>&1; then
-            warn "Could not set maximum file descriptor limit: \"$MAX_FD\". It's possible to be a problem"
+            warn "Could not set maximum file descriptor limit: \"$MAX_FD\"."
         fi
-    fi || {
-        warn "Could not query maximum file descriptor limit: $MAX_FD_LIMIT. It's possible to be a problem"
+    else
+        warn "Could not query maximum file descriptor limit: $MAX_FD_LIMIT."
     fi
-fi
-
 # For Darwin, add options to specify how the application appears in the dock
 if $darwin; then
     GRADLE_OPTS="$GRADLE_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$APP_HOME/media/gradle.icns\""

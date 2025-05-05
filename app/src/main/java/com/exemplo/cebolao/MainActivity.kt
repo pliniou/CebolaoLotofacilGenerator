@@ -1,24 +1,42 @@
 package com.exemplo.cebolao
 
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surfaceimport androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffectimport androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOfimport androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScopeimport androidx.compose.runtime.setValue
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.exemplo.cebolao.data.AppDataStore
 import com.exemplo.cebolao.data.AppDatabaseInstance
+import com.exemplo.cebolao.ui.FavoritosScreen
+import com.exemplo.cebolao.ui.FiltrosScreen
+import com.exemplo.cebolao.ui.JogosGeradosScreen
+import com.exemplo.cebolao.ui.MenuScreen
+import com.exemplo.cebolao.ui.SettingsScreen
+import com.exemplo.cebolao.ui.WelcomeScreen
+import com.exemplo.cebolao.ui.theme.CebolaoLotofacilGeneratorTheme
+import com.exemplo.cebolao.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
+import android.content.Context
+
 
 val Context.dataStore by preferencesDataStore(name = "app_preferences")
 
@@ -66,8 +84,6 @@ class MainActivity : ComponentActivity() {
                             color = MaterialTheme.colorScheme.background
                         ) {
 
-
-                            Navigation(
                                 navController = navController,
                                 appDataStore = appDataStore,
                                 viewModel = viewModel
@@ -79,11 +95,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-import androidx.navigation.compose.rememberNavController
-
 
 @Composable
-fun Navigation(navController: NavHostController, appDataStore: AppDataStore, viewModel: MainViewModel) {
+fun navigation(navController: NavHostController, appDataStore: AppDataStore, viewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = "welcome") {
         composable("welcome") { WelcomeScreen(navController, appDataStore)
         }
@@ -104,13 +118,3 @@ fun Navigation(navController: NavHostController, appDataStore: AppDataStore, vie
         }
     }
 }
-
-import com.exemplo.cebolao.ui.FavoritosScreen
-import com.exemplo.cebolao.ui.FiltrosScreen
-import com.exemplo.cebolao.ui.JogosGeradosScreen
-import com.exemplo.cebolao.ui.MenuScreen
-import com.exemplo.cebolao.ui.SettingsScreen
-import com.exemplo.cebolao.ui.WelcomeScreen
-import com.exemplo.cebolao.ui.theme.CebolaoLotofacilGeneratorTheme
-import com.exemplo.cebolao.viewmodel.MainViewModel
-import kotlinx.coroutines.launch
