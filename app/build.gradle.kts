@@ -47,7 +47,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit)
     testImplementation("androidx.test.ext:junit")
 
     androidTestImplementation("androidx.test.ext:junit")
