@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("org.jetbrains.kotlin.jvm") version "2.1.10"
     alias(libs.plugins.ksp)
 }
 
