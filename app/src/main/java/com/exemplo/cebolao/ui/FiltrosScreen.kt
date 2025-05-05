@@ -24,7 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.spimport androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 import com.exemplo.cebolao.viewmodel.MainViewModel
 
 @Composable
@@ -63,10 +65,8 @@ fun FiltrosScreen(viewModel: MainViewModel = viewModel()) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.padding(horizontal = 10.dp)
-
-                        .
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(16.dp),                       
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = filter)

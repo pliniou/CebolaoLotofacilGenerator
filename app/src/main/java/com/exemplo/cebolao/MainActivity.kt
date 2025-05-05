@@ -83,11 +83,9 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
                         ) {
-
-                                navController = navController,
-                                appDataStore = appDataStore,
-                                viewModel = viewModel
-                            )
+                           navigation(navController = navController,
+                            appDataStore = appDataStore,
+                            viewModel = viewModel)
                         }
                 }
             }
