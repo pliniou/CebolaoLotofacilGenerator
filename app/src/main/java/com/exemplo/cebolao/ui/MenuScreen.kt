@@ -18,18 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.exemplo.cebolao.Screen
 import com.exemplo.cebolao.Screen // Assuming Screen is defined in this package or a common module
 
 
 @Composable
 fun MenuScreen(navController: NavHostController) {
-    val menuItems = listOf(
-        Screen("Bem-vindo", "welcome"),
-        Screen("Menu", "menu"),
-        Screen("Filtros", "filtros"),
-        Screen("Jogos Gerados", "jogosGerados"), // Assuming 'jogosGerados' is a valid route
-        Screen("Favoritos", "favoritos"),
+ val menuItems = listOf(
+ Screen.Welcome,
+ Screen.Menu,
+ Screen.Filtros,
+ Screen.JogosGerados,
+ Screen.Favoritos,
         Screen("Configurações", "settings"),
     )
 
@@ -52,7 +52,7 @@ fun MenuScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(menuItems) { menuItem ->
-                    Text(text = menuItem.name, // Accessing 'name' property
+                    Text(text = menuItem.route, // Accessing 'name' property
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier
                             .fillMaxSize()

@@ -1,6 +1,7 @@
 package com.exemplo.cebolao.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.exemplo.cebolao.repository.JogoRepository
 import java.lang.IllegalArgumentException
 

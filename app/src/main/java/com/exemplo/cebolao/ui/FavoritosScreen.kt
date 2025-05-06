@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Card
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.runtime.Composable
@@ -26,12 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.exemplo.cebolao.model.Jogo
-import com.exemplo.cebolao.utils.LotofacilUtils
+import com.exemplo.cebolao.viewmodel.MainViewModel
 import com.exemplo.cebolao.viewmodel.MainViewModelFactory
 
 @Composable
 fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel = viewModel()) {
     LaunchedEffect(key1 = Unit) {
+        // 2. Implementar a função `loadFavoritos` -  Esta função deve estar no ViewModel
         viewModel.loadFavoritos()
     }
 
@@ -48,7 +49,7 @@ fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel =
             contentPadding = PaddingValues(bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            favoritesItems(favoritos, viewModel)
+            favoritesItems(jogos = favoritos, viewModel = viewModel)
         }
     }
 }
@@ -68,6 +69,7 @@ fun LazyListScope.favoritesItems(jogos: List<Jogo>, viewModel: MainViewModel) {
                 ) {
                     Text(text = "Números: ${formatJogo(jogo.numbers)}")
                     IconButton(onClick = {
+                        // 4. Implementar a função `updateJogo` - Esta função deve estar no ViewModel
                         val jogoAtualizado = jogo.copy(favorito = !jogo.favorito)
                         viewModel.updateJogo(jogoAtualizado)
                     }) {

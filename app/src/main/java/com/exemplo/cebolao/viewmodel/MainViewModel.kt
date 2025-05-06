@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.exemplo.cebolao.utils.LotofacilUtils.calculateSum
 import com.exemplo.cebolao.model.Jogo
 import java.lang.Exception
 
@@ -108,11 +107,8 @@ class MainViewModel(
         }
         return true
     }
-    private fun calculateSum(numbers: List<Int>): Int {
-        return numbers.sum()
-    }
 
-    private fun countPrimes(numbers: List<Int>): Int {
+   private fun countPrimes(numbers: List<Int>): Int {
         val primes = setOf(2, 3, 5, 7, 11, 13, 17, 19, 23)
         return numbers.count { it in primes }
     }

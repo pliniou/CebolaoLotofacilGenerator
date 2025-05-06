@@ -30,6 +30,7 @@ import com.exemplo.cebolao.ui.SettingsScreen
 import com.exemplo.cebolao.ui.WelcomeScreen
 import com.exemplo.cebolao.ui.theme.CebolaoLotofacilGeneratorTheme
 import com.exemplo.cebolao.viewmodel.MainViewModel
+import com.exemplo.cebolao.data.JogoRepository
 import com.exemplo.cebolao.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -48,17 +49,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val appDataStore = AppDataStore(this)
             val navController = rememberNavController()
             CebolaoLotofacilGeneratorTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    val appDataStore = AppDataStore(this)
+
                     var selectedTheme by remember { mutableStateOf("system") }
                     appDatabaseInstance = AppDatabaseInstance(applicationContext)
-
+                    val jogoRepository = JogoRepository(appDatabaseInstance.database.jogoDao())
                     val viewModel: MainViewModel = viewModel(
-                        factory = MainViewModelFactory(appDatabaseInstance)
+                        factory = MainViewModelFactory(jogoRepository)
                     )
 
                     val coroutineScope = rememberCoroutineScope()
@@ -66,7 +68,7 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(Unit) {
                         coroutineScope.launch {
                             appDataStore.getThemePreference().collect{
-                                selectedTheme = it ?: "system"
+ selectedTheme = it ?: "system"
                             }
                         }
                     }
@@ -95,6 +97,10 @@ class MainActivity : ComponentActivity() {
         }
 }
 
+    suspend fun getThemePreference(): String? {
+        return AppDataStore(this).getThemePreference().collect { it }
+    }
+
 
 @Composable
 fun navigation(
@@ -119,7 +125,7 @@ fun navigation(
             FavoritosScreen(navController = navController, viewModel = viewModel)
         }
         composable("settings") {
-            SettingsScreen(navController = navController)
+            SettingsScreen(navController = navController, appDataStore = appDataStore)
         }
     }
 }

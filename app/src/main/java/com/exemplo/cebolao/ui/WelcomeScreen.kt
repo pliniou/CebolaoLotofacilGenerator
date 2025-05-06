@@ -2,6 +2,7 @@ package com.exemplo.cebolao.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.exemplo.cebolao.data.AppDataStore
 import com.exemplo.cebolao.R
-
 @Composable
 fun WelcomeScreen(navController: NavHostController, modifier: Modifier = Modifier) {
     Column(
