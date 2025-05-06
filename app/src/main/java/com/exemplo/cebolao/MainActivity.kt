@@ -73,10 +73,11 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(Unit) {
                         coroutineScope.launch {
                             appDataStore.getThemePreference().collect{
-                                selectedTheme = it ?: "system"
+                                selectedTheme = it ?: "system"                              
                             }
-                      }
+                        }
                     }
+                    
 
                     val isDarkTheme = when (selectedTheme) {
                         "dark" -> true
@@ -84,7 +85,7 @@ class MainActivity : ComponentActivity() {
                         else -> isSystemInDarkTheme()
                     val themePreference by appDataStore.getThemePreference().collectAsState(initial = "system")
 
-                    CebolaoLotofacilGeneratorTheme(darkTheme = isDarkTheme, ) {
+                    CebolaoLotofacilGeneratorTheme(darkTheme = isDarkTheme) {
                         Surface(
                             modifier = Modifier.fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
@@ -96,6 +97,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
+                  }
                 }
             }
         }
