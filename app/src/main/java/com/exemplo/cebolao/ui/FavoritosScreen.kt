@@ -1,6 +1,5 @@
 package com.exemplo.cebolao.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,21 +16,23 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.exemplo.cebolao.model.Jogo
+import com.exemplo.cebolao.utils.LotofacilUtils
+import com.exemplo.cebolao.viewmodel.MainViewModel
+import androidx.compose.runtime.remember
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
-
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import com.exemplo.cebolao.utils.LotofacilUtils
+import com.exemplo.cebolao.viewmodel.MainViewModelFactory
 
 @Composable
 fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel = viewModel()) {

@@ -64,6 +64,10 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.compose.material3)
     implementation(libs.kotlinx.coroutines.core)
+    implementation("androidx.compose.ui:ui:1.5.4")
+    implementation("androidx.compose.ui:ui-graphics:1.5.4")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
+    
     implementation(libs.androidx.activity.ktx)
 
     implementation(libs.androidx.navigation.compose)
@@ -73,7 +77,5 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.5")
 
     ksp(libs.androidx.room.compiler)
-    debugImplementation(libs.androidx.ui.tooling.preview)
-    //implementation(libs.androidx.datastore.preferences) //remove this duplicate dependency
-
+    debugImplementation(libs.androidx.ui.tooling.preview)    
 }

@@ -1,28 +1,40 @@
 package com.exemplo.cebolao.viewmodel
 
 import android.app.Application
+import androidx.compose.runtime.MutableState
 import android.util.Log
 import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.exemplo.cebolao.data.AppDatabaseInstance
+import com.exemplo.cebolao.data.JogoDao
+import com.exemplo.cebolao.data.JogoEntity
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.repository.JogoRepository
+import com.exemplo.cebolao.utils.LotofacilUtils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.asStateFlow
-import com.exemplo.cebolao.utils.LotofacilUtils
-import com.exemplo.cebolao.data.*
-import com.exemplo.cebolao.utils.LotofacilUtils.calculateSum
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import com.exemplo.cebolao.utils.LotofacilUtils.calculateSum
 import java.lang.Exception
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-    // Your implementation
+class MainViewModel(
+    private val repository: JogoRepository
+) : ViewModel() {
 
     private val _games = MutableStateFlow<List<Jogo>>(emptyList())
+    val games: StateFlow<List<Jogo>> = _games.asStateFlow()
     private val _selectedFilters = MutableStateFlow<List<String>>(emptyList())
-
+    val selectedFilters: StateFlow<List<String>> = _selectedFilters.asStateFlow()
+    private val _jogosFavoritos = MutableStateFlow<List<Jogo>>(emptyList())
+    val jogosFavoritos: StateFlow<List<Jogo>> = _jogosFavoritos.asStateFlow()
+    
+   
 
     init {
         loadFavoritos()
@@ -30,12 +42,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun insertJogo(jogo: Jogo) {
         viewModelScope.launch(Dispatchers.IO) {
             try{
-                val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)
+                val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(", "), jogo.date, jogo.favorito)
                 repository.insertJogo(jogoEntity)                
             }catch (e: Exception){
                 Log.e("MainViewModel", "Erro ao inserir jogo: ${e.message}")
 
-            }
+            } 
         }
     }
 
@@ -67,7 +79,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateJogo(jogo: Jogo) {
         viewModelScope.launch(Dispatchers.IO) {
-            val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)
+            val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(", "), jogo.date, jogo.favorito)
 
             try{
                 repository.updateJogo(jogoEntity)
@@ -79,8 +91,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
-    
 
     private fun checkFilters(game: List<Int>, filters: List<String>): Boolean {
         for (filter in filters) {
@@ -105,15 +115,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    companion object {
-        fun mainViewModelFactory(appDatabaseInstance: AppDatabaseInstance):
-                ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    val repository = JogoRepository(appDatabaseInstance.jogoDao())
-                    return MainViewModel(repository) as T
-                }
-            }
+
+}
+
+class MainViewModelFactory(private val repository: JogoRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            return MainViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
-}
