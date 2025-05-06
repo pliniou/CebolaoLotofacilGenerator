@@ -12,7 +12,9 @@ import com.exemplo.cebolao.data.JogoDao
 import com.exemplo.cebolao.data.JogoEntity
 import com.exemplo.cebolao.repository.JogoRepository
 import com.exemplo.cebolao.utils.LotofacilUtils
+import com.exemplo.cebolao.mapper.mapJogoEntityToJogo
 import kotlinx.coroutines.Dispatchers
+import com.exemplo.cebolao.mapper.mapJogoToJogoEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,22 +42,13 @@ class MainViewModel(
     fun insertJogo(jogo: Jogo) {
         viewModelScope.launch(Dispatchers.IO) {
             try{
-                val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(", "), jogo.date, jogo.favorito)
+                val jogoEntity = mapJogoToJogoEntity(jogo)
                 repository.insertJogo(jogoEntity)                
             }catch (e: Exception){
                 Log.e("MainViewModel", "Erro ao inserir jogo: ${e.message}")
 
             } 
         }
-    }
-
-    private fun mapJogoEntityToJogo(jogoEntity: JogoEntity): Jogo {
-        return Jogo(
-            id = jogoEntity.id,
-            numbers = jogoEntity.numbers.split(",").map { it.toInt() },
-            date = jogoEntity.date,
-            favorito = jogoEntity.favorito
-        )
     }
 
     fun loadFavoritos() {
@@ -77,7 +70,7 @@ class MainViewModel(
 
     fun updateJogo(jogo: Jogo) {
         viewModelScope.launch(Dispatchers.IO) {
-            val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(", "), jogo.date, jogo.favorito)
+            val jogoEntity = mapJogoToJogoEntity(jogo)
 
             try{
                 repository.updateJogo(jogoEntity)

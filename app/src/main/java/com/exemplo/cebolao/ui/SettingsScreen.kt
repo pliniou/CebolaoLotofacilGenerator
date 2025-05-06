@@ -16,10 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp 
+import androidx.compose.ui.unit.sp
+import com.exemplo.cebolao.data.AppDataStore
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(appDataStore: AppDataStore) {
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)

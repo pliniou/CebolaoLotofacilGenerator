@@ -3,7 +3,7 @@ package com.exemplo.cebolao.data
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.editimport kotlinx.coroutines.flow.Flow
 
 
 
@@ -15,5 +15,10 @@ class AppDataStore(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences[stringPreferencesKey(key)] = value
         }
+    }
+
+    fun getThemePreference(): Flow<String> {
+        return context.dataStore.data.map { preferences ->
+ preferences[stringPreferencesKey("theme_preference")] ?: "system"        }
     }
 }

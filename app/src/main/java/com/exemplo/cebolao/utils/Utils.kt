@@ -10,3 +10,7 @@ fun stringToNumbers(numbersString: String): List<Int> {
         emptyList()
     }
 }
+
+fun formatJogo(numbers: List<Int>): String {
+ return numbers.joinToString(", ")
+}

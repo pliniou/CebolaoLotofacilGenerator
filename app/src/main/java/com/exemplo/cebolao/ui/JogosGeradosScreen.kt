@@ -27,12 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.exemplo.cebolao.model.Jogo
+import androidx.navigation.NavHostController
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import com.exemplo.cebolao.utils.formatJogo
 import com.exemplo.cebolao.utils.Utils
 
-@Composable
-fun JogosGeradosScreen(viewModel: MainViewModel) {
+@Composablefun JogosGeradosScreen(navController: NavHostController, viewModel: MainViewModel) {
  val jogosGerados by viewModel.jogosGerados.collectAsState(initial = emptyList())
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -61,7 +61,7 @@ fun JogosGeradosScreen(viewModel: MainViewModel) {
 
 @Composable
 fun JogoItem(jogo: Jogo, viewModel: MainViewModel) {
- val isFavorito by remember { mutableStateOf(jogo.isFavorito) }
+ val isFavorito by remember { mutableStateOf(jogo.favorito) }
 
     Card(
         modifier = Modifier
@@ -83,7 +83,7 @@ fun JogoItem(jogo: Jogo, viewModel: MainViewModel) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            IconButton(onClick = { viewModel.updateJogo(jogo.copy(isFavorito = !isFavorito)) }) {
+            IconButton(onClick = { viewModel.updateJogo(jogo.copy(favorito = !isFavorito)) }) {
                 Icon(
                     imageVector = if (isFavorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
                     contentDescription = if (isFavorito) "Remover dos Favoritos" else "Adicionar aos Favoritos",
