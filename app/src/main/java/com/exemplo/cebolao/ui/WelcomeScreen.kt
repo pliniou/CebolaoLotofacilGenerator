@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.exemplo.cebolao.data.AppDataStore
 import com.exemplo.cebolao.R
 @Composable
 fun WelcomeScreen(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -60,7 +59,7 @@ fun WelcomeScreen(navController: NavHostController, modifier: Modifier = Modifie
         Text(text = "Este aplicativo foi feito para te auxiliar na geração de jogos da lotofácil com alguns filtros customizados.",
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp), textAlign = TextAlign.Center)
         Button(
-            onClick = { navController.navigate("MenuScreen") },
+            onClick = { navController.navigate(Screen.Menu.route) },
             modifier = Modifier.padding(top = 24.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
 

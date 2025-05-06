@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.IconButton
@@ -31,11 +30,6 @@ import com.exemplo.cebolao.viewmodel.MainViewModelFactory
 
 @Composable
 fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel = viewModel()) {
-    LaunchedEffect(key1 = Unit) {
-        // 2. Implementar a função `loadFavoritos` -  Esta função deve estar no ViewModel
-        viewModel.loadFavoritos()
-    }
-
     val favoritos by viewModel.favoritos.collectAsState()
     Column(modifier = Modifier.padding(16.dp)) {
         Text(

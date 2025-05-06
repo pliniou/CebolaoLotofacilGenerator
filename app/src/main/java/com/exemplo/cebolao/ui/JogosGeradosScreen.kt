@@ -19,6 +19,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
+import com.exemplo.cebolao.utils.formatJogo
 import com.exemplo.cebolao.utils.Utils
 
 @Composable
@@ -74,7 +76,7 @@ fun JogoItem(jogo: Jogo, viewModel: MainViewModel) {
         ) {
             Column {
                 Text(
-                    text = "Jogo: ${Utils.formatJogo(jogo)}",
+                    text = "Jogo: ${formatJogo(jogo.numbers)}",
                     fontWeight = FontWeight.Bold
                 )
             }

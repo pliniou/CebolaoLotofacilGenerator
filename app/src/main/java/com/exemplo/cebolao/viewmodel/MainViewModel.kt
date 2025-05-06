@@ -94,15 +94,15 @@ class MainViewModel(
         for (filter in filters) {
             when (filter) {
                 "Primos" -> if (countPrimes(game) !in 3..6) return false
-                "Pares" -> if (countPairs(game) !in 7..8) return false
-                "Cruz" -> if (countCross(game) !in 4..6) return false
-                "Moldura" -> if (countFrame(game) !in 9..11) return false
-                "Metade Superior" -> if (countUpperHalf(game) !in 7..8) return false
-                "Progressão Aritmética" -> if (countArithmeticProgression(game) !in 5..6) return false
-                "Sequência" -> if (countSequence(game) !in 3..5) return false
-                "Linha" -> if (countLine(game) !in 2..4) return false
-                "Coluna" -> if (countColumn(game) !in (2..4)) return false
-                "Soma" -> if (calculateSum(game) !in (170..225)) return false
+                "Pares" -> if (LotofacilUtils.countPairs(game) !in 7..8) return false
+                "Cruz" -> if (LotofacilUtils.countCross(game) !in 4..6) return false
+                "Moldura" -> if (LotofacilUtils.countFrame(game) !in 9..11) return false
+                "Metade Superior" -> if (LotofacilUtils.countUpperHalf(game) !in 7..8) return false
+                "Progressão Aritmética" -> if (LotofacilUtils.countArithmeticProgression(game) !in 5..6) return false
+                "Sequência" -> if (LotofacilUtils.countSequence(game) !in 3..5) return false
+                "Linha" -> if (LotofacilUtils.countLine(game) !in 2..4) return false
+                "Coluna" -> if (LotofacilUtils.countColumn(game) !in (2..4)) return false
+                "Soma" -> if (LotofacilUtils.calculateSum(game) !in (170..225)) return false
             }
         }
         return true

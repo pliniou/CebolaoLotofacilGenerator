@@ -11,7 +11,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -41,65 +40,59 @@ import kotlinx.coroutines.launch
 
 val Context.dataStore by preferencesDataStore(name = "app_preferences")
 
+val appDataStore: AppDataStore by lazy { AppDataStore(App.instance) }
+
 class MainActivity : ComponentActivity() {
 
-    private lateinit var appDatabaseInstance: AppDatabaseInstance
+    private lateinit var jogoRepository: JogoRepository
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialize database and repository at the application level
+        val appDatabase = AppDatabaseInstance(applicationContext).database
+        jogoRepository = JogoRepository(appDatabase.jogoDao())
+
         setContent {
-            val appDataStore = AppDataStore(this)
             val navController = rememberNavController()
-            CebolaoLotofacilGeneratorTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
-                ) {
 
-                    var selectedTheme by remember { mutableStateOf("system") }
-                    appDatabaseInstance = AppDatabaseInstance(applicationContext)
-                    val jogoRepository = JogoRepository(appDatabaseInstance.database.jogoDao())
-                    val viewModel: MainViewModel = viewModel(
-                        factory = MainViewModelFactory(jogoRepository)
+            // Collect theme preference as State
+            val selectedTheme by appDataStore.getThemePreference().collectAsState(initial = "system")
+
+            val isDarkTheme = when (selectedTheme) {
+                "dark" -> true
+                "light" -> false
+                else -> isSystemInDarkTheme()
+            }
+
+            CebolaoLotofacilGeneratorTheme(darkTheme = isDarkTheme) {
+                Surface(modifier = androidx.compose.ui.Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+
+                    val viewModel: MainViewModel = viewModel(factory = MainViewModelFactory(jogoRepository))
+
+                    navigation(
+                        navController = navController,
+                        appDataStore = appDataStore,
+                        viewModel = viewModel
                     )
-
-                    val coroutineScope = rememberCoroutineScope()
-
-                    LaunchedEffect(Unit) {
-                        coroutineScope.launch {
-                            appDataStore.getThemePreference().collect{
- selectedTheme = it ?: "system"
-                            }
-                        }
-                    }
-                    
-
-                     val isDarkTheme = when (selectedTheme) {
-                         "dark" -> true
-                         "light" -> false
-                         else -> isSystemInDarkTheme() }
-
-                    CebolaoLotofacilGeneratorTheme(darkTheme = isDarkTheme) {
-                        Surface(
-                            modifier = Modifier.fillMaxSize(),
-                            color = MaterialTheme.colorScheme.background
-                        ) {
-                            navigation(
-                                navController = navController,
-                                appDataStore = appDataStore,
-                                viewModel = viewModel
-                            )
-                        }
-                     }
-                  }
-                }             
+                }
+            }
         }
-        }
+    }
 }
 
-    suspend fun getThemePreference(): String? {
-        return AppDataStore(this).getThemePreference().collect { it }
+class App : android.app.Application() {
+    companion object {
+        lateinit var instance: App
+            private set
     }
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+    }
+}
 
 
 @Composable
