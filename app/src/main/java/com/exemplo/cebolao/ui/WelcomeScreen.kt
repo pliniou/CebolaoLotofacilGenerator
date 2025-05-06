@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme import androidx.compose.material3.Text
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 
@@ -37,13 +35,13 @@ fun WelcomeScreen(navController: NavHostController, modifier: Modifier = Modifie
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Box(modifier = Modifier.padding(bottom = 24.dp), contentAlignment = Alignment.Center) {
-            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "Logo Cebolao Lotofacil")
+        Box(modifier = Modifier.padding(bottom = 24.dp).align(Alignment.CenterHorizontally), contentAlignment = Alignment.Center) {
+            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = stringResource(R.string.app_name))
         }
         Text(
             text = stringResource(R.string.home_screen_title),
-            modifier = Modifier.padding(bottom = 16.dp),
-            fontSize = 30.sp
+            style = MaterialTheme.typography.headlineLarge,
+            textAlign = TextAlign.Center,
         )
         Text(text = stringResource(R.string.welcome_message))
         Text(

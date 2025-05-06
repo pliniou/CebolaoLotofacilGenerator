@@ -19,22 +19,22 @@ sealed class Screen(val route: String) {
 fun AppNavigation(navController: NavHostController, mainViewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = Screen.Welcome.route) {
         composable(Screen.Welcome.route) {
-            WelcomeScreen(navController = navController)
+ WelcomeScreen(navController = navController, mainViewModel = mainViewModel)
         }
         composable(Screen.Menu.route) {
-            MenuScreen(navController = navController)
+ MenuScreen(navController = navController, mainViewModel = mainViewModel)
         }
         composable(Screen.JogosGerados.route) {
-            JogosGeradosScreen(mainViewModel = mainViewModel)
+ JogosGeradosScreen(navController = navController, mainViewModel = mainViewModel)
         }
         composable(Screen.Favoritos.route) {
-            FavoritosScreen(mainViewModel = mainViewModel)
+ FavoritosScreen(navController = navController, mainViewModel = mainViewModel)
         }
         composable(Screen.Filtros.route) {
-            FiltrosScreen(mainViewModel = mainViewModel)
+ FiltrosScreen(navController = navController, mainViewModel = mainViewModel)
         }
         composable(Screen.Settings.route) {
-            SettingsScreen(mainViewModel = mainViewModel)
+ SettingsScreen(navController = navController, mainViewModel = mainViewModel)
         }
     }
 }

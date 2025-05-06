@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import com.exemplo.cebolao.utils.Utils
@@ -34,9 +33,9 @@ import com.exemplo.cebolao.utils.Utils
 @Composable
 fun JogosGeradosScreen(viewModel: MainViewModel) {
     val jogosGerados by viewModel.jogosGerados.collectAsState()
-
+    
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Jogos Gerados", style = MaterialTheme.typography.headlineMedium)
+ Text(text = "Jogos Gerados", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.size(16.dp))
 
         if (jogosGerados.isEmpty()) {
@@ -52,7 +51,7 @@ fun JogosGeradosScreen(viewModel: MainViewModel) {
         } else {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(jogosGerados) { jogo ->
-                    JogoItem(jogo = jogo)
+ JogoItem(jogo = jogo)
                 }
             }
         }
@@ -61,7 +60,7 @@ fun JogosGeradosScreen(viewModel: MainViewModel) {
 
 @Composable
 fun JogoItem(jogo: Jogo) {
-    var isFavorito by remember { mutableStateOf(false) }
+    var isFavorito by remember { mutableStateOf(jogo.isFavorito) }
 
     Card(
         modifier = Modifier
@@ -76,7 +75,7 @@ fun JogoItem(jogo: Jogo) {
         ) {
             Column {
                 Text(
-                    text = "Jogo: ${Utils.formatJogo(jogo.numeros)}",
+                    text = "Jogo: ${Utils.formatJogo(jogo)}",
                     fontWeight = FontWeight.Bold
                 )
             }

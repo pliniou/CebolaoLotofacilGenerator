@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.exemplo.cebolao.Screen
+import com.exemplo.cebolao.Screen // Assuming Screen is defined in this package or a common module
 
 
 @Composable
@@ -28,12 +28,12 @@ fun MenuScreen(navController: NavHostController) {
         Screen("Bem-vindo", "welcome"),
         Screen("Menu", "menu"),
         Screen("Filtros", "filtros"),
-        Screen("Jogos Gerados", "jogosGerados"),
+        Screen("Jogos Gerados", "jogosGerados"), // Assuming 'jogosGerados' is a valid route
         Screen("Favoritos", "favoritos"),
         Screen("Configurações", "settings"),
     )
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) { // Using Box as a container
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,7 +44,7 @@ fun MenuScreen(navController: NavHostController) {
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(16.dp)
             )
-            HorizontalDivider(color = Color.Gray, thickness = 1.dp)
+            HorizontalDivider(color = Color.Gray, thickness = 1.dp) // Using HorizontalDivider
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -52,7 +52,7 @@ fun MenuScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(menuItems) { menuItem ->
-                    Text(text = menuItem.name,
+                    Text(text = menuItem.name, // Accessing 'name' property
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier
                             .fillMaxSize()
