@@ -95,12 +95,12 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel
                             )
                         }
-                    }
+                     }
                   }
                 }
-           }
+             }
         }
-    }
+   }
 }
 
 
@@ -140,11 +140,4 @@ fun navigation(
 fun SettingsScreen(navController: NavHostController) {
 
 }
-
-
-
-
-
-
-
 
