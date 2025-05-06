@@ -1,5 +1,6 @@
 package com.exemplo.cebolao.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,13 +10,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,13 +22,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
 
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.exemplo.cebolao.utils.LotofacilUtils
 
@@ -39,7 +39,7 @@ fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel =
         viewModel.loadFavoritos()
     }
 
-    val favoritos by viewModel.favoritos.collectAsState()
+    val favoritos by viewModel.favoritos.collectAsState(initial = emptyList())
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text = "Jogos Favoritos",
@@ -77,7 +77,7 @@ fun LazyListScope.favoritesItems(jogos: List<Jogo>, viewModel: MainViewModel) {
 
                     }) {
                         Icon(
-                            imageVector = if (jogo.favorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                            imageVector = if (jogo.favorito) Icons.Filled.Star else Icons.Outlined.Star,
                             contentDescription = if (jogo.favorito) "Remover dos Favoritos" else "Adicionar aos Favoritos"
                         )
                     }

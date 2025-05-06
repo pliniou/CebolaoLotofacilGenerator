@@ -1,6 +1,5 @@
 package com.exemplo.cebolao
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,13 +10,10 @@ import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.Modifier 
 import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -34,9 +30,10 @@ import com.exemplo.cebolao.ui.theme.CebolaoLotofacilGeneratorTheme
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 import android.content.Context
-import com.exemplo.cebolao.utils.LotofacilUtils
-import com.exemplo.cebolao.utils.Utils
 import androidx.compose.runtime.collectAsState
+import androidx.navigation.NavHostController
+
+
 val Context.dataStore by preferencesDataStore(name = "app_preferences")
 
 class MainActivity : ComponentActivity() {
@@ -65,7 +62,9 @@ class MainActivity : ComponentActivity() {
 
                     LaunchedEffect(Unit) {
                         coroutineScope.launch {
-                            selectedTheme = appDataStore.getThemePreference()
+                            appDataStore.getThemePreference().collect{
+                                selectedTheme = it
+                            }
                       }
                     }
 
@@ -111,7 +110,9 @@ fun navigation(navController: NavHostController, appDataStore: AppDataStore, vie
             FavoritosScreen(navController, viewModel)
         }
         composable("settings") {
-            SettingsScreen(navController)
+            SettingsScreen(navController = navController)
         }
     }
 }
+@Composable
+fun SettingsScreen(navController: NavHostController){}

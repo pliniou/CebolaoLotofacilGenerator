@@ -27,6 +27,11 @@ android {
             )
         }
     }
+    packagingOptions {
+        // Evita tentar remover símbolos de debug dessas bibliotecas
+        doNotStrip("**/libandroidx.graphics.path.so")
+        doNotStrip("**/libdatastore_shared_counter.so")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
