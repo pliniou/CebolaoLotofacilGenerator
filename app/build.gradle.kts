@@ -27,11 +27,13 @@ android {
             )
         }
     }
-    packagingOptions {
-        // Evita tentar remover símbolos de debug dessas bibliotecas
-        doNotStrip("**/libandroidx.graphics.path.so")
-        doNotStrip("**/libdatastore_shared_counter.so")
+    packaging {
+        jniLibs {
+            keepDebugSymbols.add("libandroidx.graphics.path.so")
+            keepDebugSymbols.add("libdatastore_shared_counter.so")
+        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -65,9 +67,13 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
 
     implementation(libs.androidx.navigation.compose)
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 
     ksp(libs.androidx.room.compiler)
     debugImplementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.datastore.preferences)
+    //implementation(libs.androidx.datastore.preferences) //remove this duplicate dependency
 
 }

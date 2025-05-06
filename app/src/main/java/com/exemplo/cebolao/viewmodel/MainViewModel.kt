@@ -1,5 +1,6 @@
 package com.exemplo.cebolao.viewmodel
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.exemplo.cebolao.model.Jogo
@@ -16,7 +17,8 @@ import com.exemplo.cebolao.utils.LotofacilUtils.calculateSum
 import kotlinx.coroutines.flow.update
 import java.lang.Exception
 
-class MainViewModel(private val repository: JogoRepository) : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    // Your implementation
 
     private val _games = MutableStateFlow<List<Jogo>>(emptyList())
     private val _selectedFilters = MutableStateFlow<List<String>>(emptyList())
