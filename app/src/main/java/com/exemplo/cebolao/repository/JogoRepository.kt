@@ -4,6 +4,7 @@ import android.util.Log
 import com.exemplo.cebolao.data.JogoDao
 import com.exemplo.cebolao.data.JogoEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class JogoRepository(private val jogoDao: JogoDao) {
@@ -42,11 +43,13 @@ class JogoRepository(private val jogoDao: JogoDao) {
         }
     }
     
-    fun updateJogo(jogoEntity: JogoEntity){
+    suspend fun updateJogo(jogoEntity: JogoEntity){
         try {
-            jogoDao.updateJogo(jogoEntity)
+            withContext(Dispatchers.IO) {
+                jogoDao.updateJogo(jogoEntity)
+            }
         }catch (e: Exception){
-            e.printStackTrace()
+            Log.e("JogoRepository", "Erro ao atualizar jogo: ${e.message}", e)
             throw e
         }
     }

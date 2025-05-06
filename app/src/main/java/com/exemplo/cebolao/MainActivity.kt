@@ -12,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -23,7 +22,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.exemplo.cebolao.data.AppDataStore
 import com.exemplo.cebolao.data.AppDatabaseInstance
-import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.ui.FavoritosScreen
 import com.exemplo.cebolao.ui.FiltrosScreen
 import com.exemplo.cebolao.ui.JogosGeradosScreen
@@ -34,10 +32,6 @@ import com.exemplo.cebolao.ui.theme.CebolaoLotofacilGeneratorTheme
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import com.exemplo.cebolao.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.launch
-import androidx.lifecycle.lifecycleScope
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.coroutineScope
 
 
 
@@ -54,7 +48,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val context = LocalContext.current
             val navController = rememberNavController()
             CebolaoLotofacilGeneratorTheme {
                 Surface(
@@ -120,11 +113,7 @@ fun navigation(
             FiltrosScreen(navController = navController, viewModel = viewModel)
         }
         composable("jogosGerados") { backStackEntry ->
-            val filter = backStackEntry.arguments?.getString("filter")
-            val jogos: List<Jogo> = emptyList()
-
-
-            JogosGeradosScreen(navController, jogos)
+            JogosGeradosScreen(navController, viewModel)
         }
         composable("favoritos") {
             FavoritosScreen(navController = navController, viewModel = viewModel)

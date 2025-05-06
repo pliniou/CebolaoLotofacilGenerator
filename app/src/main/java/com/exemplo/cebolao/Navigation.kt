@@ -1,0 +1,40 @@
+package com.exemplo.cebolao.ui
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.exemplo.cebolao.viewmodel.MainViewModel
+
+sealed class Screen(val route: String) {
+    object Welcome : Screen("welcome")
+    object Menu : Screen("menu")
+    object JogosGerados : Screen("jogos_gerados")
+    object Favoritos : Screen("favoritos")
+    object Filtros : Screen("filtros")
+    object Settings : Screen("settings")
+}
+
+@Composable
+fun AppNavigation(navController: NavHostController, mainViewModel: MainViewModel) {
+    NavHost(navController = navController, startDestination = Screen.Welcome.route) {
+        composable(Screen.Welcome.route) {
+            WelcomeScreen(navController = navController)
+        }
+        composable(Screen.Menu.route) {
+            MenuScreen(navController = navController)
+        }
+        composable(Screen.JogosGerados.route) {
+            JogosGeradosScreen(mainViewModel = mainViewModel)
+        }
+        composable(Screen.Favoritos.route) {
+            FavoritosScreen(mainViewModel = mainViewModel)
+        }
+        composable(Screen.Filtros.route) {
+            FiltrosScreen(mainViewModel = mainViewModel)
+        }
+        composable(Screen.Settings.route) {
+            SettingsScreen(mainViewModel = mainViewModel)
+        }
+    }
+}

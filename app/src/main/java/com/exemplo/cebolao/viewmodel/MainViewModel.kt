@@ -6,12 +6,10 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.exemplo.cebolao.data.AppDatabaseInstance
 import com.exemplo.cebolao.data.JogoDao
 import com.exemplo.cebolao.data.JogoEntity
-import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.repository.JogoRepository
 import com.exemplo.cebolao.utils.LotofacilUtils
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.exemplo.cebolao.utils.LotofacilUtils.calculateSum
+import com.exemplo.cebolao.model.Jogo
 import java.lang.Exception
 
 class MainViewModel(
@@ -117,12 +116,3 @@ class MainViewModel(
 
 
 }
-
-class MainViewModelFactory(private val repository: JogoRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }

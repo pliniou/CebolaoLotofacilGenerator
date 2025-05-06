@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.exemplo.cebolao.data.AppDataStore
-import com.exemplo.cebolao.viewmodel.MainViewModel
 import com.exemplo.cebolao.R
 
 @Composable
@@ -39,7 +38,7 @@ fun WelcomeScreen(navController: NavHostController, modifier: Modifier = Modifie
         verticalArrangement = Arrangement.Center
     ) {
         Box(modifier = Modifier.padding(bottom = 24.dp), contentAlignment = Alignment.Center) {
-            Image(painter = painterResource(id = R.drawable.cebolao_lotofacil_logo), contentDescription = "Logo Cebolao Lotofacil")
+            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = "Logo Cebolao Lotofacil")
         }
         Text(
             text = stringResource(R.string.home_screen_title),
