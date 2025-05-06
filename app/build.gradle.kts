@@ -28,10 +28,8 @@ android {
         }
     }
     packaging {
-        // Check for version compatibility between Gradle, Android Plugin, and NDK.
- packagingOptions {
-            doNotStrip "*/libandroidx.graphics.path.so"
- }
+        // Check for version compatibility between Gradle, Android Plugin, and NDK.        
+
         jniLibs {
             keepDebugSymbols.add("libandroidx.graphics.path.so")
             keepDebugSymbols.add("libdatastore_shared_counter.so")
