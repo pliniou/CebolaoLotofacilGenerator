@@ -1,41 +1,32 @@
 { pkgs, ... }: {
-  channel = "stable-24.05"; # ou "unstable" se preferir versões mais recentes
+  channel = "stable-24.05";
 
   packages = [
     pkgs.openjdk17
     pkgs.maven
-    # Adicione outros pacotes necessários aqui
+    pkgs.nodejs_20 # ou a versão que você quiser
+    pkgs.firebase-tools
   ];
 
   env = {
     JAVA_HOME = "${pkgs.openjdk17}";
+    NODE_ENV = "development";
   };
 
   idx = {
-    extensions = [
-      # Adicione extensões do VS Code conforme necessário
-    ];
-
-    previews = {
-      enable = true;
-      previews = {
-        # web = {
-        #   command = ["npm" "run" "dev"];
-        #   manager = "web";
-        #   env = {
-        #     PORT = "$PORT";
-        #   };
-        # };
-      };
-    };
-
     workspace = {
+      # Uncomment the lines below if your project is a Node.js project and
+      # requires npm dependencies and/or to be served via npm.
+      #
       onCreate = {
-        # npm-install = "npm install";
+        install-deps = "npm install";
       };
       onStart = {
-        # watch-backend = "npm run watch-backend";
+        serve = "firebase emulators:start";
       };
     };
   };
+
+  idx.extensions = [
+  ];
 }
