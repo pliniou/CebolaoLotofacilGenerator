@@ -28,6 +28,10 @@ android {
         }
     }
     packaging {
+        // Check for version compatibility between Gradle, Android Plugin, and NDK.
+ packagingOptions {
+            doNotStrip "*/libandroidx.graphics.path.so"
+ }
         jniLibs {
             keepDebugSymbols.add("libandroidx.graphics.path.so")
             keepDebugSymbols.add("libdatastore_shared_counter.so")
@@ -63,9 +67,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.core)    
     implementation("androidx.compose.ui:ui:1.5.4")
-    implementation("androidx.compose.ui:ui-graphics:1.5.4")
+    implementation("androidx.compose.ui:ui-graphics:1.6.0")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
     
     implementation(libs.androidx.activity.ktx)
