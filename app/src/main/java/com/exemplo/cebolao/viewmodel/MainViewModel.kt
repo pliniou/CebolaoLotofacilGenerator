@@ -6,14 +6,13 @@ import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.repository.JogoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.exemplo.cebolao.data.*
-import com.exemplo.cebolao.utils.LotofacilUtils
-import com.exemplo.cebolao.utils.LotofacilUtils.calculateSum
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import androidx.lifecycle.ViewModel
-import com.exemplo.cebolao.utils.LotofacilUtils.numbersToString
 import kotlinx.coroutines.flow.asStateFlow
+import com.exemplo.cebolao.utils.LotofacilUtils
+import com.exemplo.cebolao.data.*
+import com.exemplo.cebolao.utils.LotofacilUtils.calculateSum
 import kotlinx.coroutines.flow.update
 import java.lang.Exception
 
@@ -26,7 +25,7 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
     init {
         loadFavoritos()
     } 
-    private fun insertJogo(jogo: Jogo) {
+    fun insertJogo(jogo: Jogo) {
         viewModelScope.launch(Dispatchers.IO) {
             try{
                 val jogoEntity = JogoEntity(jogo.id, jogo.numbers.joinToString(","), jogo.date, jogo.favorito)
@@ -109,7 +108,7 @@ class MainViewModel(private val repository: JogoRepository) : ViewModel() {
                 ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    val repository = JogoRepository(appDatabaseInstance)
+                    val repository = JogoRepository(appDatabaseInstance.jogoDao())
                     return MainViewModel(repository) as T
                 }
             }

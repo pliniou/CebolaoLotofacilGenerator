@@ -1,26 +1,23 @@
 package com.exemplo.cebolao
 
-
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -29,6 +26,7 @@ import com.exemplo.cebolao.data.AppDatabaseInstance
 import com.exemplo.cebolao.ui.FavoritosScreen
 import com.exemplo.cebolao.ui.FiltrosScreen
 import com.exemplo.cebolao.ui.JogosGeradosScreen
+import com.exemplo.cebolao.ui.MainViewModelFactory
 import com.exemplo.cebolao.ui.MenuScreen
 import com.exemplo.cebolao.ui.SettingsScreen
 import com.exemplo.cebolao.ui.WelcomeScreen
@@ -36,8 +34,9 @@ import com.exemplo.cebolao.ui.theme.CebolaoLotofacilGeneratorTheme
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 import android.content.Context
-
-
+import com.exemplo.cebolao.utils.LotofacilUtils
+import com.exemplo.cebolao.utils.Utils
+import androidx.compose.runtime.collectAsState
 val Context.dataStore by preferencesDataStore(name = "app_preferences")
 
 class MainActivity : ComponentActivity() {
@@ -48,11 +47,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            val context = LocalContext.current
             val navController = rememberNavController()
-
             CebolaoLotofacilGeneratorTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
@@ -61,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     appDatabaseInstance = AppDatabaseInstance(applicationContext)
 
                     val viewModel: MainViewModel = viewModel(
-                        factory = MainViewModel.MainViewModelFactory(appDatabaseInstance)
+                        factory = MainViewModelFactory(appDatabaseInstance)
                     )
 
                     val coroutineScope = rememberCoroutineScope()
@@ -69,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(Unit) {
                         coroutineScope.launch {
                             selectedTheme = appDataStore.getThemePreference()
-                        }
+                      }
                     }
 
                     val isDarkTheme = when (selectedTheme) {
@@ -77,8 +74,9 @@ class MainActivity : ComponentActivity() {
                         "light" -> false
                         else -> isSystemInDarkTheme()
                     }
+                    val themePreference by appDataStore.getThemePreference().collectAsState(initial = "system")
 
-                    CebolaoLotofacilGeneratorTheme(darkTheme = isDarkTheme) {
+                    CebolaoLotofacilGeneratorTheme(darkTheme = isDarkTheme, ) {
                         Surface(
                             modifier = Modifier.fillMaxSize(),
                             color = MaterialTheme.colorScheme.background
@@ -99,18 +97,18 @@ class MainActivity : ComponentActivity() {
 fun navigation(navController: NavHostController, appDataStore: AppDataStore, viewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = "welcome") {
         composable("welcome") { WelcomeScreen(navController, appDataStore)
-        }
+    }
         composable("menu") {
             MenuScreen(navController = navController, appDataStore = appDataStore)
         }
         composable("filtros") {
-            FiltrosScreen(navController = navController, viewModel = viewModel, appDataStore = appDataStore)
+            FiltrosScreen(navController = navController, viewModel = viewModel)
         }
         composable("jogosGerados") {
             JogosGeradosScreen(navController)
         }
         composable("favoritos") {
-            FavoritosScreen(navController)
+            FavoritosScreen(navController, viewModel)
         }
         composable("settings") {
             SettingsScreen(navController)
