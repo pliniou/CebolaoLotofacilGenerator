@@ -29,8 +29,6 @@ import androidx.navigation.NavHostController
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.utils.LotofacilUtils
 import com.exemplo.cebolao.viewmodel.MainViewModel
-import androidx.compose.runtime.remember
-import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import com.exemplo.cebolao.viewmodel.MainViewModelFactory
 
