@@ -1,4 +1,4 @@
-# Gerador Cebolão LotoFácil
+gr# Gerador Cebolão LotoFácil
 
 ## Propósito
 

@@ -6,6 +6,7 @@
     pkgs.maven
     pkgs.nodejs_20 # ou a versão que você quiser
     pkgs.firebase-tools
+    pkgs.gradle
   ];
 
   env = {
