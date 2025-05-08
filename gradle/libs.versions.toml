@@ -18,7 +18,7 @@ room = "2.6.1"
 composeMaterial3 = "1.2.1"
 datastorePreferences = "1.1.5"
 kotlinxCoroutines = "1.7.3"
-ksp = "2.1.20-1.0.22"
+ksp = "1.9.22-1.0.17"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
