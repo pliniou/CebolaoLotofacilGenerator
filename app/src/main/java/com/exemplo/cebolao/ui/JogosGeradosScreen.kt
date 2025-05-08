@@ -32,7 +32,7 @@ import com.exemplo.cebolao.viewmodel.MainViewModel
 import com.exemplo.cebolao.utils.formatJogo
 import com.exemplo.cebolao.utils.Utils
 
-@Composablefun JogosGeradosScreen(navController: NavHostController, viewModel: MainViewModel) {
+@Composable fun JogosGeradosScreen(navController: NavHostController, viewModel: MainViewModel) {
  val jogosGerados by viewModel.jogosGerados.collectAsState(initial = emptyList())
 
     Column(modifier = Modifier.padding(16.dp)) {
