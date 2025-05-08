@@ -136,7 +136,7 @@ class LotofacilUtils {
  fun filterByMultiplo(jogos: List<Jogo>, multiplo: Int, minCount: Int, maxCount: Int): List<Jogo> {
             return jogos.filter { jogo ->
                 val count = jogo.numeros.count { it % multiplo == 0 }
-                count in minCount..maxCount && it.numeros.any { it % multiplo == 0 } // Corrigindo referências
+ count in minCount..maxCount
             }
         }
     }

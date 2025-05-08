@@ -118,7 +118,7 @@ fun navigation(
             FavoritosScreen(navController = navController, viewModel = viewModel)
         }
         composable("settings") { // appDataStore is not used in SettingsScreen
-            SettingsScreen(navController = navController, appDataStore = appDataStore)
+            SettingsScreen(navController = navController)
         }
     }
 }

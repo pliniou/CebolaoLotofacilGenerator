@@ -33,7 +33,7 @@ import com.exemplo.cebolao.utils.formatJogo
 import com.exemplo.cebolao.utils.Utils
 
 @Composable fun JogosGeradosScreen(navController: NavHostController, viewModel: MainViewModel) {
- val jogosGerados by viewModel.jogosGerados.collectAsState(initial = emptyList())
+ val jogosGerados by viewModel.games.collectAsState(initial = emptyList())
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Jogos Gerados", style = MaterialTheme.typography.headlineMedium)
@@ -61,8 +61,6 @@ import com.exemplo.cebolao.utils.Utils
 
 @Composable
 fun JogoItem(jogo: Jogo, viewModel: MainViewModel) {
- val isFavorito by remember { mutableStateOf(jogo.favorito) }
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,11 +81,11 @@ fun JogoItem(jogo: Jogo, viewModel: MainViewModel) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            IconButton(onClick = { viewModel.updateJogo(jogo.copy(favorito = !isFavorito)) }) {
+            IconButton(onClick = { viewModel.updateJogo(jogo.copy(favorito = !jogo.favorito)) }) {
                 Icon(
-                    imageVector = if (isFavorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                    contentDescription = if (isFavorito) "Remover dos Favoritos" else "Adicionar aos Favoritos",
-                    tint = if (isFavorito) Color.Yellow else Color.Gray
+                    imageVector = if (jogo.favorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                    contentDescription = if (jogo.favorito) "Remover dos Favoritos" else "Adicionar aos Favoritos",
+                    tint = if (jogo.favorito) Color.Yellow else Color.Gray
                 )
             }
         }

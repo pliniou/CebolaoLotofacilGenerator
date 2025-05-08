@@ -31,7 +31,7 @@ import com.exemplo.cebolao.ui.formatJogo
 
 @Composable
 fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel = viewModel()) {
-    val favoritos by viewModel.favoritos.collectAsState()
+ val favoritos by viewModel.jogosFavoritos.collectAsState()
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text = "Jogos Favoritos",
