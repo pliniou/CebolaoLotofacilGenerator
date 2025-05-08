@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import com.exemplo.cebolao.viewmodel.MainViewModelFactory
+import com.exemplo.cebolao.ui.formatJogo
 
 @Composable
 fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel = viewModel()) {

@@ -103,10 +103,10 @@ fun navigation(
 ) {
     NavHost(navController = navController, startDestination = "welcome") {
         composable("welcome") {
-            WelcomeScreen(navController, appDataStore)
+            WelcomeScreen(navController)
         }
         composable("menu") {
-            MenuScreen(navController = navController, appDataStore = appDataStore)
+            MenuScreen(navController = navController, mainViewModel = viewModel)
         }
         composable("filtros") {
             FiltrosScreen(navController = navController, viewModel = viewModel)
@@ -117,7 +117,7 @@ fun navigation(
         composable("favoritos") {
             FavoritosScreen(navController = navController, viewModel = viewModel)
         }
-        composable("settings") {
+        composable("settings") { // appDataStore is not used in SettingsScreen
             SettingsScreen(navController = navController, appDataStore = appDataStore)
         }
     }
