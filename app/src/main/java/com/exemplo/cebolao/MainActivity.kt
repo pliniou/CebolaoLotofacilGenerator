@@ -20,17 +20,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.exemplo.cebolao.data.AppDataStore
-import com.exemplo.cebolao.data.AppDatabaseInstance
+import com.exemplo.cebolao.data.*
+import com.exemplo.cebolao.data.AppDatabase
 import com.exemplo.cebolao.ui.FavoritosScreen
 import com.exemplo.cebolao.ui.FiltrosScreen
 import com.exemplo.cebolao.ui.JogosGeradosScreen
 import com.exemplo.cebolao.ui.MenuScreen
 import com.exemplo.cebolao.ui.SettingsScreen
 import com.exemplo.cebolao.ui.WelcomeScreen
-import com.exemplo.cebolao.ui.theme.CebolaoLotofacilGeneratorTheme
+import com.exemplo.cebolao.ui.theme.CebolaoLotofacilGeneratorTheme // Assuming this is your theme file
 import com.exemplo.cebolao.viewmodel.MainViewModel
-import com.exemplo.cebolao.data.JogoRepository
 import com.exemplo.cebolao.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -39,23 +38,23 @@ import kotlinx.coroutines.launch
 
 
 
-val Context.dataStore by preferencesDataStore(name = "app_preferences")
-
 val appDataStore: AppDataStore by lazy { AppDataStore(App.instance) }
 
 class MainActivity : ComponentActivity() {
-
-    private lateinit var database: AppDatabase
+    private lateinit var appDatabase: AppDatabase
     private lateinit var jogoRepository: JogoRepository
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        database = Room.databaseBuilder(
+        appDatabase = Room.databaseBuilder(
             applicationContext,
-            AppDatabase::class.java, "jogo-database"
+            AppDatabase::class.java, "jogo-db"
         ).build()
+
         jogoRepository = JogoRepository(appDatabase.jogoDao())
+        val viewModelFactory = MainViewModelFactory(jogoRepository, appDataStore)
 
         setContent {
             val navController = rememberNavController()
@@ -67,11 +66,11 @@ class MainActivity : ComponentActivity() {
                 "dark" -> true
                 "light" -> false
                 else -> isSystemInDarkTheme()
-            }
+            } // Assuming you still want to handle theming here
 
             CebolaoLotofacilGeneratorTheme(darkTheme = isDarkTheme) {
                 Surface(modifier = androidx.compose.ui.Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-
+                    viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
                     val viewModel: MainViewModel = viewModel(factory = MainViewModelFactory(jogoRepository))
 
                     navigation(
