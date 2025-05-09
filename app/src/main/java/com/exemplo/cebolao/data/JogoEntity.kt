@@ -11,7 +11,7 @@ import com.google.gson.reflect.TypeToken
 @Entity(tableName = "jogo_table")
 data class JogoEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val numbers: String,
+ val numbers: List<Int>,
     val date: Long,
     @ColumnInfo(name = "favorito")
     val favorito: Boolean = false

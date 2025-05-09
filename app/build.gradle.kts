@@ -58,8 +58,6 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation("androidx.test.ext:junit:1.1.5")
 
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
@@ -68,14 +66,16 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.5.4")
     implementation("androidx.compose.ui:ui-graphics:1.6.0")
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.4")
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+
     
     implementation(libs.androidx.activity.ktx)
 
     implementation(libs.androidx.navigation.compose)
-    implementation("androidx.compose.material:material-icons-extended:1.5.4")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.navigation:navigation-compose:2.7.5")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
     ksp(libs.androidx.room.compiler)
     debugImplementation(libs.androidx.ui.tooling.preview)    
