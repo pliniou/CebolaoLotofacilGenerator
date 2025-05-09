@@ -18,13 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
 import com.exemplo.cebolao.ui.formatJogo
-import androidx.compose.runtime.livedata.observeAsState
 
 @Composable
-fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel = viewModel()) {
+fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel) {
  val favoritos by viewModel.jogosFavoritos.collectAsState()
     Column(modifier = Modifier.padding(16.dp)) {
         Text(

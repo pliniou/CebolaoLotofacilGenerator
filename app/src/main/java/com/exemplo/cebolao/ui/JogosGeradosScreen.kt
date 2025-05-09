@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.exemplo.cebolao.model.Jogo
 import androidx.navigation.NavHostController
 import com.exemplo.cebolao.viewmodel.MainViewModel
-import com.exemplo.cebolao.utils.Utils
 
 @Composable fun JogosGeradosScreen(navController: NavHostController, viewModel: MainViewModel) {
     val currentJogos by viewModel.jogosGerados.collectAsState()
@@ -38,7 +37,7 @@ import com.exemplo.cebolao.utils.Utils
         Text(text = "Jogos Gerados", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.size(16.dp))
 
-        if (jogosGerados.isEmpty()) {
+        if (currentJogos.isEmpty()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Filled.Warning,

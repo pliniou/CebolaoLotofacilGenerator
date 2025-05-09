@@ -14,12 +14,15 @@ import androidx.compose.runtime.*
 import androidx.room.Room
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.exemplo.cebolao.data.AppDataStore
+import com.exemplo.cebolao.repository.JogoRepository
 import com.exemplo.cebolao.data.*
 import com.exemplo.cebolao.data.AppDatabase
 import com.exemplo.cebolao.ui.FavoritosScreen
