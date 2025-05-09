@@ -2,9 +2,11 @@ package com.exemplo.cebolao.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.exemplo.cebolao.model.Jogo
+import androidx.room.TypeConverters
+import com.exemplo.cebolao.data.TypeConverter
 
-@Database(entities = [Jogo::class], version = 1)
+@Database(entities = [JogoEntity::class], version = 1, exportSchema = false)
+@TypeConverters(TypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun jogoDao(): JogoDao
 }
