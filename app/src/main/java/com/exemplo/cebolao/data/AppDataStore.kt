@@ -2,8 +2,10 @@ package com.exemplo.cebolao.data
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+
 import kotlinx.coroutines.flow.Flow
 
 
@@ -12,14 +14,23 @@ import kotlinx.coroutines.flow.Flow
 class AppDataStore(private val context: Context) {
     private val Context.dataStore by preferencesDataStore(name = "settings")
 
+    companion object {
+        val SAVED_NUMBERS = stringSetPreferencesKey("saved_numbers")
+    }
+
+    val savedNumbers: Flow<List<Int>> = context.dataStore.data
+        .map { preferences ->
+            preferences[SAVED_NUMBERS]?.map { it.toInt() } ?: emptyList()
+        }
+
     suspend fun saveString(key: String, value: String) {
         context.dataStore.edit { preferences ->
             preferences[stringPreferencesKey(key)] = value
         }
     }
-
     fun getThemePreference(): Flow<String> {
         return context.dataStore.data.map { preferences ->
- preferences[stringPreferencesKey("theme_preference")] ?: "system"        }
+ preferences[stringPreferencesKey("theme_preference")] ?: "system"
+        }
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
+import androidx.room.Room
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -44,14 +45,16 @@ val appDataStore: AppDataStore by lazy { AppDataStore(App.instance) }
 
 class MainActivity : ComponentActivity() {
 
+    private lateinit var database: AppDatabase
     private lateinit var jogoRepository: JogoRepository
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize database and repository at the application level
-        val appDatabase = AppDatabaseInstance(applicationContext).database
+        database = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "jogo-database"
+        ).build()
         jogoRepository = JogoRepository(appDatabase.jogoDao())
 
         setContent {

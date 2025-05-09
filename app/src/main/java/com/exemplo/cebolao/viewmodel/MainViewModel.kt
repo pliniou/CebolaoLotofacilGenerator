@@ -13,6 +13,7 @@ import com.exemplo.cebolao.data.JogoEntity
 import com.exemplo.cebolao.repository.JogoRepository
 import com.exemplo.cebolao.utils.LotofacilUtils
 import com.exemplo.cebolao.mapper.mapJogoEntityToJogo
+import com.exemplo.cebolao.data.AppDataStore
 import kotlinx.coroutines.Dispatchers
 import com.exemplo.cebolao.mapper.mapJogoToJogoEntity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,8 @@ import com.exemplo.cebolao.model.Jogo
 import java.lang.Exception
 
 class MainViewModel(
-    private val repository: JogoRepository
+    private val repository: JogoRepository,
+    private val dataStore: AppDataStore
 ) : ViewModel() {
     
     private val _games = MutableStateFlow<List<Jogo>>(emptyList<Jogo>())
@@ -39,15 +41,10 @@ class MainViewModel(
     init {
         loadFavoritos()
     } 
-    fun insertJogo(jogo: Jogo) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try{
-                val jogoEntity = mapJogoToJogoEntity(jogo)
-                repository.insertJogo(jogoEntity)                
-            }catch (e: Exception){
-                Log.e("MainViewModel", "Erro ao inserir jogo: ${e.message}")
 
-            } 
+    fun insertJogo(jogo: Jogo) {
+        viewModelScope.launch {
+            repository.insert(jogo) // Garantir que está inserindo um objeto Jogo
         }
     }
 

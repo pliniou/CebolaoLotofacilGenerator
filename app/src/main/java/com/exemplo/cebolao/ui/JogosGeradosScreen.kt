@@ -29,12 +29,11 @@ import androidx.compose.ui.unit.dp
 import com.exemplo.cebolao.model.Jogo
 import androidx.navigation.NavHostController
 import com.exemplo.cebolao.viewmodel.MainViewModel
-import com.exemplo.cebolao.utils.formatJogo
 import com.exemplo.cebolao.utils.Utils
 
 @Composable fun JogosGeradosScreen(navController: NavHostController, viewModel: MainViewModel) {
- val jogosGerados by viewModel.games.collectAsState(initial = emptyList())
-
+    val currentJogos by viewModel.jogosGerados.collectAsState()
+    
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Jogos Gerados", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.size(16.dp))
@@ -51,8 +50,8 @@ import com.exemplo.cebolao.utils.Utils
             }
         } else {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(jogosGerados) { jogo ->
-                    JogoItem(jogo = jogo, viewModel = viewModel)
+                items(currentJogos) { jogo ->
+                    JogoItem(jogo = jogo, viewModel = viewModel )
                 }
             }
         }
@@ -74,7 +73,7 @@ fun JogoItem(jogo: Jogo, viewModel: MainViewModel) {
         ) {
             Column {
                 Text(
-                    text = "Jogo: ${formatJogo(jogo.numbers)}",
+                    text = "Jogo: ${jogo.numeros.joinToString(", ")}",
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -82,8 +81,8 @@ fun JogoItem(jogo: Jogo, viewModel: MainViewModel) {
             Spacer(modifier = Modifier.weight(1f))
 
             IconButton(onClick = { viewModel.updateJogo(jogo.copy(favorito = !jogo.favorito)) }) {
-                Icon(
-                    imageVector = if (jogo.favorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                 Icon(
+                    imageVector = if (jogo.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
                     contentDescription = if (jogo.favorito) "Remover dos Favoritos" else "Adicionar aos Favoritos",
                     tint = if (jogo.favorito) Color.Yellow else Color.Gray
                 )

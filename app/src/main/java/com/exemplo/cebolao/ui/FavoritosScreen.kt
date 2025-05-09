@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
@@ -19,15 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Card
-import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
-import com.exemplo.cebolao.viewmodel.MainViewModelFactory
 import com.exemplo.cebolao.ui.formatJogo
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.StarBorder
 
 @Composable
 fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel = viewModel()) {
@@ -62,14 +59,13 @@ fun LazyListScope.favoritesItems(jogos: List<Jogo>, viewModel: MainViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Números: ${formatJogo(jogo.numbers)}")
+                    Text(text = "Números: ${formatJogo(jogo.numeros)}")
                     IconButton(onClick = {
-                        // 4. Implementar a função `updateJogo` - Esta função deve estar no ViewModel
-                        val jogoAtualizado = jogo.copy(favorito = !jogo.favorito)
+                        val jogoAtualizado = jogo.copy(isFavorite = !jogo.isFavorite)
                         viewModel.updateJogo(jogoAtualizado)
                     }) {
                         Icon(
-                            imageVector = if (jogo.favorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                            imageVector = if (jogo.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
                             contentDescription = if (jogo.favorito) "Remover dos Favoritos" else "Adicionar aos Favoritos"
                         )
                     }
@@ -81,5 +77,5 @@ fun LazyListScope.favoritesItems(jogos: List<Jogo>, viewModel: MainViewModel) {
 }
 
 fun formatJogo(numbers: List<Int>): String {
- return numbers.joinToString(", ")
+    return numbers.joinToString(", ")
 }
