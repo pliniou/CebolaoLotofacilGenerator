@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
-import com.exemplo.cebolao.ui.formatJogo
 
 @Composable
 fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel) {
@@ -39,18 +38,8 @@ fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel) 
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(favoritos) { jogo ->
-                JogoItem(
-                    numeros = jogo.numeros,
-                    isFavorite = jogo.isFavorite,
-                    onFavoriteClick = {
-                        // TODO: Implement favorite click logic
-                    }
-                )
+                JogoItem(jogo = jogo, viewModel = viewModel)
             }
         }
     }
-}
-
-fun formatJogo(numbers: List<Int>): String {
-    return numbers.joinToString(", ")
 }

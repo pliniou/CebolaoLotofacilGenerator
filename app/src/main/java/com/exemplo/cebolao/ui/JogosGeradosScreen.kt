@@ -50,7 +50,7 @@ import com.exemplo.cebolao.viewmodel.MainViewModel
         } else {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(currentJogos) { jogo ->
-                    JogoItem(jogo = jogo, viewModel = viewModel )
+                    JogoItem(jogo = jogo, viewModel = viewModel)
                 }
             }
         }

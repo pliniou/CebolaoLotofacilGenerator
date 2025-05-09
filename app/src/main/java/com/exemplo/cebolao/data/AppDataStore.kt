@@ -5,6 +5,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 import kotlinx.coroutines.flow.Flow
@@ -15,13 +16,13 @@ class AppDataStore(private val context: Context) {
     
     val savedNumbers: Flow<List<Int>> = context.dataStore.data
         .map { preferences ->
-            preferences[Preferences.Key<Set<String>>("SAVED_NUMBERS")]
+ preferences[stringSetPreferencesKey("SAVED_NUMBERS")]
                 ?.map { it.toInt() }?.toList() ?: emptyList()
         }
     
     suspend fun saveNumbers(numbers: List<Int>) {
         context.dataStore.edit { preferences ->
-            preferences[Preferences.Key<Set<String>>("SAVED_NUMBERS")] =
+ preferences[stringSetPreferencesKey("SAVED_NUMBERS")] =
                 numbers.map { it.toString() }.toSet()
         }
     }

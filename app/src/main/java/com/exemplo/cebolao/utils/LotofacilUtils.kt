@@ -1,6 +1,7 @@
 package com.exemplo.cebolao.utils
 
 import com.exemplo.cebolao.model.Jogo
+import java.time.LocalDate
 import kotlin.random.Random
 
 class LotofacilUtils {
@@ -22,7 +23,7 @@ class LotofacilUtils {
             return Jogo(
                 numeros = selectedNumbers.toList().sorted(),
                 isFavorite = false,
-                dataGeracao = System.currentTimeMillis()
+                dataGeracao = LocalDate.now()
             )
         }
 
