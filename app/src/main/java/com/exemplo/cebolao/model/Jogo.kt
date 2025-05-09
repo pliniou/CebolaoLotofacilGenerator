@@ -1,10 +1,7 @@
 package com.exemplo.cebolao.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "jogo_table")
+// This data class is likely used in the domain or presentation layer
 data class Jogo(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0, // Added default value for Room

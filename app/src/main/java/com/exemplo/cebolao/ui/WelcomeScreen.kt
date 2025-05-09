@@ -10,10 +10,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 
@@ -23,10 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.exemplo.cebolao.R
 @Composable
-fun WelcomeScreen(navController: NavHostController, modifier: Modifier = Modifier) {
+fun WelcomeScreen( modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .padding(24.dp)
@@ -59,7 +57,7 @@ fun WelcomeScreen(navController: NavHostController, modifier: Modifier = Modifie
         Text(text = "Este aplicativo foi feito para te auxiliar na geração de jogos da lotofácil com alguns filtros customizados.",
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp), textAlign = TextAlign.Center)
         Button(
-            onClick = { navController.navigate(Screen.Menu.route) },
+            onClick = { /* TODO: Navigate to MenuScreen */ },
             modifier = Modifier.padding(top = 24.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
 

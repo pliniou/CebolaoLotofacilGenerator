@@ -9,22 +9,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.exemplo.cebolao.model.Jogo
 import com.exemplo.cebolao.viewmodel.MainViewModel
 
 @Composable
-fun FavoritosScreen(navController: NavHostController, viewModel: MainViewModel) {
- val favoritos by viewModel.jogosFavoritos.collectAsState()
+fun FavoritosScreen(viewModel: MainViewModel) {
+    val favoritos by viewModel.jogosFavoritos.collectAsState()
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text = "Jogos Favoritos",

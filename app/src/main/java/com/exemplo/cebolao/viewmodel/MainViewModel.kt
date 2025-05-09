@@ -29,9 +29,9 @@ class MainViewModel(
     private val dataStore: AppDataStore
 ) : ViewModel() {
     
-    private val _games = MutableStateFlow<List<Jogo>>(emptyList<Jogo>())
+ private val _games = MutableStateFlow(emptyList<Jogo>())
     val games: StateFlow<List<Jogo>> = _games.asStateFlow()
-    private val _selectedFilters = MutableStateFlow<List<String>>(emptyList())
+ private val _selectedFilters = MutableStateFlow(emptyList<String>())
     val selectedFilters: StateFlow<List<String>> = _selectedFilters.asStateFlow()
     private val _jogosFavoritos = MutableStateFlow<List<Jogo>>(emptyList())
     val jogosFavoritos: StateFlow<List<Jogo>> = _jogosFavoritos.asStateFlow()
@@ -48,7 +48,7 @@ class MainViewModel(
         }
     }
 
-    fun loadFavoritos() {
+    private fun loadFavoritos() {
         viewModelScope.launch(Dispatchers.IO) {
             try{
                 val favoritos = repository.getFavoritos()

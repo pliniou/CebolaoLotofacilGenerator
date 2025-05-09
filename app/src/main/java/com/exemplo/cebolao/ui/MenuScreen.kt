@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -24,13 +23,13 @@ import com.exemplo.cebolao.viewmodel.MainViewModel
 
 @Composable
 fun MenuScreen(navController: NavHostController, mainViewModel: MainViewModel) {
- val menuItems = listOf(
- Screen.Welcome, // Welcome should probably not be in the menu
- // Screen.Menu, // Don't navigate to the menu from the menu
- Screen.Filtros,
- Screen.JogosGerados,
- Screen.Favoritos,
- Screen.Settings,
+    val menuItems = listOf(
+        Screen.Welcome, // Welcome should probably not be in the menu
+        // Screen.Menu, // Don't navigate to the menu from the menu
+        Screen.Filtros,
+        Screen.JogosGerados,
+        Screen.Favoritos,
+        Screen.Settings,
     )
 
     Box(modifier = Modifier.fillMaxSize()) { // Using Box as a container
@@ -52,14 +51,14 @@ fun MenuScreen(navController: NavHostController, mainViewModel: MainViewModel) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(menuItems) { menuItem ->
-                    Text(text = menuItem.title,
+                    Text(
+                        text = menuItem.title,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier
                             .fillMaxSize()
                             .clickable { navController.navigate(menuItem.route)}
                             .padding(8.dp)
                     )
-                    HorizontalDivider(color = Color.LightGray, thickness = 1.dp)
                 }
             }
         }

@@ -2,10 +2,4 @@
     <string name="app_name">Cebolao Lotofacil Generator</string>
     <string name="welcome_message">Bem-vindo ao Gerador de Jogos da Lotofácil!</string>
     <string name="home_screen_title">Tela Inicial</string>
-    <string name="generate_games_button">Generate Games</string>
-    <string name="filter_menu">Filters</string>
-    <string name="initial_explanation">This app helps you generate games for Lotofácil.</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
 </resources>

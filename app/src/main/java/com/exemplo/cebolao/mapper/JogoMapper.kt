@@ -1,7 +1,6 @@
 package com.exemplo.cebolao.mapper
 
 import com.exemplo.cebolao.data.JogoEntity
-import com.exemplo.cebolao.model.Jogo
 
 fun mapJogoToJogoEntity(jogo: Jogo): JogoEntity =
     JogoEntity(

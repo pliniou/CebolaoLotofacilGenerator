@@ -5,20 +5,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.exemplo.cebolao.viewmodel.MainViewModel
-import com.exemplo.cebolao.ui.WelcomeScreen
-import com.exemplo.cebolao.ui.MenuScreen
-import com.exemplo.cebolao.ui.JogosGeradosScreen
-import com.exemplo.cebolao.ui.FavoritosScreen
-import com.exemplo.cebolao.ui.FiltrosScreen
-import com.exemplo.cebolao.ui.SettingsScreen
 
 sealed class Screen(val route: String, val title: String) {
- object Welcome : Screen("welcome", "Welcome")
- object Menu : Screen("menu", "Menu")
- object JogosGerados : Screen("jogos_gerados", "Generated Games")
- object Favoritos : Screen("favoritos", "Favorites")
- object Filtros : Screen("filtros", "Filters")
- object Settings : Screen("settings", "Settings")
+ data object Welcome : Screen("welcome", "Welcome")
+ data object Menu : Screen("menu", "Menu")
+ data object JogosGerados : Screen("jogos_gerados", "Generated Games")
+ data object Favoritos : Screen("favoritos", "Favorites")
+ data object Filtros : Screen("filtros", "Filters")
+ data object Settings : Screen("settings", "Settings")
 }
 
 @Composable
