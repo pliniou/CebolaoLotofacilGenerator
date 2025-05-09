@@ -58,7 +58,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation("androidx.test.ext:junit:1.1.5")
 
-    androidTestImplementation("androidx.test.ext:junit")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.androidx.room.runtime)
