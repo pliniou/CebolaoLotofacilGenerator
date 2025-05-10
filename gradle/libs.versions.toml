@@ -17,6 +17,20 @@ kotlinxCoroutines = "1.8.1" # Updated to latest stable
 lifecycle = "2.7.0"
 navigation = "2.7.6"
 gson = "2.10.1"
+material3 = "1.2.1"
+composeUi = "1.8.1"
+composeUiGraphics = "1.8.1"
+composeUiTooling = "1.8.1"
+composeMaterialIconsExtended = "1.8.1"
+activityKtx = "1.9.0"
+roomRuntime = "2.6.1"
+roomCompiler = "2.6.1"
+roomKtx = "2.6.1"
+androidxJunit = "1.1.5"
+androidxUiToolingPreview = "1.8.1"
+androidxUi = "1.8.1"
+androidxUiGraphics = "1.8.1"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "uiToolingPreview" }
@@ -32,6 +46,19 @@ androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecy
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 com-google-code-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+androidx.appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx.compose.material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx.ui = { group = "androidx.compose.ui", name = "ui", version.ref = "composeUi" }
+androidx.ui.graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "composeUiGraphics" }
+androidx.ui.tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUiTooling" }
+androidx.compose.material.icons.extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterialIconsExtended" }
+androidx.activity.ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
+androidx.room.runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+androidx.room.compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+androidx.room.ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+androidx.junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
+androidx.ui.tooling.preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "androidxUiToolingPreview" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
