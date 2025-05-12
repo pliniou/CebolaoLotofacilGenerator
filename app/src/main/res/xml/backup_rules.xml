@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Inclui preferências compartilhadas para backup -->
+    <include domain="sharedpref" path="com.example.cebolaolotofacilgenerator_preferences.xml"/>
+    <include domain="database" path="lotofacil_database"/>
+    
+    <!-- Exclui códigos de acesso ou dados sensíveis de dispositivo -->
+    <exclude domain="sharedpref" path="device_specific.xml"/>
+    <exclude domain="file" path="temp"/>
+</full-backup-content>

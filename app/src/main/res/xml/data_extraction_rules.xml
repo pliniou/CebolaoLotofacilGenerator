@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Permite backup de preferências e banco de dados -->
+        <include domain="sharedpref" path="com.example.cebolaolotofacilgenerator_preferences.xml"/>
+        <include domain="database" path="lotofacil_database"/>
+        
+        <!-- Exclui dados temporários ou sensíveis -->
+        <exclude domain="sharedpref" path="device_specific.xml"/>
+        <exclude domain="file" path="temp"/>
+    </cloud-backup>
+    
+    <device-transfer>
+        <!-- Permite transferência de preferências e banco de dados entre dispositivos -->
+        <include domain="sharedpref" path="com.example.cebolaolotofacilgenerator_preferences.xml"/>
+        <include domain="database" path="lotofacil_database"/>
+        
+        <!-- Exclui dados temporários ou sensíveis -->
+        <exclude domain="sharedpref" path="device_specific.xml"/>
+        <exclude domain="file" path="temp"/>
+    </device-transfer>
+</data-extraction-rules>

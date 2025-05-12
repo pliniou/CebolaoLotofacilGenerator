@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.CebolaoLotofacilGenerator" parent="Theme.Material3.DayNight">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+
+    <!-- Aplicativo tema para modo noturno. -->
+    <style name="Theme.CebolaoLotofacilGenerator" parent="Base.Theme.CebolaoLotofacilGenerator">
+        <!-- Target API 21+ (LOLLIPOP) attributes -->
+        <!-- <item name="android:statusBarColor">?attr/colorPrimaryVariant</item> -->        <!-- Removido daqui -->
+    </style>
+</resources>

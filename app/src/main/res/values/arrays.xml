@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Arrays para valores padrão dos filtros -->
+    <string-array name="valores_impares_default">
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string-array name="valores_soma_default">
+        <item>190</item>
+        <item>220</item>
+    </string-array>
+
+    <string-array name="valores_primos_default">
+        <item>3</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="valores_fibonacci_default">
+        <item>2</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="valores_miolo_default">
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="valores_multiplos_tres_default">
+        <item>3</item>
+        <item>6</item>
+    </string-array>
+</resources>

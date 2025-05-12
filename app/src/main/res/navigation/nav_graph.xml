@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/navigation_principal">
+
+    <fragment
+        android:id="@+id/navigation_principal"
+        android:name="com.example.cebolaolotofacilgenerator.ui.fragments.PrincipalFragment"
+        android:label="@string/menu_principal"
+        tools:layout="@layout/fragment_principal" />
+
+    <fragment
+        android:id="@+id/navigation_filtros"
+        android:name="com.example.cebolaolotofacilgenerator.ui.fragments.FiltrosFragment"
+        android:label="@string/menu_filtros"
+        tools:layout="@layout/fragment_filtros" />
+
+    <fragment
+        android:id="@+id/navigation_conferencia"
+        android:name="com.example.cebolaolotofacilgenerator.ui.fragments.ConferenciaFragment"
+        android:label="@string/menu_conferencia"
+        tools:layout="@layout/fragment_conferencia" />
+
+    <fragment
+        android:id="@+id/navigation_gerenciamento"
+        android:name="com.example.cebolaolotofacilgenerator.ui.fragments.GerenciamentoFragment"
+        android:label="@string/menu_gerenciamento"
+        tools:layout="@layout/fragment_gerenciamento" />
+
+    <fragment
+        android:id="@+id/navigation_configuracoes"
+        android:name="com.example.cebolaolotofacilgenerator.ui.fragments.ConfiguracoesFragment"
+        android:label="@string/menu_configuracoes"
+        tools:layout="@layout/fragment_configuracoes" />
+</navigation>

@@ -1,0 +1,24 @@
+{
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-17",
+      "path": "/nix/store/h32r2d86515rimvyf8ih0dpwiczd5gj5-openjdk-17.0.7+7/lib/openjdk",
+      "default": true
+    }
+  ],
+  "firebase.emulators.runAll": true,
+  "firebase.emulators.startCommand": "firebase emulators:start",
+  "firebase.projects.default": "cebolaolotofacilgeneratorgit-18545597",
+  "editor.formatOnSave": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.nodePath": "node_modules",
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ],
+  "IDX.aI.enableInlineCompletion": true,
+  "IDX.aI.enableCodebaseIndexing": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.jdt.ls.java.home": "C:\\Program Files\\Java\\jdk-17",
+  "java.import.gradle.java.home": "C:\\Program Files\\Java\\jdk-17"
+}
