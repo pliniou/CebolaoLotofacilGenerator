@@ -39,14 +39,14 @@ class JogosGerenciamentoAdapter(
 
         init {
             binding.root.setOnClickListener {
-                val position = bindingAdapterPosition
+                val position = absoluteAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onJogoClick(getItem(position))
                 }
             }
 
             binding.buttonFavorito.setOnClickListener {
-                val position = bindingAdapterPosition
+                val position = absoluteAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val jogo = getItem(position)
                     onFavoritoClick(jogo, !jogo.favorito)
@@ -54,7 +54,7 @@ class JogosGerenciamentoAdapter(
             }
 
             binding.buttonExcluir.setOnClickListener {
-                val position = bindingAdapterPosition
+                val position = absoluteAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onExcluirClick(getItem(position))
                 }
@@ -84,7 +84,7 @@ class JogosGerenciamentoAdapter(
                 }
 
                 // Exibe informações de conferência, se aplicável
-                if (jogo.conferido) {
+                if (jogo.acertos != null) {
                     textViewResultados.text = "Acertos: ${jogo.acertos}"
                     textViewResultados.visibility = android.view.View.VISIBLE
                 } else {

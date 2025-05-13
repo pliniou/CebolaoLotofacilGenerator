@@ -22,6 +22,14 @@
     <color name="ball_selected">#4CAF50</color>
     <color name="ball_matched">#FF9800</color>
     
+    <!-- Cores para indicar acertos na conferência -->
+    <color name="acertos_15">#F44336</color> <!-- Vermelho - prêmio principal -->
+    <color name="acertos_14">#FF9800</color> <!-- Laranja - segundo prêmio -->
+    <color name="acertos_13">#FFEB3B</color> <!-- Amarelo - terceiro prêmio -->
+    <color name="acertos_12">#8BC34A</color> <!-- Verde claro - quarto prêmio -->
+    <color name="acertos_11">#4CAF50</color> <!-- Verde - quinto prêmio -->
+    <color name="acertos_menor_11">#E0E0E0</color> <!-- Cinza - sem prêmio -->
+    
     <!-- Cores base -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

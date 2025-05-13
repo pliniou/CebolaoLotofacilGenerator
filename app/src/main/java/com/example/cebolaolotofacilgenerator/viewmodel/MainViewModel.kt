@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
-import com.example.cebolaolotofacilgenerator.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
 import kotlinx.coroutines.launch
 
 class MainViewModel(

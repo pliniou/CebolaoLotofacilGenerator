@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cebolaolotofacilgenerator.data.modelo.Resultado
+import com.example.cebolaolotofacilgenerator.data.model.Resultado
 import com.example.cebolaolotofacilgenerator.databinding.ItemResultadoBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -39,7 +39,7 @@ class ResultadosAdapter(
 
         init {
             binding.root.setOnClickListener {
-                val position = bindingAdapterPosition
+                val position = absoluteAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onResultadoClick(getItem(position))
                 }
@@ -48,8 +48,8 @@ class ResultadosAdapter(
 
         fun bind(resultado: Resultado) {
             binding.apply {
-                textViewConcurso.text = resultado.numeroConcurso.toString()
-                textViewData.text = dateFormat.format(resultado.dataRealizacao)
+                textViewConcurso.text = resultado.concurso.toString()
+                textViewData.text = dateFormat.format(resultado.dataSorteio)
                 
                 // Exibe os primeiros números do resultado para economizar espaço
                 val primeirosNumeros = resultado.numeros.take(5)
@@ -61,7 +61,7 @@ class ResultadosAdapter(
 
     class ResultadoDiffCallback : DiffUtil.ItemCallback<Resultado>() {
         override fun areItemsTheSame(oldItem: Resultado, newItem: Resultado): Boolean {
-            return oldItem.numeroConcurso == newItem.numeroConcurso
+            return oldItem.concurso == newItem.concurso
         }
 
         override fun areContentsTheSame(oldItem: Resultado, newItem: Resultado): Boolean {

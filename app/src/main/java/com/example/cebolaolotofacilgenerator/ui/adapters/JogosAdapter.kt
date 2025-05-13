@@ -29,14 +29,14 @@ class JogosAdapter(
 
         init {
             binding.root.setOnClickListener {
-                val position = bindingAdapterPosition
+                val position = absoluteAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onJogoClick(getItem(position))
                 }
             }
 
             binding.iconeFavorito.setOnClickListener {
-                val position = bindingAdapterPosition
+                val position = absoluteAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val jogo = getItem(position)
                     onFavoritoClick(jogo, !jogo.favorito)

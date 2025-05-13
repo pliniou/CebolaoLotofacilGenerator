@@ -1,28 +1,26 @@
-package com.example.cebolaolotofacilgenerator.ui // Pacote corrigido
+package com.example.cebolaolotofacilgenerator.ui
 
-// Importe as telas e o ViewModel do pacote correto
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.example.cebolaolotofacilgenerator.ui.screens.* // Exemplo, ajuste conforme necessário
-import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel // Exemplo, ajuste conforme
-// necessário
+import androidx.navigation.compose.composable
+import com.example.cebolaolotofacilgenerator.ui.screens.PrincipalScreen
+import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 
 sealed class Screen(val route: String, val title: String) {
-    // ... Definições das telas ...
-    // Exemplo:
-    // data object Principal : Screen("principal", "Principal")
-    // data object Filtros : Screen("filtros", "Filtros")
-    // ... etc ...
-
-    // Remova as telas legadas se não forem usadas no Compose
-    // data object Welcome : Screen("welcome", "Welcome")
-    // data object Menu : Screen("menu", "Menu")
-    // data object JogosGerados : Screen("jogos_gerados", "Generated Games")
-    // data object Favoritos : Screen("favoritos", "Favorites")
-    // data object Settings : Screen("settings", "Settings")
-
-    // Adicione as telas baseadas em Fragmentos se a navegação Compose for para elas
+    // Definição das telas principais do app
+    data object Principal : Screen("principal", "Gerador Lotofácil")
+    data object Filtros : Screen("filtros", "Filtros")
+    data object Conferencia : Screen("conferencia", "Conferência")
+    data object Gerenciamento : Screen("gerenciamento", "Gerenciamento")
+    data object Configuracoes : Screen("configuracoes", "Configurações")
+    
+    // Para suporte à navegação baseada em fragmentos, podemos usar estas rotas
     data object PrincipalFragment : Screen("principal_fragment", "Principal")
     data object FiltrosFragment : Screen("filtros_fragment", "Filtros")
     data object ConferenciaFragment : Screen("conferencia_fragment", "Conferência")
@@ -32,37 +30,44 @@ sealed class Screen(val route: String, val title: String) {
 
 @Composable
 fun AppNavigation(
-        navController: NavHostController,
-        viewModel: MainViewModel
-) { // Ajuste o tipo do ViewModel se necessário
-    // Defina a tela inicial correta (provavelmente a tela principal do fragmento)
-    NavHost(navController = navController, startDestination = Screen.PrincipalFragment.route) {
-        // Defina os composables para cada tela/fragmento que será navegado via Compose
-        // Se estiver usando Navigation Component com Fragments, a configuração principal
-        // estará no nav_graph.xml e este AppNavigation pode não ser necessário
-        // ou será usado de forma diferente.
-
-        // Exemplo (se fosse navegação puramente Compose):
-        /*
-        composable(Screen.PrincipalFragment.route) {
-            // Composable da tela principal (se fosse Compose)
-            // PrincipalScreen(navController = navController, viewModel = viewModel)
+    navController: NavHostController,
+    viewModel: MainViewModel
+) {
+    // Define a tela inicial como a tela principal
+    NavHost(navController = navController, startDestination = Screen.Principal.route) {
+        // Define rotas para os composables das telas
+        composable(Screen.Principal.route) {
+            // Usa o composable da tela principal
+            PrincipalScreen(navController = navController, viewModel = viewModel)
         }
-        composable(Screen.FiltrosFragment.route) {
-            // FiltrosScreen(navController = navController, viewModel = viewModel)
+        
+        // As outras telas serão adicionadas conforme forem implementadas
+        composable(Screen.Filtros.route) {
+            // Placeholder temporário até que a tela seja implementada
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Tela de Filtros - Em construção")
+            }
         }
-        */
-        // ... outras telas ...
-
-        // Remova as rotas legadas se não forem usadas
-        /*
-        composable(Screen.Welcome.route) {
-            // WelcomeScreen(navController = navController, viewModel = viewModel)
+        
+        composable(Screen.Conferencia.route) {
+            // Placeholder temporário até que a tela seja implementada
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Tela de Conferência - Em construção")
+            }
         }
-        composable(Screen.Menu.route) {
-            // MenuScreen(navController = navController, viewModel = viewModel)
+        
+        composable(Screen.Gerenciamento.route) {
+            // Placeholder temporário até que a tela seja implementada
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Tela de Gerenciamento - Em construção")
+            }
         }
-        // ... etc ...
-        */
+        
+        composable(Screen.Configuracoes.route) {
+            // Placeholder temporário até que a tela seja implementada
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Tela de Configurações - Em construção")
+            }
+        }
     }
 }
