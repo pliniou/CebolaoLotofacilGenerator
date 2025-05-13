@@ -1,4 +1,4 @@
-package com.exemplo.cebolao.ui.theme
+// Arquivo legado, esvaziado para evitar conflitos
 
 import android.app.Activity
 import android.os.Build

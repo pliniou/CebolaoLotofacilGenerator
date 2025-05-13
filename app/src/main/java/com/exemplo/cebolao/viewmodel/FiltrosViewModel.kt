@@ -1,1 +1,1 @@
-// O conteúdo deste arquivo foi removido pois a classe FiltrosViewModel não é utilizada.
+// O conteúdo deste arquivo foi removido // Arquivo legado, esvaziado para evitar conflitos não é utilizada.

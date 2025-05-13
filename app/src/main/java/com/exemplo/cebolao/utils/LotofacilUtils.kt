@@ -1,4 +1,4 @@
-package com.exemplo.cebolao.utils
+// Arquivo legado, esvaziado para evitar conflitos
 
 import com.exemplo.cebolao.model.Jogo
 import java.util.Calendar

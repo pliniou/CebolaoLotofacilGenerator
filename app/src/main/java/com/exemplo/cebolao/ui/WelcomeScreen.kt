@@ -1,4 +1,4 @@
-package com.exemplo.cebolao.ui
+// Arquivo legado, esvaziado para evitar conflitos
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

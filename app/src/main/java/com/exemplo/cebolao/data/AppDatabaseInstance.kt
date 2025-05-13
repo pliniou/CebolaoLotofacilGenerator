@@ -1,2 +1,1 @@
-class AppDatabaseInstance private constructor(context: Context) {
-}
+class AppDatabaseInstance // Arquivo legado, esvaziado para evitar conflitos

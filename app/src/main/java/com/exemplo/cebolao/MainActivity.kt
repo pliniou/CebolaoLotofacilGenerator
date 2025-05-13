@@ -1,4 +1,4 @@
-package com.exemplo.cebolao
+// Arquivo legado, esvaziado para evitar conflitos
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

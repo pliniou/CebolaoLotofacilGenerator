@@ -1,1 +1,1 @@
-// Arquivo removido. Use apenas a entidade Jogo em com.example.cebolaolotofacilgenerator.data.model.
+// Arquivo removido. Use apenas a entidade Jogo // Arquivo legado, esvaziado para evitar conflitosotofacilgenerator.data.model.

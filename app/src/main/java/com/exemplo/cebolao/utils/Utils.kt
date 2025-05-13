@@ -1,1 +1,1 @@
-package com.exemplo.cebolao.utils
+// Arquivo legado, esvaziado para evitar conflitos

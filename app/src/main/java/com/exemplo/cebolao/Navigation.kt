@@ -1,10 +1,9 @@
-package com.example.cebolaolotofacilgenerator
+// Arquivo legado, esvaziado para evitar conflitoslotofacilgenerator
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.cebolaolotofacilgenerator.ui.screens.FavoritosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.FiltrosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.JogosGeradosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.MenuScreen

@@ -1,4 +1,4 @@
-package com.exemplo.cebolao.ui
+// Arquivo legado, esvaziado para evitar conflitos
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

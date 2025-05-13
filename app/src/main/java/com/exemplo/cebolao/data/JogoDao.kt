@@ -1,1 +1,1 @@
-// Arquivo removido. Use apenas o JogoDao em com.example.cebolaolotofacilgenerator.data.dao.
+// Arquivo legado, esvaziado para evitar conflitos

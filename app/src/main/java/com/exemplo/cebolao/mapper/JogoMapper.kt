@@ -1,4 +1,4 @@
-package com.exemplo.cebolao.mapper
+// Arquivo legado, esvaziado para evitar conflitos
 
 import com.exemplo.cebolao.data.JogoEntity
 import com.exemplo.cebolao.model.Jogo

@@ -1,4 +1,4 @@
-package com.exemplo.cebolao.utils
+// Arquivo legado, esvaziado para evitar conflitos
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

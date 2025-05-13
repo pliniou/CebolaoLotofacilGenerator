@@ -1,4 +1,4 @@
-package com.example.cebolaolotofacilgenerator.ui.adapters
+./gradlew build./gradlew buildpackage com.example.cebolaolotofacilgenerator.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -29,14 +29,14 @@ class JogosAdapter(
 
         init {
             binding.root.setOnClickListener {
-                val position = absoluteAdapterPosition
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onJogoClick(getItem(position))
                 }
             }
 
             binding.iconeFavorito.setOnClickListener {
-                val position = absoluteAdapterPosition
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val jogo = getItem(position)
                     onFavoritoClick(jogo, !jogo.favorito)

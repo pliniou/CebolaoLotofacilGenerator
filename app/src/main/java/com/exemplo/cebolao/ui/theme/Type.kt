@@ -1,4 +1,4 @@
-package com.exemplo.cebolao.ui.theme
+// Arquivo legado, esvaziado para evitar conflitos
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

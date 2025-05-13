@@ -39,14 +39,14 @@ class JogosGerenciamentoAdapter(
 
         init {
             binding.root.setOnClickListener {
-                val position = absoluteAdapterPosition
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onJogoClick(getItem(position))
                 }
             }
 
             binding.buttonFavorito.setOnClickListener {
-                val position = absoluteAdapterPosition
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val jogo = getItem(position)
                     onFavoritoClick(jogo, !jogo.favorito)
@@ -54,7 +54,7 @@ class JogosGerenciamentoAdapter(
             }
 
             binding.buttonExcluir.setOnClickListener {
-                val position = absoluteAdapterPosition
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     onExcluirClick(getItem(position))
                 }
@@ -64,7 +64,7 @@ class JogosGerenciamentoAdapter(
         fun bind(jogo: Jogo) {
             binding.apply {
                 textViewNumeros.text = jogo.numeros.joinToString(" - ")
-                textViewData.text = dateFormat.format(jogo.dataGeracao)
+                textViewData.text = dateFormat.format(jogo.dataCriacao)
 
                 // Configura o ícone de favorito
                 val iconFavoritoResId =

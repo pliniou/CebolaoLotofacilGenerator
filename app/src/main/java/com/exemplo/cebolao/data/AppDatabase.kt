@@ -1,1 +1,1 @@
-// Arquivo removido. Use apenas o AppDatabase em com.example.cebolaolotofacilgenerator.data.db.
+// Arquivo legado, esvaziado para evitar conflitos
