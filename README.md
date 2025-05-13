@@ -105,21 +105,44 @@ Em todas as modalidades de geração, após clicar em "Gerar Jogos" na tela de g
 
 ## Estrutura do Projeto
 
-O projeto é organizado da seguinte forma:
+O projeto segue a arquitetura MVVM e é totalmente implementado em Kotlin, utilizando as tecnologias modernas do ecossistema Android.
 
-*   **`MainActivity.java`**: É a tela de entrada do aplicativo. Apresenta as opções de tipo de geração (Aleatória, Fixos, Excluídos) e navega para as telas correspondentes.
-*   **`FixedNumbersActivity.java`**: Tela responsável por permitir que o usuário selecione os números que deseja fixar nos jogos. Após a seleção, encaminha para a `GenerateNumbersActivity`.
-*   **`ExcludedNumbersActivity.java`**: Tela responsável por permitir que o usuário selecione os números que deseja excluir dos jogos. Após a seleção, encaminha para a `GenerateNumbersActivity`.
-*   **`GenerateNumbersActivity.java`**: Tela central onde o usuário define a quantidade de dezenas por jogo e a quantidade de jogos a serem gerados. Esta tela recebe informações das telas anteriores (números fixos ou excluídos, se houver) e realiza a lógica de geração dos jogos. Exibe os jogos gerados em uma lista.
-*   **`Game.java`**: Classe de modelo que representa um único jogo da Lotofácil (um conjunto de números).
-*   **`GameAdapter.java`**: Adaptador utilizado para popular a lista (`RecyclerView`) de jogos gerados na `GenerateNumbersActivity`.
-*   **`LotteryUtils.java`**: Classe de utilidades que contém métodos auxiliares para a lógica de geração de números, como sorteio, combinação, validações, etc.
-*   **`layout/`**: Diretório contendo os arquivos XML que definem a interface gráfica de cada tela (Activity) do aplicativo.
-    *   `activity_main.xml`: Layout da tela inicial.
-    *   `activity_fixed_numbers.xml`: Layout da tela de seleção de números fixos.
-    *   `activity_excluded_numbers.xml`: Layout da tela de seleção de números excluídos.
-    *   `activity_generate_numbers.xml`: Layout da tela de configuração e exibição dos jogos gerados.
-    *   `item_game.xml`: Layout para cada item individual na lista de jogos gerados.
+```
+CebolaoLotofacilGenerator/
+├── app/
+│   ├── src/main/java/com/example/cebolaolotofacilgenerator/
+│   │   ├── data/
+│   │   │   ├── model/         # Modelos de dados: Jogo.kt, Resultado.kt
+│   │   │   ├── dao/           # DAOs: JogoDao.kt, ResultadoDao.kt
+│   │   │   └── repository/    # Repositórios: JogoRepository.kt, ResultadoRepository.kt
+│   │   ├── ui/
+│   │   │   ├── adapters/      # Adapters para RecyclerView/ListAdapter
+│   │   │   ├── fragments/     # Fragments da interface do usuário
+│   │   │   └── screens/       # Telas em Jetpack Compose (se aplicável)
+│   │   ├── viewmodel/         # ViewModels: JogoViewModel, ResultadoViewModel, GeradorViewModel, PreferenciasViewModel
+│   │   └── util/              # Utilitários: GeradorJogos, VerificadorJogos, PreferenciasManager
+│   └── ...
+├── build.gradle.kts           # Script de build em Kotlin
+├── settings.gradle.kts        # Configuração de módulos
+└── README.md                  # Documentação do projeto
+```
+
+### Componentes Principais
+
+- **Modelos:** Representam os dados persistidos (Jogo, Resultado) e são anotados para uso com Room.
+- **DAOs:** Interfaces para acesso ao banco de dados local (Room).
+- **Repositórios:** Abstraem o acesso aos dados, centralizando a lógica de persistência e consulta.
+- **ViewModels:** Gerenciam o estado da UI e a lógica de negócio, utilizando LiveData e coroutines.
+- **Fragments:** Implementam as telas e fluxos de navegação da aplicação.
+- **Adapters:** Fazem o binding de listas de jogos/resultados para componentes de UI (RecyclerView/ListAdapter).
+- **Utilitários:** Funções auxiliares para geração, conferência e gerenciamento de preferências.
+- **Jetpack Compose:** Utilizado para telas modernas e reativas (caso aplicável).
+- **DataStore:** Persistência de preferências do usuário.
+
+### Observações
+- Não há arquivos `.java` ou layouts XML clássicos: toda a lógica e UI são em Kotlin (Fragments, Compose, ViewBinding).
+- O projeto é modular e facilmente extensível.
+- Scripts de build são 100% Kotlin Script (`.kts`).
 
 ## Como Compilar e Executar
 
