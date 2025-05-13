@@ -88,5 +88,10 @@ data class Jogo(
         private fun isFibonacci(num: Int): Boolean {
             return num in setOf(1, 2, 3, 5, 8, 13, 21)
         }
+
+        // Verifica se um número pertence ao "miolo"
+        private fun isMiolo(num: Int): Boolean {
+            return num in 7..19
+        }
     }
 }

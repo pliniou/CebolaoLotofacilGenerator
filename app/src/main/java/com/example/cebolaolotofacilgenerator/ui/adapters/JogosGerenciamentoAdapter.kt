@@ -5,28 +5,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cebolaolotofacilgenerator.data.modelo.Jogo
+import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.databinding.ItemJogoGerenciamentoBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-/**
- * Adaptador para exibir jogos na tela de gerenciamento
- */
+/** Adaptador para exibir jogos na tela de gerenciamento */
 class JogosGerenciamentoAdapter(
-    private val onFavoritoClick: (Jogo, Boolean) -> Unit,
-    private val onExcluirClick: (Jogo) -> Unit,
-    private val onJogoClick: (Jogo) -> Unit
+        private val onFavoritoClick: (Jogo, Boolean) -> Unit,
+        private val onExcluirClick: (Jogo) -> Unit,
+        private val onJogoClick: (Jogo) -> Unit
 ) : ListAdapter<Jogo, JogosGerenciamentoAdapter.JogoViewHolder>(JogoDiffCallback()) {
 
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JogoViewHolder {
-        val binding = ItemJogoGerenciamentoBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+        val binding =
+                ItemJogoGerenciamentoBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                )
         return JogoViewHolder(binding)
     }
 
@@ -35,9 +34,8 @@ class JogosGerenciamentoAdapter(
         holder.bind(jogo)
     }
 
-    inner class JogoViewHolder(
-        private val binding: ItemJogoGerenciamentoBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+    inner class JogoViewHolder(private val binding: ItemJogoGerenciamentoBinding) :
+            RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener {
@@ -67,18 +65,21 @@ class JogosGerenciamentoAdapter(
             binding.apply {
                 textViewNumeros.text = jogo.numeros.joinToString(" - ")
                 textViewData.text = dateFormat.format(jogo.dataGeracao)
-                
+
                 // Configura o ícone de favorito
-                val iconFavoritoResId = if (jogo.favorito) {
-                    android.R.drawable.btn_star_big_on
-                } else {
-                    android.R.drawable.btn_star_big_off
-                }
+                val iconFavoritoResId =
+                        if (jogo.favorito) {
+                            android.R.drawable.btn_star_big_on
+                        } else {
+                            android.R.drawable.btn_star_big_off
+                        }
                 buttonFavorito.setImageResource(iconFavoritoResId)
 
                 // Exibe as características do jogo de forma compacta
                 textViewCaracteristicas.text = buildString {
-                    append("P/I: ${jogo.quantidadePares}/${jogo.quantidadeImpares} | Soma: ${jogo.soma}")
+                    append(
+                            "P/I: ${jogo.quantidadePares}/${jogo.quantidadeImpares} | Soma: ${jogo.soma}"
+                    )
                     append(" | Pri: ${jogo.quantidadePrimos} | Fib: ${jogo.quantidadeFibonacci}")
                 }
 
