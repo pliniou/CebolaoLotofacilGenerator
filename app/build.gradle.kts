@@ -53,12 +53,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -79,6 +79,8 @@ android {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7") // Adicionado para suporte ao FragmentContainerView
 
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler) // Mantido, agora funcionará pois o plugin está aplicado corretamente
