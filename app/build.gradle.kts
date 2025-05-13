@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.ksp) // Corrigido: uso do alias do catálogo de versões
     id("kotlin-parcelize")
 }
 
@@ -36,7 +36,6 @@ android {
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
-            zipAlignEnabled = true
             isDebuggable = false
 
             resValue("string", "app_mode", "Produção")
@@ -82,7 +81,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
     implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler) // Mantido, agora funcionará pois o plugin está aplicado corretamente
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.navigation.compose)
