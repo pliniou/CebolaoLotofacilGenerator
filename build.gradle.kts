@@ -20,7 +20,7 @@ plugins {
 }
 
 tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+    delete(layout.buildDirectory)
 }
 
 // NOTA: O erro "Could not find androidx.room:room-ktx:2.6.4" precisa ser investigado

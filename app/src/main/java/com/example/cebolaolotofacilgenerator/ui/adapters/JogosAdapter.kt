@@ -1,4 +1,4 @@
-./gradlew build./gradlew buildpackage com.example.cebolaolotofacilgenerator.ui.adapters
+package com.example.cebolaolotofacilgenerator.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
