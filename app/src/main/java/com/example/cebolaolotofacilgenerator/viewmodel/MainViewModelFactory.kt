@@ -16,14 +16,18 @@ class MainViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return MainViewModel(application, jogoRepository, appDataStore) as T
         }
-        if (modelClass.isAssignableFrom(JogosViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST") return JogosViewModel(application) as T
-        }
         if (modelClass.isAssignableFrom(FiltrosViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST") return FiltrosViewModel(application, appDataStore) as T
+            @Suppress("UNCHECKED_CAST")
+            return FiltrosViewModel(application /*, appDataStore */) as T
         }
         if (modelClass.isAssignableFrom(GeradorViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST") return GeradorViewModel(application) as T
+        }
+        if (modelClass.isAssignableFrom(JogoViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST") return JogoViewModel(application) as T
+        }
+        if (modelClass.isAssignableFrom(ResultadoViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST") return ResultadoViewModel(application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }

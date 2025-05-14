@@ -9,6 +9,7 @@ import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.data.model.Resultado
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.model.common.OperacaoStatus
 import com.example.cebolaolotofacilgenerator.util.VerificadorJogos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -200,12 +201,4 @@ class JogoViewModel(application: Application) : AndroidViewModel(application) {
     fun resetarStatus() {
         _operacaoStatus.value = OperacaoStatus.INATIVO
     }
-}
-
-/** Enum para representar o status de uma operação. */
-enum class OperacaoStatus {
-    INATIVO,
-    CARREGANDO,
-    SUCESSO,
-    ERRO
 }

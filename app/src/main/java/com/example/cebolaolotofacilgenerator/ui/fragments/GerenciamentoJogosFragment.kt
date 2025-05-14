@@ -126,14 +126,14 @@ class GerenciamentoJogosFragment : Fragment() {
 
     private fun confirmarExclusao(jogo: Jogo) {
         AlertDialog.Builder(requireContext())
-                .setTitle(R.string.confirmar_exclusao)
+                .setTitle(R.string.confirmar_exclusao_titulo)
                 .setMessage(
                         getString(
                                 R.string.mensagem_confirmar_exclusao_jogo,
                                 jogo.numeros.joinToString(" - ")
                         )
                 )
-                .setPositiveButton(R.string.excluir) { _, _ ->
+                .setPositiveButton(R.string.excluir_jogo) { _, _ ->
                     viewModel.deletarJogo(jogo)
                     Toast.makeText(requireContext(), R.string.jogo_excluido, Toast.LENGTH_SHORT)
                             .show()
@@ -146,7 +146,7 @@ class GerenciamentoJogosFragment : Fragment() {
         AlertDialog.Builder(requireContext())
                 .setTitle(R.string.confirmar_limpar_todos)
                 .setMessage(R.string.mensagem_confirmar_limpar_todos)
-                .setPositiveButton(R.string.confirmar) { _, _ ->
+                .setPositiveButton(R.string.sim) { _, _ ->
                     viewModel.limparTodosJogos()
                     Toast.makeText(
                                     requireContext(),
@@ -155,7 +155,7 @@ class GerenciamentoJogosFragment : Fragment() {
                             )
                             .show()
                 }
-                .setNegativeButton(R.string.cancelar, null)
+                .setNegativeButton(R.string.nao, null)
                 .show()
     }
 
@@ -174,7 +174,7 @@ class GerenciamentoJogosFragment : Fragment() {
                                         R.string.data_geracao,
                                         android.text.format.DateFormat.format(
                                                 "dd/MM/yyyy HH:mm",
-                                                jogo.dataGeracao
+                                                jogo.dataCriacao
                                         )
                                 )
                         )
@@ -205,7 +205,7 @@ class GerenciamentoJogosFragment : Fragment() {
                         .append("\n")
                         .append(getString(R.string.multiplos_tres, jogo.quantidadeMultiplosDeTres))
 
-        if (jogo.conferido) {
+        if (jogo.acertos != null) {
             mensagem.append("\n\n").append(getString(R.string.resultado_conferencia, jogo.acertos))
         }
 

@@ -7,18 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
+import com.example.cebolaolotofacilgenerator.model.common.OperacaoStatus
 import com.example.cebolaolotofacilgenerator.util.GeradorJogos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
-// Definição do Enum OperacaoStatus
-enum class OperacaoStatus {
-    CARREGANDO,
-    SUCESSO,
-    ERRO,
-    OCIOSO
-}
 
 /** ViewModel para o gerador de jogos da Lotofácil com filtros estatísticos. */
 class GeradorViewModel(application: Application) : AndroidViewModel(application) {

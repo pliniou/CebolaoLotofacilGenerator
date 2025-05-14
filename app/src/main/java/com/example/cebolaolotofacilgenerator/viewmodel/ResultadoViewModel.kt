@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.model.Resultado
 import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
+import com.example.cebolaolotofacilgenerator.model.common.OperacaoStatus
 import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -133,7 +134,7 @@ class ResultadoViewModel(application: Application) : AndroidViewModel(applicatio
     fun criarNovoResultado(
             concurso: Long,
             dataSorteio: Date,
-            numerosSorteados: List<Int>,
+            numerosSorteadosLista: List<Int>,
             premiacao15: Double,
             ganhadores15: Int,
             premiacao14: Double,
@@ -148,7 +149,7 @@ class ResultadoViewModel(application: Application) : AndroidViewModel(applicatio
         return Resultado(
                 concurso = concurso,
                 dataSorteio = dataSorteio,
-                numerosSorteados = numerosSorteados.sorted().joinToString(","),
+                numeros = numerosSorteadosLista.sorted(),
                 premiacao15Acertos = premiacao15,
                 ganhadores15 = ganhadores15,
                 premiacao14Acertos = premiacao14,

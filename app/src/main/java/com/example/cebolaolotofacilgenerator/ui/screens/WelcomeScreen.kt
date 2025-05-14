@@ -38,7 +38,7 @@ fun WelcomeScreen(navController: NavHostController, viewModel: MainViewModel) {
             // Se não for primeira execução, navega para o menu
             if (firstRunCompleted) {
                 navController.navigate(Screen.Menu.route) {
-                    popUpTo(Screen.Welcome.route) { inclusive = true }
+                    popUpTo(Screen.Welcome.route) { this.inclusive = true }
                 }
             }
         }
@@ -76,7 +76,7 @@ fun WelcomeScreen(navController: NavHostController, viewModel: MainViewModel) {
             Button(
                     onClick = {
                         navController.navigate(Screen.Menu.route) {
-                            popUpTo(Screen.Welcome.route) { inclusive = true }
+                            popUpTo(Screen.Welcome.route) { this.inclusive = true }
                         }
                     },
                     modifier = Modifier.fillMaxWidth(0.7f).padding(vertical = 8.dp)

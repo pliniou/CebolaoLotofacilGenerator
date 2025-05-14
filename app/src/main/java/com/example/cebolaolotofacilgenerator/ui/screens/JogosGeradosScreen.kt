@@ -31,16 +31,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
-import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
-import com.example.cebolaolotofacilgenerator.viewmodel.OperacaoStatus
+import com.example.cebolaolotofacilgenerator.model.common.OperacaoStatus
+import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
 
 /** Tela que exibe os jogos gerados pelo app */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JogosGeradosScreen(navController: NavHostController, viewModel: MainViewModel) {
-    val jogosGerados by viewModel.geradorViewModel.jogosGerados.observeAsState(emptyList())
-    val operacaoStatus by
-            viewModel.geradorViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
+fun JogosGeradosScreen(navController: NavHostController, geradorViewModel: GeradorViewModel) {
+    val jogosGerados by geradorViewModel.jogosGerados.observeAsState(emptyList())
+    val operacaoStatus by geradorViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
 
     Scaffold(
             topBar = {
@@ -116,7 +115,7 @@ fun JogoItem(jogo: Jogo) {
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(top = 4.dp)
         )
-        if (jogo.isFavorito) {
+        if (jogo.favorito) {
             Text(
                     text = "⭐ Favorito",
                     style = MaterialTheme.typography.bodySmall,

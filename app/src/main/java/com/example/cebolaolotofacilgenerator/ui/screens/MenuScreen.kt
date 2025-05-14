@@ -26,67 +26,75 @@ import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 /** Tela de menu principal do aplicativo */
 @Composable
 fun MenuScreen(navController: NavHostController, viewModel: MainViewModel) {
-    Scaffold(
-            topBar = {
-                TopAppBar(
-                        title = { Text("Menu Principal") },
-                        colors =
-                                TopAppBarDefaults.topAppBarColors(
-                                        containerColor = Color(0xFF1976D2),
-                                        titleContentColor = Color.White
+        Scaffold(
+                topBar = {
+                        TopAppBar(
+                                title = { Text("Menu Principal") },
+                                colors =
+                                        TopAppBarDefaults.topAppBarColors(
+                                                containerColor = Color(0xFF1976D2),
+                                                titleContentColor = Color.White
+                                        )
+                        )
+                }
+        ) { paddingValues ->
+                Box(
+                        modifier = Modifier.fillMaxSize().padding(paddingValues),
+                        contentAlignment = Alignment.Center
+                ) {
+                        Column(
+                                modifier = Modifier.fillMaxWidth(0.8f).padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                                Text(
+                                        text = "Cebolão Lotofácil Generator",
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        textAlign = TextAlign.Center
                                 )
-                )
-            }
-    ) { paddingValues ->
-        Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
-                contentAlignment = Alignment.Center
-        ) {
-            Column(
-                    modifier = Modifier.fillMaxWidth(0.8f).padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                        text = "Cebolão Lotofácil Generator",
-                        style = MaterialTheme.typography.headlineMedium,
-                        textAlign = TextAlign.Center
-                )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                                Spacer(modifier = Modifier.height(32.dp))
 
-                Button(
-                        onClick = { navController.navigate(Screen.Principal.route) },
-                        modifier = Modifier.fillMaxWidth()
-                ) { Text("Gerador de Jogos") }
+                                Button(
+                                        onClick = {
+                                                navController.navigate(Screen.Principal.route)
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                ) { Text("Gerador de Jogos") }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                                Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                        onClick = { navController.navigate(Screen.Filtros.route) },
-                        modifier = Modifier.fillMaxWidth()
-                ) { Text("Filtros") }
+                                Button(
+                                        onClick = { navController.navigate(Screen.Filtros.route) },
+                                        modifier = Modifier.fillMaxWidth()
+                                ) { Text("Filtros") }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                                Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                        onClick = { navController.navigate(Screen.JogosGerados.route) },
-                        modifier = Modifier.fillMaxWidth()
-                ) { Text("Jogos Gerados") }
+                                Button(
+                                        onClick = {
+                                                navController.navigate(Screen.JogosGerados.route)
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                ) { Text("Jogos Gerados") }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                                Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                        onClick = { navController.navigate(Screen.Favoritos.route) },
-                        modifier = Modifier.fillMaxWidth()
-                ) { Text("Favoritos") }
+                                Button(
+                                        onClick = {
+                                                navController.navigate(Screen.Favoritos.route)
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                ) { Text("Favoritos") }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                                Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                        onClick = { navController.navigate(Screen.Settings.route) },
-                        modifier = Modifier.fillMaxWidth()
-                ) { Text("Configurações") }
-            }
+                                Button(
+                                        onClick = {
+                                                navController.navigate(Screen.SettingsNav.route)
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                ) { Text("Configurações") }
+                        }
+                }
         }
-    }
 }

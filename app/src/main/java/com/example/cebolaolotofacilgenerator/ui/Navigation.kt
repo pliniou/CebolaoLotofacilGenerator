@@ -20,6 +20,21 @@ sealed class Screen(val route: String, val title: String) {
     data object Gerenciamento : Screen("gerenciamento", "Gerenciamento")
     data object Configuracoes : Screen("configuracoes", "Configurações")
 
+    // Telas adicionais que estavam faltando para MenuScreen e WelcomeScreen
+    data object Welcome : Screen("welcome", "Bem-vindo")
+    data object Menu : Screen("menu", "Menu Principal")
+    data object JogosGerados : Screen("jogos_gerados", "Jogos Gerados") // Usado por MenuScreen
+    data object Favoritos :
+            Screen(
+                    "favoritos_nav",
+                    "Favoritos"
+            ) // Usado por MenuScreen, _nav para diferenciar de Routes.Favoritos
+    data object SettingsNav :
+            Screen(
+                    "settings_nav",
+                    "Configurações App"
+            ) // Usado por MenuScreen, _nav para diferenciar de Routes.Settings
+
     // Para suporte à navegação baseada em fragmentos, podemos usar estas rotas
     data object PrincipalFragment : Screen("principal_fragment", "Principal")
     data object FiltrosFragment : Screen("filtros_fragment", "Filtros")

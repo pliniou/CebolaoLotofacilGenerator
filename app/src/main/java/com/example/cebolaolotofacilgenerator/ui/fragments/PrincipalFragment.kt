@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.databinding.FragmentPrincipalBinding
+import com.example.cebolaolotofacilgenerator.model.common.OperacaoStatus
 import com.example.cebolaolotofacilgenerator.ui.adapters.JogosAdapter
-import com.example.cebolaolotofacilgenerator.ui.viewmodel.JogosViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.JogoViewModel
 
 class PrincipalFragment : Fragment() {
 
@@ -20,7 +22,8 @@ class PrincipalFragment : Fragment() {
     private val binding
         get() = _binding!!
 
-    private val jogosViewModel: JogosViewModel by viewModels()
+    private val geradorViewModel: GeradorViewModel by viewModels()
+    private val jogoViewModel: JogoViewModel by viewModels()
     private lateinit var jogosAdapter: JogosAdapter
 
     override fun onCreateView(
@@ -38,13 +41,15 @@ class PrincipalFragment : Fragment() {
         setupRecyclerView()
         setupObservers()
         setupListeners()
+        geradorViewModel.operacaoStatus.value?.let { atualizarUIComBaseNoStatus(it) }
+        geradorViewModel.jogosGerados.value?.let { atualizarVisibilidadeListaVazia(it.isEmpty()) }
     }
 
     private fun setupRecyclerView() {
         jogosAdapter =
                 JogosAdapter(
                         onFavoritoClick = { jogo: Jogo, favorito: Boolean ->
-                            jogosViewModel.marcarComoFavorito(jogo, favorito)
+                            jogoViewModel.marcarComoFavorito(jogo, favorito)
                         },
                         onJogoClick = { jogo: Jogo ->
                             Toast.makeText(
@@ -56,54 +61,76 @@ class PrincipalFragment : Fragment() {
                         }
                 )
 
-        binding.recyclerViewJogos.apply {
+        binding.rvJogosGerados.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = jogosAdapter
         }
     }
 
     private fun setupObservers() {
-        jogosViewModel.jogosGerados.observe(viewLifecycleOwner) { jogos: List<Jogo>? ->
+        geradorViewModel.jogosGerados.observe(viewLifecycleOwner) { jogos: List<Jogo>? ->
             jogos?.let {
                 jogosAdapter.submitList(it)
                 atualizarVisibilidadeListaVazia(it.isEmpty())
             }
         }
 
-        jogosViewModel.statusGeracao.observe(viewLifecycleOwner) {
-                status: JogosViewModel.StatusGeracao? ->
+        geradorViewModel.operacaoStatus.observe(viewLifecycleOwner) { status: OperacaoStatus? ->
+            status?.let { atualizarUIComBaseNoStatus(it) }
+        }
+
+        geradorViewModel.mensagem.observe(viewLifecycleOwner) { mensagem: String? ->
+            mensagem?.let {
+                if (geradorViewModel.operacaoStatus.value == OperacaoStatus.ERRO) {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                    geradorViewModel.limparMensagemUnica()
+                }
+            }
+        }
+
+        jogoViewModel.operacaoStatus.observe(viewLifecycleOwner) { status: OperacaoStatus? ->
             when (status) {
-                JogosViewModel.StatusGeracao.GERANDO -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.buttonGerarJogos.isEnabled = false
+                OperacaoStatus.SUCESSO -> {
+                    jogoViewModel.resetarStatus()
                 }
-                JogosViewModel.StatusGeracao.CONCLUIDO -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.buttonGerarJogos.isEnabled = true
-                }
-                JogosViewModel.StatusGeracao.ERRO -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.buttonGerarJogos.isEnabled = true
-                    Toast.makeText(requireContext(), R.string.erro_gerar_jogos, Toast.LENGTH_SHORT)
+                OperacaoStatus.ERRO -> {
+                    Toast.makeText(requireContext(), "Erro ao salvar jogos.", Toast.LENGTH_SHORT)
                             .show()
+                    jogoViewModel.resetarStatus()
                 }
-                null -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.buttonGerarJogos.isEnabled = true
+                else -> {
+                    /* Não faz nada para CARREGANDO ou OCIOSO neste observer específico */
                 }
             }
         }
     }
 
-    private fun setupListeners() {
-        binding.buttonGerarJogos.setOnClickListener {
-            val quantidadeJogosStr = binding.editTextQuantidadeJogos.text.toString()
-            val quantidadeJogos = quantidadeJogosStr.toIntOrNull() ?: 1
-            jogosViewModel.gerarJogos(quantidadeJogos)
+    private fun atualizarUIComBaseNoStatus(status: OperacaoStatus) {
+        when (status) {
+            OperacaoStatus.CARREGANDO -> {
+                binding.progressGerador.visibility = View.VISIBLE
+                binding.btnGerarJogos.isEnabled = false
+            }
+            OperacaoStatus.SUCESSO, OperacaoStatus.OCIOSO -> {
+                binding.progressGerador.visibility = View.GONE
+                binding.btnGerarJogos.isEnabled = true
+            }
+            OperacaoStatus.ERRO -> {
+                binding.progressGerador.visibility = View.GONE
+                binding.btnGerarJogos.isEnabled = true
+            }
+            else -> {
+                binding.progressGerador.visibility = View.GONE
+                binding.btnGerarJogos.isEnabled = true
+            }
         }
+    }
 
-        binding.buttonSalvarJogos.setOnClickListener {
-            val jogos = jogosViewModel.jogosGerados.value
+    private fun setupListeners() {
+        binding.btnGerarJogos.setOnClickListener { geradorViewModel.gerarJogos() }
+
+        binding.btnSalvarJogos.setOnClickListener {
+            val jogos = geradorViewModel.jogosGerados.value
             if (jogos.isNullOrEmpty()) {
                 Toast.makeText(
                                 requireContext(),
@@ -113,7 +140,7 @@ class PrincipalFragment : Fragment() {
                         .show()
                 return@setOnClickListener
             }
-            jogosViewModel.salvarJogos(jogos)
+            jogoViewModel.inserirJogos(jogos)
             Toast.makeText(requireContext(), R.string.jogos_salvos_com_sucesso, Toast.LENGTH_SHORT)
                     .show()
         }
@@ -121,13 +148,13 @@ class PrincipalFragment : Fragment() {
 
     private fun atualizarVisibilidadeListaVazia(listaVazia: Boolean) {
         if (listaVazia) {
-            binding.recyclerViewJogos.visibility = View.GONE
-            binding.textViewListaVazia.visibility = View.VISIBLE
-            binding.buttonSalvarJogos.isEnabled = false
+            binding.rvJogosGerados.visibility = View.GONE
+            binding.tvInfoJogosGerados.visibility = View.VISIBLE
+            binding.btnSalvarJogos.isEnabled = false
         } else {
-            binding.recyclerViewJogos.visibility = View.VISIBLE
-            binding.textViewListaVazia.visibility = View.GONE
-            binding.buttonSalvarJogos.isEnabled = true
+            binding.rvJogosGerados.visibility = View.VISIBLE
+            binding.tvInfoJogosGerados.visibility = View.GONE
+            binding.btnSalvarJogos.isEnabled = true
         }
     }
 

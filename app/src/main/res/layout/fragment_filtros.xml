@@ -154,142 +154,259 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Filtros Estatísticos"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:layout_marginBottom="8dp" />
 
+                <!-- Filtro Pares/Ímpares -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:layout_marginTop="8dp">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputLayoutMinPares"
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:hint="Mín. Pares">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMinPares"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputLayoutMaxPares"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:hint="Máx. Pares">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMaxPares"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Pares/Ímpares"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchParesImpares"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/textViewValorParesImpares"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAlignment="center"
+                    tools:text="Entre 5 e 10" />
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/sliderParesImpares"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="15"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
 
+                <!-- Filtro Soma Total -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputLayoutMinPrimos"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="16dp">
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:hint="Mín. Primos">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMinPrimos"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputLayoutMaxPrimos"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:hint="Máx. Primos">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMaxPrimos"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Soma Total dos Números"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchSomaTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/textViewValorSomaTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAlignment="center"
+                    tools:text="Entre 160 e 220" />
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/sliderSomaTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="120"
+                    android:valueTo="270"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
 
+                <!-- Filtro Números Primos -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputLayoutMinSoma"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="16dp">
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:hint="Mín. Soma">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMinSoma"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/inputLayoutMaxSoma"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:hint="Máx. Soma">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etMaxSoma"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Quantidade de Primos"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchPrimos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/textViewValorPrimos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAlignment="center"
+                    tools:text="Entre 3 e 6" />
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/sliderPrimos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="9"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
+                <!-- Filtro Números Fibonacci -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="16dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Quantidade de Fibonacci"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchFibonacci"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/textViewValorFibonacci"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAlignment="center"
+                    tools:text="Entre 2 e 5" />
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/sliderFibonacci"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="7"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
+                <!-- Filtro Miolo/Moldura -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="16dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Números do Miolo"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchMioloMoldura"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/textViewValorMioloMoldura"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAlignment="center"
+                    tools:text="Entre 3 e 6" />
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/sliderMioloMoldura"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="9"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
+                <!-- Filtro Múltiplos de Três -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="16dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Múltiplos de Três"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchMultiplosTres"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/textViewValorMultiplosTres"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAlignment="center"
+                    tools:text="Entre 2 e 5" />
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/sliderMultiplosTres"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="8"
+                    android:stepSize="1"
+                    app:labelBehavior="gone" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <Button
-            android:id="@+id/btnSalvarFiltros"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAcoesFiltros"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Salvar Filtros"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp"
             app:layout_constraintTop_toBottomOf="@id/cardFiltrosEstatisticos"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
-        <Button
-            android:id="@+id/btnResetarFiltros"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Resetar Filtros"
-            app:layout_constraintTop_toBottomOf="@id/btnSalvarFiltros"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <Button
+                    android:id="@+id/buttonAplicarFiltros"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Aplicar Filtros e Gerar Jogos" />
+
+                <Button
+                    android:id="@+id/buttonSalvarFiltros"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Salvar Configuração de Filtros"
+                    style="?attr/materialButtonOutlinedStyle" />
+
+                <Button
+                    android:id="@+id/buttonResetarFiltros"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Resetar Filtros"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:textColor="?attr/colorError" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView> 
