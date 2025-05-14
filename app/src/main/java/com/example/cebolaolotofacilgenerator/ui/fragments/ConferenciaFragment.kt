@@ -97,7 +97,7 @@ class ConferenciaFragment : Fragment() {
                         // TODO: Adicionar string 'concurso_numero' em strings.xml (ex: <string
                         // name="concurso_numero">Concurso N° %d</string>)
                         binding.textViewConcursoNumero.text =
-                                getString(R.string.concurso_numero, resultado.concurso)
+                                getString(R.string.concurso_numero_formatado, resultado.concurso)
                         binding.textViewDataConcurso.text =
                                 dateFormatter.format(resultado.dataSorteio)
 

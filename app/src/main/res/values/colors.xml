@@ -15,6 +15,14 @@
     <color name="orange_200">#FFCC80</color> <!-- Necessária para tema noturno, mesmo que Lint
     indique não uso global -->
 
+    <!-- Cores para feedback de acertos em jogos conferidos -->
+    <color name="acertos_15">#4CAF50</color> <!-- Verde vibrante -->
+    <color name="acertos_14">#66BB6A</color> <!-- Verde -->
+    <color name="acertos_13">#81C784</color> <!-- Verde claro -->
+    <color name="acertos_12">#FFEE58</color> <!-- Amarelo claro -->
+    <color name="acertos_11">#FFCA28</color> <!-- Laranja claro -->
+    <color name="acertos_menor_11">#E0E0E0</color> <!-- Cinza claro -->
+
     <!-- Cores que foram listadas como não usadas e realmente não são usadas pelos temas atuais:
         purple_200, purple_500, purple_700, teal_200, teal_700,
         ball_background, ball_text, ball_selected, ball_matched, e tons de cinza gray_100 a gray_900

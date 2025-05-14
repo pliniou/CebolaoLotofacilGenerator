@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.compose.runtime.livedata)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -103,6 +104,10 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    // ViewModel e LiveData KTX
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)

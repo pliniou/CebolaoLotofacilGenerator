@@ -64,6 +64,16 @@
     <string name="informe_15_dezenas_sorteadas">Informe as 15 dezenas sorteadas.</string>
     <string name="informe_jogos_para_conferencia">Informe os jogos para conferência.</string>
 
+    <!-- Novas strings para ConferenciaFragment -->
+    <string name="concurso_numero_formatado">Concurso N° %d</string>
+    <string name="erro_conferir_jogos">Erro ao conferir os jogos. Tente novamente.</string>
+    <string name="erro_numero_concurso_invalido">Número do concurso inválido.</string>
+    <string name="erro_quantidade_numeros_invalida">Quantidade de números inválida. Selecione 15
+        números.</string>
+    <string name="resultado_salvo_com_sucesso">Resultado salvo com sucesso!</string>
+    <string name="concurso_nao_selecionado">Nenhum concurso selecionado</string>
+    <!-- Fim das novas strings para ConferenciaFragment -->
+
     <!-- Strings para o Bottom Navigation -->
     <string name="bottom_nav_item_principal">Principal</string>
     <string name="bottom_nav_item_filtros">Filtros</string>
@@ -124,4 +134,29 @@
     <string name="premio_12_acertos">12 acertos</string>
     <string name="premio_11_acertos">11 acertos</string>
     <string name="sem_premio">Sem prêmio</string>
+
+    <!-- Strings para ConfiguracoesFragment -->
+    <string name="tema_claro">Claro</string>
+    <string name="tema_escuro">Escuro</string>
+    <string name="tema_sistema">Padrão do Sistema</string>
+    <string name="selecionar_tema">Selecionar Tema</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="versao_app">Versão do aplicativo: %s</string>
+    <string name="descricao_app">Cebolão Lotofácil Generator ajuda você a criar e conferir seus
+        jogos da Lotofácil.</string>
+    <string name="desenvolvido_por">Desenvolvido por Um Programador Entusiasta</string>
+    <string name="fechar">Fechar</string>
+    <!-- Fim das strings para ConfiguracoesFragment -->
+
+    <!-- Strings para FiltrosFragment -->
+    <string name="filtros_resetados">Filtros resetados para os valores padrão.</string>
+    <string name="valor_filtro_pares_impares">Ímpares: %1$d-%2$d</string> <!-- Ajustado para Ímpares,
+    já que os sliders são minImpares/maxImpares -->
+    <string name="valor_filtro_soma_total">Soma: %1$d-%2$d</string>
+    <string name="valor_filtro_primos">Primos: %1$d-%2$d</string>
+    <string name="valor_filtro_fibonacci">Fibonacci: %1$d-%2$d</string>
+    <string name="valor_filtro_miolo_moldura">Miolo: %1$d-%2$d</string>
+    <string name="valor_filtro_multiplos_tres">Múltiplos de 3: %1$d-%2$d</string>
+    <!-- Fim das strings para FiltrosFragment -->
+
 </resources>

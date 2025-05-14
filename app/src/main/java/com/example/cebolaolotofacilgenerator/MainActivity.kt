@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
 
         // Inicializa o ViewModel com a Factory
         val database = AppDatabase.getDatabase(applicationContext)
-        val jogoRepository = JogoRepository(database.jogoDao(), appDataStore)
+        val jogoRepository = JogoRepository(database.jogoDao())
         val viewModelFactory = MainViewModelFactory(application, jogoRepository, appDataStore)
         mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 

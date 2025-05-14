@@ -3,7 +3,7 @@ agp = "8.2.2"
 kotlin = "1.9.22"
 core-ktx = "1.12.0"
 appcompat = "1.6.1"
-activityCompose = "1.8.2"
+activityCompose = "1.9.0"
 composeCompiler = "1.5.8"
 material = "1.11.0"
 datastorePreferences = "1.0.0"
@@ -19,6 +19,8 @@ junit = "4.13.2"
 androidxEspressoCore = "3.5.1"
 androidxJunit = "1.1.5"
 compose-bom = "2024.02.00"
+lifecycle = "2.8.0"
+composeRuntime = "1.6.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -43,6 +45,9 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxEspressoCore" }
+androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "composeRuntime" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -39,7 +39,7 @@ class JogosConferidosAdapter :
 
             binding.apply {
                 textViewNumeros.text = jogo.numeros.joinToString(" - ")
-                textViewAcertos.text = context.getString(R.string.acertos_formatado, acertos)
+                textViewAcertos.text = context.getString(R.string.acertos_label, acertos)
 
                 // Define a cor de fundo baseada na quantidade de acertos
                 val corFundo =
