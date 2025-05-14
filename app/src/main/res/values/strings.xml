@@ -1,11 +1,11 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Gerais -->
     <string name="app_name">Cebolao Lotofacil Generator</string>
     <string name="app_version">1.0.0</string>
     <string name="concurso">Concurso</string>
     <string name="action_settings">Configurações</string>
     <string name="home_screen_title">Cebolão Lotofácil</string>
-    
+
     <!-- Menu de Navegação -->
     <string name="menu_principal">Principal</string>
     <string name="menu_filtros">Filtros</string>
@@ -14,7 +14,7 @@
     <string name="filter_menu">Filtros</string>
     <string name="generate_games_button">Gerar Jogos</string>
     <string name="menu_configuracoes">Configurações</string>
-    
+
     <!-- Tela Principal -->
     <string name="titulo_tela_principal">Gerador de Jogos da Lotofácil</string>
     <string name="quantidade_jogos">Quantidade de jogos a gerar</string>
@@ -24,38 +24,43 @@
     <string name="erro_gerar_jogos">Erro ao gerar jogos. Tente novamente.</string>
     <string name="nenhum_jogo_para_salvar">Nenhum jogo para salvar.</string>
     <string name="jogos_salvos_com_sucesso">Jogos salvos com sucesso!</string>
-    
+
     <!-- Tela de Filtros -->
     <string name="titulo_tela_filtros">Filtros Estatísticos</string>
     <string name="filtro_pares_impares">Pares e Ímpares</string>
-    <string name="descricao_filtro_pares_impares">Quantidade de números ímpares no jogo (o restante será par)</string>
+    <string name="descricao_filtro_pares_impares">Quantidade de números ímpares no jogo (o restante
+        será par)</string>
     <string name="valor_filtro_pares_impares">Entre %1$d e %2$d números ímpares</string>
-    
+
     <string name="filtro_soma_total">Soma Total</string>
     <string name="descricao_filtro_soma_total">Soma de todos os números do jogo</string>
     <string name="valor_filtro_soma_total">Entre %1$d e %2$d</string>
-    
+
     <string name="filtro_primos">Números Primos</string>
-    <string name="descricao_filtro_primos">Quantidade de números primos (2, 3, 5, 7, 11, 13, 17, 19, 23)</string>
+    <string name="descricao_filtro_primos">Quantidade de números primos (2, 3, 5, 7, 11, 13, 17, 19,
+        23)</string>
     <string name="valor_filtro_primos">Entre %1$d e %2$d primos</string>
-    
+
     <string name="filtro_fibonacci">Números de Fibonacci</string>
-    <string name="descricao_filtro_fibonacci">Quantidade de números da sequência de Fibonacci (1, 2, 3, 5, 8, 13, 21)</string>
+    <string name="descricao_filtro_fibonacci">Quantidade de números da sequência de Fibonacci (1, 2,
+        3, 5, 8, 13, 21)</string>
     <string name="valor_filtro_fibonacci">Entre %1$d e %2$d números de Fibonacci</string>
-    
+
     <string name="filtro_miolo_moldura">Miolo e Moldura</string>
-    <string name="descricao_filtro_miolo_moldura">Quantidade de números do miolo do volante (7, 8, 9, 12, 13, 14, 17, 18, 19)</string>
+    <string name="descricao_filtro_miolo_moldura">Quantidade de números do miolo do volante (7, 8,
+        9, 12, 13, 14, 17, 18, 19)</string>
     <string name="valor_filtro_miolo_moldura">Entre %1$d e %2$d números do miolo</string>
-    
+
     <string name="filtro_multiplos_tres">Múltiplos de 3</string>
-    <string name="descricao_filtro_multiplos_tres">Quantidade de números que são múltiplos de 3 (3, 6, 9, 12, 15, 18, 21, 24)</string>
+    <string name="descricao_filtro_multiplos_tres">Quantidade de números que são múltiplos de 3 (3,
+        6, 9, 12, 15, 18, 21, 24)</string>
     <string name="valor_filtro_multiplos_tres">Entre %1$d e %2$d múltiplos de 3</string>
-    
+
     <string name="salvar_filtros">Salvar Filtros</string>
     <string name="resetar_filtros">Restaurar Padrões</string>
     <string name="filtros_salvos_com_sucesso">Filtros salvos com sucesso!</string>
     <string name="filtros_resetados">Filtros restaurados para configuração padrão.</string>
-    
+
     <!-- Tela de Conferência -->
     <string name="titulo_tela_conferencia">Conferência de Resultados</string>
     <string name="resultados_anteriores">Resultados Anteriores</string>
@@ -71,9 +76,11 @@
     <string name="resultado_atual">Resultado Atual</string>
     <string name="erro_conferir_jogos">Erro ao conferir jogos. Tente novamente.</string>
     <string name="erro_numero_concurso_invalido">Número do concurso inválido.</string>
-    <string name="erro_quantidade_numeros_invalida">É necessário informar exatamente 15 números diferentes entre 1 e 25.</string>
+    <string name="erro_quantidade_numeros_invalida">É necessário informar exatamente 15 números
+        diferentes entre 1 e 25.</string>
     <string name="jogos_conferidos">Jogos Conferidos</string>
-    <string name="nenhum_jogo_conferido">Nenhum jogo conferido. Use o botão acima para conferir seus jogos.</string>
+    <string name="nenhum_jogo_conferido">Nenhum jogo conferido. Use o botão acima para conferir seus
+        jogos.</string>
     <string name="concurso_nao_selecionado">Nenhum concurso selecionado</string>
     <string name="acertos_formatado">%1$d acertos</string>
     <string name="premio_15_acertos">Prêmio Principal</string>
@@ -82,7 +89,7 @@
     <string name="premio_12_acertos">4º Prêmio</string>
     <string name="premio_11_acertos">5º Prêmio</string>
     <string name="sem_premio">Sem prêmio</string>
-    
+
     <!-- Tela de Gerenciamento de Jogos -->
     <string name="titulo_tela_gerenciamento">Gerenciamento de Jogos</string>
     <string name="todos">Todos</string>
@@ -96,7 +103,8 @@
     <string name="cancelar">Cancelar</string>
     <string name="jogo_excluido">Jogo excluído com sucesso!</string>
     <string name="confirmar_limpar_todos">Confirmar Exclusão em Massa</string>
-    <string name="mensagem_confirmar_limpar_todos">Deseja realmente excluir TODOS os jogos? Esta ação não pode ser desfeita.</string>
+    <string name="mensagem_confirmar_limpar_todos">Deseja realmente excluir TODOS os jogos? Esta
+        ação não pode ser desfeita.</string>
     <string name="confirmar">Confirmar</string>
     <string name="todos_jogos_excluidos">Todos os jogos foram excluídos.</string>
     <string name="detalhes_do_jogo">Detalhes do Jogo</string>
@@ -113,7 +121,7 @@
     <string name="fechar">Fechar</string>
     <string name="marcar_como_favorito">Marcar como favorito</string>
     <string name="excluir_jogo">Excluir jogo</string>
-    
+
     <!-- Tela de Configurações -->
     <string name="titulo_tela_configuracoes">Configurações</string>
     <string name="tema_aplicativo">Tema do Aplicativo</string>
@@ -126,9 +134,10 @@
     <string name="icone_sobre">Ícone de informações</string>
     <string name="versao_e_creditos">Versão e créditos</string>
     <string name="versao_app">Versão %1$s</string>
-    <string name="descricao_app">O Cebolão Lotofácil Generator é um aplicativo para gerar jogos da Lotofácil utilizando filtros estatísticos que podem aumentar suas chances de premiação.</string>
+    <string name="descricao_app">O Cebolão Lotofácil Generator é um aplicativo para gerar jogos da
+        Lotofácil utilizando filtros estatísticos que podem aumentar suas chances de premiação.</string>
     <string name="desenvolvido_por">Desenvolvido por Cebolão Apps</string>
-    
+
     <!-- Legacy strings -->
     <string name="logotipo_do_app">Logotipo do aplicativo</string>
     <string name="label_numeros_lotofacil">Números da Lotofácil</string>
