@@ -18,12 +18,14 @@
     <!-- Tela Principal -->
     <string name="titulo_tela_principal">Gerador de Jogos da Lotofácil</string>
     <string name="quantidade_jogos">Quantidade de jogos a gerar</string>
+    <string name="default_quantidade_jogos">1</string>
     <string name="gerar_jogos">Gerar Jogos</string>
     <string name="salvar_jogos">Salvar Jogos</string>
     <string name="nenhum_jogo_gerado">Nenhum jogo gerado. Use o botão acima para gerar jogos.</string>
     <string name="erro_gerar_jogos">Erro ao gerar jogos. Tente novamente.</string>
     <string name="nenhum_jogo_para_salvar">Nenhum jogo para salvar.</string>
     <string name="jogos_salvos_com_sucesso">Jogos salvos com sucesso!</string>
+    <string name="erro_quantidade_jogos_invalida">Quantidade de jogos deve ser maior que zero.</string>
 
     <!-- Tela de Filtros -->
     <string name="titulo_tela_filtros">Filtros Estatísticos</string>

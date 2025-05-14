@@ -1,1 +1,0 @@
-// O conteúdo deste arquivo foi removido // Arquivo legado, esvaziado para evitar conflitos não é utilizada.

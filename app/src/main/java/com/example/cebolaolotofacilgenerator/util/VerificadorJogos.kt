@@ -32,7 +32,7 @@ class VerificadorJogos {
         fun conferirJogos(jogos: List<Jogo>, resultado: Resultado): List<Jogo> {
             return jogos.map { jogo ->
                 val acertos = verificarAcertos(jogo, resultado)
-                jogo.copy(acertos = acertos, concursoConferido = resultado.numeroConcurso)
+                jogo.copy(acertos = acertos, concursoConferido = resultado.concurso)
             }
         }
 
@@ -83,7 +83,7 @@ class VerificadorJogos {
             // Conta os jogos por número de acertos
             jogos.forEach { jogo ->
                 val acertos = jogo.acertos ?: verificarAcertos(jogo, resultado)
-                relatorio[acertos] = relatorio.getOrDefault(acertos, 0) + 1
+                relatorio[acertos] = (relatorio[acertos] ?: 0) + 1
             }
 
             return relatorio

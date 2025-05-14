@@ -25,9 +25,9 @@
 
     <fragment
         android:id="@+id/navigation_gerenciamento"
-        android:name="com.example.cebolaolotofacilgenerator.ui.fragments.GerenciamentoFragment"
+        android:name="com.example.cebolaolotofacilgenerator.ui.fragments.GerenciamentoJogosFragment"
         android:label="@string/menu_gerenciamento"
-        tools:layout="@layout/fragment_gerenciamento" />
+        tools:layout="@layout/fragment_gerenciamento_jogos" />
 
     <fragment
         android:id="@+id/navigation_configuracoes"

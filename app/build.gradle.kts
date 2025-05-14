@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    alias(libs.plugins.ksp) // Corrigido: uso do alias do catálogo de versões
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
 }
 
@@ -68,7 +68,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     packaging {
         resources {
@@ -78,12 +78,12 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7") // Adicionado para suporte ao FragmentContainerView
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.material)
+    implementation(libs.androidx.navigation.fragment.ktx)
 
     implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler) // Mantido, agora funcionará pois o plugin está aplicado corretamente
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.navigation.compose)
@@ -100,5 +100,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
-    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation(libs.androidx.viewpager2)
 }

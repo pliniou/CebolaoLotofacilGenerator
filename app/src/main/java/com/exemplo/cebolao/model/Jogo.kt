@@ -1,1 +1,0 @@
-// Arquivo removido. Use apenas a entidade Jogo // Arquivo legado, esvaziado para evitar conflitosotofacilgenerator.data.model.
