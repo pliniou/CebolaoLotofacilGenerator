@@ -5,6 +5,9 @@ import androidx.lifecycle.*
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -21,6 +24,19 @@ class MainViewModel(
                 MutableLiveData<Boolean>().apply {
                     viewModelScope.launch { appDataStore.firstRunCompleted.collect { value = it } }
                 }
+
+    // StateFlow para o estado das notificações
+    val notificationsEnabled: StateFlow<Boolean> =
+            appDataStore.notificationsEnabled.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = true // Valor inicial, será substituído pelo valor do DataStore
+            )
+
+    // Função para atualizar o estado das notificações
+    fun setNotificationsEnabled(isEnabled: Boolean) {
+        viewModelScope.launch { appDataStore.setNotificationsEnabled(isEnabled) }
+    }
 
     // LiveData para observar todos os jogos
     val todosJogos: LiveData<List<Jogo>> = jogoRepository.todosJogos

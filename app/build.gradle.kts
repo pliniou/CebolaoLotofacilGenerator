@@ -94,6 +94,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.androidx.compose.materialIconsCore)
+    implementation(libs.androidx.compose.materialIconsExtended)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
