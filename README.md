@@ -1,25 +1,60 @@
 # Cebolão Lotofácil Generator
 
-Este é um aplicativo Android desenvolvido para auxiliar na geração de combinações de números para a Lotofácil com recursos avançados de filtragem estatística.
+Aplicativo Android para geração e gerenciamento de jogos da Lotofácil, desenvolvido em Kotlin com Jetpack Compose, arquitetura MVVM, Room, DataStore e navegação moderna.
 
-## Requisitos do Sistema
+## Requisitos
 
-- Android Studio Hedgehog (2023.1.1) ou superior
-- JDK 17
-- Gradle 8.11.1
-- Android SDK 34 (compilação)
-- Android SDK 21+ (execução)
+- **Android Studio Giraffe ou mais recente**
+- **JDK 17**
+- **Kotlin 1.9.22**
+- **Gradle Wrapper 8.11.1** (não altere para outra versão)
+- **Android Gradle Plugin 8.2.2**
+- **Compile SDK:** 34
+- **Target SDK:** 34
+- **Min SDK:** 21
 
-## Compatibilidade
+## Principais Tecnologias
 
-- Kotlin 1.9.22
-- Java 17
-- Android Gradle Plugin 8.2.2
-- Compose Compiler 1.5.8
-- Room 2.6.1
-- Material3 1.2.0
-- Navigation Component 2.7.7
-- Coroutines 1.7.3
+- Jetpack Compose (UI moderna)
+- Room (persistência local)
+- DataStore (preferências)
+- ViewModel + LiveData (arquitetura MVVM)
+- Navegação Compose
+- Kotlin Coroutines 1.7.3
+- Material 3
+
+## Como compilar e rodar
+
+1. **Clone o repositório:**
+   ```sh
+   git clone <url-do-repositorio>
+   cd CebolaoLotofacilGenerator
+   ```
+2. **Abra no Android Studio** (recomendado) ou rode pelo terminal:
+   ```sh
+   ./gradlew assembleDebug
+   ```
+3. **Execute no emulador ou dispositivo físico** (SDK 21+).
+
+## Estrutura do Projeto
+
+- `app/src/main/java/com/example/cebolaolotofacilgenerator/` - Código principal
+  - `ui/screens/` - Telas Compose
+  - `viewmodel/` - ViewModels
+  - `data/` - Persistência e repositórios
+  - `model/` - Modelos de dados
+- `app/src/main/res/` - Recursos (layouts, strings, temas)
+
+## Observações
+
+- O projeto utiliza navegação Compose. As telas principais exibem textos de placeholder por padrão.
+- Para customizar ou evoluir as telas, edite os arquivos em `ui/screens/`.
+- Caso veja tela preta, verifique se há conteúdo visível nos Composables principais.
+
+## Testes
+
+- Testes unitários: `junit:junit:4.13.2`
+- Testes instrumentados: `androidx.test.ext:junit:1.1.5`, `androidx.test.espresso:espresso-core:3.5.1`
 
 ## Funcionalidades Principais
 
@@ -90,19 +125,6 @@ CebolaoLotofacilGenerator/
 └── README.md
 ```
 
-## Configuração do Projeto
-
-1. Clone o repositório:
-```bash
-git clone https://github.com/seu-usuario/CebolaoLotofacilGenerator.git
-```
-
-2. Abra o projeto no Android Studio
-
-3. Sincronize o projeto com os arquivos Gradle
-
-4. Execute o aplicativo em um emulador ou dispositivo físico
-
 ## Compilação
 
 O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
@@ -119,32 +141,6 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 ./gradlew connectedCheck  # Testes instrumentados
 ```
 
-## Otimizações Recentes
-
-### Versão 1.0.0 (Fevereiro 2024)
-- Migração para Java 17
-- Atualização do Android Gradle Plugin para 8.2.2
-- Implementação do catálogo de versões (TOML)
-- Migração parcial para Jetpack Compose
-- Atualização das dependências para versões mais recentes
-- Remoção de recursos não utilizados
-- Correção de problemas de internacionalização
-- Implementação de temas dinâmicos (Material3)
-
-## Contribuição
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
 ## Licença
 
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
-## Contato
-
-Seu Nome - [@seutwitter](https://twitter.com/seutwitter) - email@exemplo.com
-
-Link do Projeto: [https://github.com/seu-usuario/CebolaoLotofacilGenerator](https://github.com/seu-usuario/CebolaoLotofacilGenerator)
