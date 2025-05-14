@@ -12,16 +12,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// Definição do Enum OperacaoStatus
+enum class OperacaoStatus {
+    CARREGANDO,
+    SUCESSO,
+    ERRO,
+    OCIOSO
+}
+
 /** ViewModel para o gerador de jogos da Lotofácil com filtros estatísticos. */
 class GeradorViewModel(application: Application) : AndroidViewModel(application) {
 
     // Estado da operação de geração
-    private val _operacaoStatus = MutableLiveData<OperacaoStatus>()
+    private val _operacaoStatus =
+            MutableLiveData<OperacaoStatus>(OperacaoStatus.OCIOSO) // Inicializado
     val operacaoStatus: LiveData<OperacaoStatus> = _operacaoStatus
 
     // Jogos gerados
     private val _jogosGerados = MutableLiveData<List<Jogo>>()
     val jogosGerados: LiveData<List<Jogo>> = _jogosGerados
+
+    // Mensagem para feedback (erros de validação ou sucesso/erro da geração)
+    private val _mensagem = MutableLiveData<String?>()
+    val mensagem: LiveData<String?> = _mensagem
 
     // Configurações de geração
     var quantidadeJogos = 10
@@ -49,7 +62,6 @@ class GeradorViewModel(application: Application) : AndroidViewModel(application)
         quantidadeNumeros = 15
         numerosFixos.clear()
         numerosExcluidos.clear()
-
         minPares = null
         maxPares = null
         minPrimos = null
@@ -62,6 +74,9 @@ class GeradorViewModel(application: Application) : AndroidViewModel(application)
         maxMultiplosTres = null
         minSoma = null
         maxSoma = null
+        _jogosGerados.value = emptyList() // Limpa jogos gerados ao resetar config
+        _operacaoStatus.value = OperacaoStatus.OCIOSO
+        _mensagem.value = null
     }
 
     /**
@@ -74,8 +89,22 @@ class GeradorViewModel(application: Application) : AndroidViewModel(application)
             numerosFixos.remove(numero)
             false
         } else {
-            numerosFixos.add(numero)
-            true
+            if (numerosFixos.size < quantidadeNumeros - 1) { // Limita o número de fixos
+                if (numero !in numerosExcluidos) { // Não pode ser fixo se já estiver excluído
+                    numerosFixos.add(numero)
+                    true
+                } else {
+                    _mensagem.value =
+                            getApplication<Application>()
+                                    .getString(R.string.erro_numero_excluido_nao_pode_ser_fixo)
+                    false
+                }
+            } else {
+                _mensagem.value =
+                        getApplication<Application>()
+                                .getString(R.string.erro_maximo_numeros_fixos_atingido)
+                false
+            }
         }
     }
 
@@ -89,8 +118,22 @@ class GeradorViewModel(application: Application) : AndroidViewModel(application)
             numerosExcluidos.remove(numero)
             false
         } else {
-            numerosExcluidos.add(numero)
-            true
+            if (25 - numerosExcluidos.size > quantidadeNumeros) { // Limita o número de excluídos
+                if (numero !in numerosFixos) { // Não pode ser excluído se já for fixo
+                    numerosExcluidos.add(numero)
+                    true
+                } else {
+                    _mensagem.value =
+                            getApplication<Application>()
+                                    .getString(R.string.erro_numero_fixo_nao_pode_ser_excluido)
+                    false
+                }
+            } else {
+                _mensagem.value =
+                        getApplication<Application>()
+                                .getString(R.string.erro_maximo_numeros_excluidos_atingido)
+                false
+            }
         }
     }
 
@@ -107,98 +150,125 @@ class GeradorViewModel(application: Application) : AndroidViewModel(application)
      * @return Um par com o status (verdadeiro se válido) e uma mensagem de erro (se houver).
      */
     fun validarConfiguracoes(): Pair<Boolean, String?> {
-        // Verificar quantidade de jogos
-        if (quantidadeJogos <= 0) {
-            return Pair(false, appContext.getString(R.string.erro_quantidade_jogos_invalida))
-        }
-
-        // Verificar quantidade de números por jogo
-        if (quantidadeNumeros !in 15..20) {
-            return Pair(false, appContext.getString(R.string.erro_quantidade_numeros_invalida))
-        }
-
-        // Verificar se há números fixos demais
-        if (numerosFixos.size > quantidadeNumeros) {
-            return Pair(
-                    false,
-                    appContext.getString(R.string.erro_quantidade_numeros_fixos_invalida)
-            )
-        }
-
-        // Verificar se há números excluídos demais
-        if (25 - numerosExcluidos.size < quantidadeNumeros) {
-            return Pair(
-                    false,
-                    appContext.getString(R.string.erro_quantidade_numeros_excluidos_invalida)
-            )
-        }
-
-        // Verificar sobreposição entre fixos e excluídos
+        if (quantidadeJogos <= 0)
+                return Pair(
+                        false,
+                        getApplication<Application>()
+                                .getString(R.string.erro_quantidade_jogos_invalida)
+                )
+        if (quantidadeNumeros !in 15..20)
+                return Pair(
+                        false,
+                        getApplication<Application>()
+                                .getString(R.string.erro_quantidade_numeros_invalida)
+                )
+        if (numerosFixos.size >= quantidadeNumeros)
+                return Pair(
+                        false,
+                        getApplication<Application>()
+                                .getString(R.string.erro_quantidade_numeros_fixos_invalida)
+                )
+        if (25 - numerosExcluidos.size < quantidadeNumeros)
+                return Pair(
+                        false,
+                        getApplication<Application>()
+                                .getString(R.string.erro_quantidade_numeros_excluidos_invalida)
+                )
         val sobreposicao = verificarSobreposicao()
-        if (sobreposicao.isNotEmpty()) {
-            return Pair(
-                    false,
-                    appContext.getString(
-                            R.string.erro_numeros_sobreposicao,
-                            sobreposicao.sorted().joinToString(", ")
-                    )
-            )
-        }
-
+        if (sobreposicao.isNotEmpty())
+                return Pair(
+                        false,
+                        getApplication<Application>()
+                                .getString(
+                                        R.string.erro_numeros_sobreposicao,
+                                        sobreposicao.sorted().joinToString(", ")
+                                )
+                )
         return Pair(true, null)
     }
 
     /** Gera jogos com base nas configurações atuais. */
-    fun gerarJogos() =
-            viewModelScope.launch {
-                try {
-                    // Valida as configurações
-                    val (valido, _) =
-                            validarConfiguracoes() // Usando _ para ignorar o erro não utilizado
-                    if (!valido) {
-                        _operacaoStatus.value = OperacaoStatus.ERRO
-                        return@launch
-                    }
-
-                    _operacaoStatus.value = OperacaoStatus.CARREGANDO
-
-                    // Executa a geração em um thread de fundo
-                    val jogos =
-                            withContext(Dispatchers.Default) {
-                                GeradorJogos.gerarJogos(
-                                        quantidadeJogos = quantidadeJogos,
-                                        quantidadeNumeros = quantidadeNumeros,
-                                        numerosFixos = numerosFixos,
-                                        numerosExcluidos = numerosExcluidos,
-                                        minPares = minPares,
-                                        maxPares = maxPares,
-                                        minPrimos = minPrimos,
-                                        maxPrimos = maxPrimos,
-                                        minFibonacci = minFibonacci,
-                                        maxFibonacci = maxFibonacci,
-                                        minMiolo = minMiolo,
-                                        maxMiolo = maxMiolo,
-                                        minMultiplosTres = minMultiplosTres,
-                                        maxMultiplosTres = maxMultiplosTres,
-                                        minSoma = minSoma,
-                                        maxSoma = maxSoma
-                                )
-                            }
-
-                    _jogosGerados.value = jogos
-                    _operacaoStatus.value = OperacaoStatus.SUCESSO
-                } catch (e: Exception) {
-                    _operacaoStatus.value = OperacaoStatus.ERRO
-                }
+    fun gerarJogos() {
+        viewModelScope.launch {
+            val (valido, msgErroValidacao) = validarConfiguracoes()
+            if (!valido) {
+                _mensagem.postValue(msgErroValidacao)
+                _operacaoStatus.postValue(OperacaoStatus.ERRO)
+                _jogosGerados.postValue(emptyList()) // Limpa jogos se a validação falhar
+                return@launch
             }
+
+            _operacaoStatus.postValue(OperacaoStatus.CARREGANDO)
+            _mensagem.postValue(null) // Limpa mensagem anterior
+            try {
+                val jogos =
+                        withContext(Dispatchers.Default) {
+                            GeradorJogos.gerarJogos(
+                                    quantidadeJogos = quantidadeJogos,
+                                    quantidadeNumeros = quantidadeNumeros,
+                                    numerosFixos =
+                                            numerosFixos.toList(), // Passa cópia para segurança
+                                    numerosExcluidos = numerosExcluidos.toList(), // Passa cópia
+                                    minPares = minPares,
+                                    maxPares = maxPares,
+                                    minPrimos = minPrimos,
+                                    maxPrimos = maxPrimos,
+                                    minFibonacci = minFibonacci,
+                                    maxFibonacci = maxFibonacci,
+                                    minMiolo = minMiolo,
+                                    maxMiolo = maxMiolo,
+                                    minMultiplosTres = minMultiplosTres,
+                                    maxMultiplosTres = maxMultiplosTres,
+                                    minSoma = minSoma,
+                                    maxSoma = maxSoma
+                            )
+                        }
+                _jogosGerados.postValue(jogos)
+                if (jogos.isEmpty() && quantidadeJogos > 0) {
+                    _mensagem.postValue(
+                            getApplication<Application>()
+                                    .getString(R.string.info_nenhum_jogo_gerado_filtros)
+                    )
+                    _operacaoStatus.postValue(
+                            OperacaoStatus.OCIOSO
+                    ) // Ou ERRO, dependendo da preferência
+                } else {
+                    _operacaoStatus.postValue(OperacaoStatus.SUCESSO)
+                }
+            } catch (e: IllegalArgumentException) {
+                _jogosGerados.postValue(emptyList())
+                _mensagem.postValue(
+                        e.message
+                                ?: getApplication<Application>()
+                                        .getString(R.string.erro_gerar_jogos_parametros_invalidos)
+                )
+                _operacaoStatus.postValue(OperacaoStatus.ERRO)
+            } catch (e: Exception) {
+                _jogosGerados.postValue(emptyList())
+                _mensagem.postValue(
+                        getApplication<Application>()
+                                .getString(R.string.erro_desconhecido_geracao) +
+                                " ${e.localizedMessage}"
+                )
+                _operacaoStatus.postValue(OperacaoStatus.ERRO)
+            }
+        }
+    }
 
     /** Limpa a lista de jogos gerados. */
     fun limparJogosGerados() {
         _jogosGerados.value = emptyList()
+        _operacaoStatus.value = OperacaoStatus.OCIOSO
+        _mensagem.value = null
     }
 
     /** Reseta o status da operação. */
-    fun resetarStatus() {
-        _operacaoStatus.value = OperacaoStatus.INATIVO
+    fun resetarStatusOperacao() {
+        _operacaoStatus.value = OperacaoStatus.OCIOSO
+        _mensagem.value = null
+    }
+
+    fun limparMensagemUnica() {
+        _mensagem.value = null
     }
 }

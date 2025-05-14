@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cebolaolotofacilgenerator.R
+import com.example.cebolaolotofacilgenerator.data.model.Jogo
+import com.example.cebolaolotofacilgenerator.databinding.FragmentPrincipalBinding
 import com.example.cebolaolotofacilgenerator.ui.adapters.JogosAdapter
+import com.example.cebolaolotofacilgenerator.ui.viewmodel.JogosViewModel
 
 class PrincipalFragment : Fragment() {
 
@@ -16,6 +20,7 @@ class PrincipalFragment : Fragment() {
     private val binding
         get() = _binding!!
 
+    private val jogosViewModel: JogosViewModel by viewModels()
     private lateinit var jogosAdapter: JogosAdapter
 
     override fun onCreateView(
@@ -38,11 +43,16 @@ class PrincipalFragment : Fragment() {
     private fun setupRecyclerView() {
         jogosAdapter =
                 JogosAdapter(
-                        onFavoritoClick = { jogo, favorito ->
+                        onFavoritoClick = { jogo: Jogo, favorito: Boolean ->
                             jogosViewModel.marcarComoFavorito(jogo, favorito)
                         },
-                        onJogoClick = { jogo ->
-                            // Exibir detalhes do jogo
+                        onJogoClick = { jogo: Jogo ->
+                            Toast.makeText(
+                                            requireContext(),
+                                            "Jogo clicado: ${jogo.numeros.joinToString()}",
+                                            Toast.LENGTH_SHORT
+                                    )
+                                    .show()
                         }
                 )
 
@@ -53,14 +63,15 @@ class PrincipalFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        // Observa os jogos gerados
-        jogosViewModel.jogosGerados.observe(viewLifecycleOwner) { jogos ->
-            jogosAdapter.submitList(jogos)
-            atualizarVisibilidadeListaVazia(jogos.isEmpty())
+        jogosViewModel.jogosGerados.observe(viewLifecycleOwner) { jogos: List<Jogo>? ->
+            jogos?.let {
+                jogosAdapter.submitList(it)
+                atualizarVisibilidadeListaVazia(it.isEmpty())
+            }
         }
 
-        // Observa o status da geração
-        jogosViewModel.statusGeracao.observe(viewLifecycleOwner) { status ->
+        jogosViewModel.statusGeracao.observe(viewLifecycleOwner) {
+                status: JogosViewModel.StatusGeracao? ->
             when (status) {
                 JogosViewModel.StatusGeracao.GERANDO -> {
                     binding.progressBar.visibility = View.VISIBLE
@@ -76,14 +87,19 @@ class PrincipalFragment : Fragment() {
                     Toast.makeText(requireContext(), R.string.erro_gerar_jogos, Toast.LENGTH_SHORT)
                             .show()
                 }
-                else -> {}
+                null -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.buttonGerarJogos.isEnabled = true
+                }
             }
         }
     }
 
     private fun setupListeners() {
         binding.buttonGerarJogos.setOnClickListener {
-            val quantidadeJogos = binding.editTextQuantidadeJogos.text.toString().toIntOrNull() ?: 1
+            val quantidadeJogosStr = binding.editTextQuantidadeJogos.text.toString()
+            val quantidadeJogos = quantidadeJogosStr.toIntOrNull() ?: 1
+            jogosViewModel.gerarJogos(quantidadeJogos)
         }
 
         binding.buttonSalvarJogos.setOnClickListener {
@@ -97,7 +113,6 @@ class PrincipalFragment : Fragment() {
                         .show()
                 return@setOnClickListener
             }
-
             jogosViewModel.salvarJogos(jogos)
             Toast.makeText(requireContext(), R.string.jogos_salvos_com_sucesso, Toast.LENGTH_SHORT)
                     .show()

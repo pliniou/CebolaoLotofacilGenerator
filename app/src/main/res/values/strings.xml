@@ -6,6 +6,7 @@
 
     <!-- Strings relacionadas à funcionalidade de salvar/carregar configurações de filtros -->
     <string name="filtros_salvos_sucesso">Configurações de filtros salvas com sucesso!</string>
+    <string name="filtros_salvos_com_sucesso">Filtros salvos com sucesso!</string>
     <string name="falha_salvar_filtros">Falha ao salvar as configurações de filtros.</string>
     <string name="filtros_carregados_sucesso">Configurações de filtros carregadas com sucesso!</string>
     <string name="falha_carregar_filtros">Falha ao carregar as configurações de filtros.</string>
@@ -158,5 +159,22 @@
     <string name="valor_filtro_miolo_moldura">Miolo: %1$d-%2$d</string>
     <string name="valor_filtro_multiplos_tres">Múltiplos de 3: %1$d-%2$d</string>
     <!-- Fim das strings para FiltrosFragment -->
+
+    <!-- Strings mencionadas como faltantes -->
+    <string name="erro_quantidade_jogos_invalida">Quantidade de jogos inválida</string>
+    <string name="na_aplicado">N/A - Não aplicado</string>
+    <string name="info_nenhum_jogo_gerado_filtros">Nenhum jogo foi gerado com os filtros atuais.
+        Considere relaxar os critérios.</string>
+    <string name="erro_numero_excluido_nao_pode_ser_fixo">Um número excluído não pode ser fixo.</string>
+    <string name="erro_maximo_numeros_fixos_atingido">Número máximo de números fixos atingido.</string>
+    <string name="erro_numero_fixo_nao_pode_ser_excluido">Um número fixo não pode ser excluído.</string>
+    <string name="erro_maximo_numeros_excluidos_atingido">Número máximo de números excluídos
+        atingido.</string>
+    <string name="erro_quantidade_numeros_fixos_invalida">Quantidade de números fixos inválida.</string>
+    <string name="erro_quantidade_numeros_excluidos_invalida">Quantidade de números excluídos
+        inválida.</string>
+    <string name="erro_numeros_sobreposicao">Números em sobreposição: %1$s</string>
+    <string name="erro_gerar_jogos_parametros_invalidos">Erro ao gerar jogos: parâmetros inválidos.</string>
+    <string name="erro_desconhecido_geracao">Erro desconhecido durante a geração de jogos.</string>
 
 </resources>

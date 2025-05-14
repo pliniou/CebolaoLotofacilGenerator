@@ -5,14 +5,14 @@ import com.example.cebolaolotofacilgenerator.data.dao.JogoDao
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 
 /**
- * Repositório para gerenciar operações relacionadas aos jogos da Lotofácil.
- * Fornece uma camada de abstração sobre o DAO.
+ * Repositório para gerenciar operações relacionadas aos jogos da Lotofácil. Fornece uma camada de
+ * abstração sobre o DAO.
  */
 class JogoRepository(private val jogoDao: JogoDao) {
 
     // Observa todos os jogos
     val todosJogos: LiveData<List<Jogo>> = jogoDao.observarTodos()
-    
+
     // Observa apenas os jogos favoritos
     val jogosFavoritos: LiveData<List<Jogo>> = jogoDao.observarFavoritos()
 
@@ -58,7 +58,7 @@ class JogoRepository(private val jogoDao: JogoDao) {
     suspend fun obterJogoPorId(jogoId: Long): Jogo? {
         return jogoDao.buscarPorId(jogoId)
     }
-    
+
     /**
      * Busca jogos que foram conferidos com um determinado concurso.
      * @param concursoId O ID do concurso.
@@ -67,12 +67,17 @@ class JogoRepository(private val jogoDao: JogoDao) {
     suspend fun buscarJogosConferidos(concursoId: Long): List<Jogo> {
         return jogoDao.buscarJogosConferidos(concursoId)
     }
-    
+
     /**
      * Conta quantos jogos estão armazenados no banco de dados.
      * @return O número total de jogos.
      */
     suspend fun contarJogos(): Int {
         return jogoDao.contarJogos()
+    }
+
+    /** Remove todos os jogos do banco de dados. */
+    suspend fun limparTodosJogos() {
+        jogoDao.limparTodos()
     }
 }

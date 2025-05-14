@@ -88,4 +88,7 @@ interface JogoDao {
      * @return O número total de jogos.
      */
     @Query("SELECT COUNT(*) FROM jogos") suspend fun contarJogos(): Int
+
+    /** Remove todos os jogos do banco de dados. */
+    @Query("DELETE FROM jogos") suspend fun limparTodos()
 }
