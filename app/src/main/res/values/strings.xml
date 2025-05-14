@@ -198,5 +198,6 @@
 
     <string name="erro_gerar_jogos">Erro ao gerar jogos. Verifique os filtros ou tente novamente.</string>
     <string name="nenhum_jogo_para_salvar">Nenhum jogo gerado para salvar.</string>
+    <string name="jogos_salvos_com_sucesso">Jogos salvos com sucesso!</string>
 
 </resources>

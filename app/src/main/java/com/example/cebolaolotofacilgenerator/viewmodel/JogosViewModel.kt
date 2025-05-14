@@ -5,18 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
+import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
 import kotlinx.coroutines.launch
 
 class JogosViewModel(private val repository: JogoRepository) : ViewModel() {
 
     // LiveData para jogos
-    private val _jogos = MutableLiveData<List<Jogo>>()
-    val jogos: LiveData<List<Jogo>> = _jogos
+    private val _todosJogos = MutableLiveData<List<Jogo>>()
+    val todosJogos: LiveData<List<Jogo>> = _todosJogos
 
     // LiveData para jogos favoritos
     private val _jogosFavoritos = MutableLiveData<List<Jogo>>()
     val jogosFavoritos: LiveData<List<Jogo>> = _jogosFavoritos
+
+    // LiveData para jogos conferidos
+    private val _jogosConferidos = MutableLiveData<List<Jogo>>()
+    val jogosConferidos: LiveData<List<Jogo>> = _jogosConferidos
 
     // LiveData para status da operação
     private val _operacaoStatus = MutableLiveData<OperacaoStatus>()
@@ -25,13 +30,14 @@ class JogosViewModel(private val repository: JogoRepository) : ViewModel() {
     init {
         carregarJogos()
         carregarJogosFavoritos()
+        carregarJogosConferidos()
     }
 
     fun carregarJogos() =
             viewModelScope.launch {
                 try {
                     _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                    _jogos.value = repository.buscarTodosJogos()
+                    _todosJogos.value = repository.buscarTodosJogos()
                     _operacaoStatus.value = OperacaoStatus.SUCESSO
                 } catch (e: Exception) {
                     _operacaoStatus.value = OperacaoStatus.ERRO
@@ -43,6 +49,17 @@ class JogosViewModel(private val repository: JogoRepository) : ViewModel() {
                 try {
                     _operacaoStatus.value = OperacaoStatus.CARREGANDO
                     _jogosFavoritos.value = repository.buscarJogosFavoritos()
+                    _operacaoStatus.value = OperacaoStatus.SUCESSO
+                } catch (e: Exception) {
+                    _operacaoStatus.value = OperacaoStatus.ERRO
+                }
+            }
+
+    fun carregarJogosConferidos() =
+            viewModelScope.launch {
+                try {
+                    _operacaoStatus.value = OperacaoStatus.CARREGANDO
+                    _jogosConferidos.value = repository.buscarJogosConferidos()
                     _operacaoStatus.value = OperacaoStatus.SUCESSO
                 } catch (e: Exception) {
                     _operacaoStatus.value = OperacaoStatus.ERRO
@@ -62,26 +79,28 @@ class JogosViewModel(private val repository: JogoRepository) : ViewModel() {
                 }
             }
 
-    fun excluirJogo(jogo: Jogo) =
+    fun deletarJogo(jogo: Jogo) =
             viewModelScope.launch {
                 try {
                     _operacaoStatus.value = OperacaoStatus.CARREGANDO
                     repository.excluirJogo(jogo)
                     carregarJogos()
                     carregarJogosFavoritos()
+                    carregarJogosConferidos()
                     _operacaoStatus.value = OperacaoStatus.SUCESSO
                 } catch (e: Exception) {
                     _operacaoStatus.value = OperacaoStatus.ERRO
                 }
             }
 
-    fun excluirTodosJogos() =
+    fun limparTodosJogos() =
             viewModelScope.launch {
                 try {
                     _operacaoStatus.value = OperacaoStatus.CARREGANDO
                     repository.excluirTodosJogos()
                     carregarJogos()
                     carregarJogosFavoritos()
+                    carregarJogosConferidos()
                     _operacaoStatus.value = OperacaoStatus.SUCESSO
                 } catch (e: Exception) {
                     _operacaoStatus.value = OperacaoStatus.ERRO

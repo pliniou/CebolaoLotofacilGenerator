@@ -16,6 +16,33 @@ class JogoRepository(private val jogoDao: JogoDao) {
     // Observa apenas os jogos favoritos
     val jogosFavoritos: LiveData<List<Jogo>> = jogoDao.observarFavoritos()
 
+    // Observa apenas os jogos conferidos
+    val jogosConferidos: LiveData<List<Jogo>> = jogoDao.observarConferidos()
+
+    /**
+     * Busca todos os jogos do banco de dados.
+     * @return Lista com todos os jogos.
+     */
+    suspend fun buscarTodosJogos(): List<Jogo> {
+        return jogoDao.buscarTodos()
+    }
+
+    /**
+     * Busca todos os jogos favoritos do banco de dados.
+     * @return Lista com todos os jogos favoritos.
+     */
+    suspend fun buscarJogosFavoritos(): List<Jogo> {
+        return jogoDao.buscarFavoritos()
+    }
+
+    /**
+     * Busca todos os jogos conferidos do banco de dados.
+     * @return Lista com todos os jogos conferidos.
+     */
+    suspend fun buscarJogosConferidos(): List<Jogo> {
+        return jogoDao.buscarConferidos()
+    }
+
     /**
      * Insere um novo jogo no banco de dados.
      * @param jogo O jogo a ser inserido.
@@ -46,7 +73,7 @@ class JogoRepository(private val jogoDao: JogoDao) {
      * Remove um jogo do banco de dados.
      * @param jogo O jogo a ser removido.
      */
-    suspend fun deletarJogo(jogo: Jogo) {
+    suspend fun excluirJogo(jogo: Jogo) {
         jogoDao.excluir(jogo)
     }
 
@@ -77,7 +104,7 @@ class JogoRepository(private val jogoDao: JogoDao) {
     }
 
     /** Remove todos os jogos do banco de dados. */
-    suspend fun limparTodosJogos() {
+    suspend fun excluirTodosJogos() {
         jogoDao.limparTodos()
     }
 }
