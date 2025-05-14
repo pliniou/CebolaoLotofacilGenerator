@@ -17,26 +17,27 @@ import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 /** Tela de filtros para configuração de jogos */
 @Composable
 fun FiltrosScreen(navController: NavHostController, viewModel: MainViewModel) {
-    Scaffold(
-            topBar = {
-                TopAppBar(
-                        title = { Text("Filtros") },
-                        colors =
-                                TopAppBarDefaults.topAppBarColors(
-                                        containerColor = Color(0xFF1976D2),
-                                        titleContentColor = Color.White
-                                ),
-                        navigationIcon = {
-                            // TODO: Adicionar botão de navegação para voltar quando implementarmos
-                            // a navegação
-                        }
-                )
-            }
-    ) { paddingValues ->
-        // Conteúdo da tela - por enquanto um placeholder até implementação completa
-        Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
-                contentAlignment = Alignment.Center
-        ) { Text(text = "Tela de Filtros - Em implementação") }
-    }
+        Scaffold(
+                topBar = {
+                        TopAppBar(
+                                title = { Text("Filtros") },
+                                colors =
+                                        TopAppBarDefaults.topAppBarColors(
+                                                containerColor = Color(0xFF1976D2),
+                                                titleContentColor = Color.White
+                                        ),
+                                navigationIcon = {
+                                        // TODO: Adicionar botão de navegação para voltar quando
+                                        // implementarmos
+                                        // a navegação
+                                }
+                        )
+                }
+        ) { paddingValues ->
+                // Conteúdo da tela - por enquanto um placeholder até implementação completa
+                Box(
+                        modifier = Modifier.fillMaxSize().padding(paddingValues),
+                        contentAlignment = Alignment.Center
+                ) { Text(text = "Tela de Filtros - Em implementação") }
+        }
 }

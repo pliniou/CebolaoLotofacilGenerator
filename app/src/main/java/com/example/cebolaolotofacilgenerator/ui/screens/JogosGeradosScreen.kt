@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,7 +53,7 @@ fun JogosGeradosScreen(navController: NavHostController, geradorViewModel: Gerad
                         navigationIcon = {
                             IconButton(onClick = { navController.navigateUp() }) {
                                 Icon(
-                                        imageVector = Icons.Default.ArrowBack,
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                         contentDescription = "Voltar",
                                         tint = Color.White
                                 )
@@ -97,7 +97,7 @@ fun JogosGeradosScreen(navController: NavHostController, geradorViewModel: Gerad
                     ) {
                         items(jogosGerados) { jogo ->
                             JogoItem(jogo = jogo)
-                            Divider(modifier = Modifier.padding(vertical = 8.dp))
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                         }
                     }
                 }
@@ -109,7 +109,7 @@ fun JogosGeradosScreen(navController: NavHostController, geradorViewModel: Gerad
 @Composable
 fun JogoItem(jogo: Jogo) {
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-        Text(text = "Jogo ${jogo.id ?: ""}", style = MaterialTheme.typography.titleMedium)
+        Text(text = "Jogo ${jogo.id.toString()}", style = MaterialTheme.typography.titleMedium)
         Text(
                 text = jogo.numeros.joinToString(" - "),
                 style = MaterialTheme.typography.bodyMedium,

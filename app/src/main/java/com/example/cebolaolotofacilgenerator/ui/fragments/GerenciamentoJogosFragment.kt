@@ -13,7 +13,7 @@ import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.databinding.FragmentGerenciamentoJogosBinding
 import com.example.cebolaolotofacilgenerator.ui.adapters.JogosGerenciamentoAdapter
-import com.example.cebolaolotofacilgenerator.ui.viewmodel.JogosViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.JogosViewModel
 import com.google.android.material.tabs.TabLayout
 
 class GerenciamentoJogosFragment : Fragment() {

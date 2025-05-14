@@ -99,7 +99,7 @@ class JogoViewModel(application: Application) : AndroidViewModel(application) {
             viewModelScope.launch {
                 try {
                     _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                    repository.deletarJogo(jogo)
+                    repository.excluirJogo(jogo)
                     _operacaoStatus.value = OperacaoStatus.SUCESSO
                 } catch (e: Exception) {
                     _operacaoStatus.value = OperacaoStatus.ERRO
