@@ -45,16 +45,29 @@ Aplicativo Android para geração e gerenciamento de jogos da Lotofácil, desenv
   - `model/` - Modelos de dados
 - `app/src/main/res/` - Recursos (layouts, strings, temas)
 
-## Observações
+## Navegação e UI
 
-- O projeto utiliza navegação Compose. As telas principais exibem textos de placeholder por padrão.
-- Para customizar ou evoluir as telas, edite os arquivos em `ui/screens/`.
-- Caso veja tela preta, verifique se há conteúdo visível nos Composables principais.
+O aplicativo possui uma navegação moderna baseada em Jetpack Compose Navigation, com as seguintes telas:
 
-## Testes
+- **Tela de Onboarding:** Exibida na primeira execução do aplicativo, com informações introdutórias e instruções de uso.
+- **Tela Principal (Home):** Interface central com cartões para as principais funcionalidades:
+  - Geração de novos jogos
+  - Acesso aos jogos favoritos
+  - Consulta de resultados anteriores
+  - Dicas para jogar na Lotofácil
+- **Tela de Favoritos:** Armazena os jogos salvos pelo usuário.
+- **Tela de Resultados:** Mostra os resultados de concursos anteriores da Lotofácil.
+- **Tela de Configurações:** Permite personalizar o comportamento do aplicativo.
 
-- Testes unitários: `junit:junit:4.13.2`
-- Testes instrumentados: `androidx.test.ext:junit:1.1.5`, `androidx.test.espresso:espresso-core:3.5.1`
+Cada tela possui um cabeçalho (TopAppBar) consistente com título e ações contextuais, seguindo o padrão de design Material 3.
+
+## Fluxo de Navegação
+
+O aplicativo inicia com uma verificação se é a primeira execução:
+- Se for a primeira execução, exibe a tela de Onboarding
+- Caso contrário, vai diretamente para a Tela Principal
+
+A partir da Tela Principal, o usuário pode navegar para qualquer uma das outras telas através dos cartões ou do ícone de configurações.
 
 ## Funcionalidades Principais
 
@@ -109,10 +122,17 @@ CebolaoLotofacilGenerator/
 │   │   │   │   │   └── repository/
 │   │   │   │   ├── ui/
 │   │   │   │   │   ├── screens/
+│   │   │   │   │   │   ├── HomeScreen.kt       # Tela principal
+│   │   │   │   │   │   ├── FavoritosScreen.kt  # Tela de favoritos
+│   │   │   │   │   │   ├── ResultadosScreen.kt # Tela de resultados
+│   │   │   │   │   │   ├── SettingsScreen.kt   # Tela de configurações
+│   │   │   │   │   │   └── OnboardingScreen.kt # Tela de boas-vindas
 │   │   │   │   │   ├── components/
 │   │   │   │   │   └── theme/
 │   │   │   │   ├── viewmodel/
-│   │   │   │   └── util/
+│   │   │   │   ├── MainActivity.kt             # Ponto de entrada do app
+│   │   │   │   ├── AppNavigation.kt            # Navegação entre telas
+│   │   │   │   └── Routes.kt                   # Definição de rotas
 │   │   │   └── res/
 │   │   ├── test/
 │   │   └── androidTest/
@@ -140,6 +160,19 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 ./gradlew test            # Testes unitários
 ./gradlew connectedCheck  # Testes instrumentados
 ```
+
+## Solução de Problemas
+
+- **Tela preta com apenas texto:** As telas foram atualizadas para mostrar interfaces completas com Material Design, cabeçalhos, cartões e botões.
+- **Erros de compilação relacionados ao Compose:** Verifique se está usando as versões corretas das bibliotecas conforme especificado no build.gradle.kts.
+- **Problemas de navegação:** Certifique-se de que o arquivo Routes.kt está definindo corretamente as rotas e que o NavHost está configurado adequadamente.
+
+## Próximos Passos
+
+- Implementação da geração de jogos aleatórios
+- Sistema de armazenamento e visualização de jogos favoritos
+- Funcionalidade de conferência de resultados
+- Melhorias na interface de usuário e experiência
 
 ## Licença
 

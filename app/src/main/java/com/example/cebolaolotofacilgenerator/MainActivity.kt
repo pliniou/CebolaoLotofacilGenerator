@@ -9,13 +9,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.ui.screens.FavoritosScreen
+import com.example.cebolaolotofacilgenerator.ui.screens.HomeScreen
+import com.example.cebolaolotofacilgenerator.ui.screens.OnboardingScreen
+import com.example.cebolaolotofacilgenerator.ui.screens.ResultadosScreen
+import com.example.cebolaolotofacilgenerator.ui.screens.SettingsScreen
 import com.example.cebolaolotofacilgenerator.ui.theme.CebolaoLotofacilGeneratorTheme
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModelFactory
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -35,14 +43,6 @@ class MainActivity : ComponentActivity() {
         val viewModelFactory = MainViewModelFactory(application, jogoRepository, appDataStore)
         mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
-        // Observa o firstRunCompleted
-        lifecycleScope.launch {
-            appDataStore.firstRunCompleted.collect { completed ->
-                // A lógica de navegação baseada nisso deve ocorrer dentro do NavHost
-                // ou ser controlada pelo estado no ViewModel.
-            }
-        }
-
         setContent {
             CebolaoLotofacilGeneratorTheme {
                 Surface(
@@ -50,8 +50,67 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    // Passa o MainViewModel para o Navigation Composable
-                    AppNavigation(navController = navController, viewModel = mainViewModel)
+
+                    // Verifica se é a primeira execução
+                    val isFirstRun = remember { mutableStateOf(true) }
+                    var startDestination by remember { mutableStateOf(Routes.Home.route) }
+
+                    // Carrega o valor de firstRunCompleted
+                    LaunchedEffect(Unit) {
+                        isFirstRun.value = !appDataStore.firstRunCompleted.first()
+                        startDestination =
+                                if (isFirstRun.value) {
+                                    Routes.Onboarding.route
+                                } else {
+                                    Routes.Home.route
+                                }
+                    }
+
+                    // Mostra o NavHost somente quando o startDestination estiver definido
+                    // (após carregar dados do DataStore)
+                    if (startDestination.isNotEmpty()) {
+                        NavHost(
+                                navController = navController,
+                                startDestination = startDestination
+                        ) {
+                            composable(Routes.Home.route) {
+                                HomeScreen(viewModel = mainViewModel, navController = navController)
+                            }
+                            composable(Routes.Settings.route) {
+                                SettingsScreen(
+                                        viewModel = mainViewModel,
+                                        navController = navController
+                                )
+                            }
+                            composable(Routes.Favoritos.route) {
+                                FavoritosScreen(
+                                        viewModel = mainViewModel,
+                                        navController = navController
+                                )
+                            }
+                            composable(Routes.Resultados.route) {
+                                ResultadosScreen(
+                                        viewModel = mainViewModel,
+                                        navController = navController
+                                )
+                            }
+                            composable(Routes.Onboarding.route) {
+                                OnboardingScreen(
+                                        viewModel = mainViewModel,
+                                        onComplete = {
+                                            lifecycleScope.launch {
+                                                appDataStore.setFirstRunCompleted(true)
+                                                navController.navigate(Routes.Home.route) {
+                                                    popUpTo(Routes.Onboarding.route) {
+                                                        inclusive = true
+                                                    }
+                                                }
+                                            }
+                                        }
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

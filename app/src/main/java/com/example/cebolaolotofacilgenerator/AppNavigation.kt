@@ -23,14 +23,7 @@ sealed class Routes(val route: String) {
 /** Componente de navegação principal do aplicativo */
 @Composable
 fun AppNavigation(navController: NavHostController, viewModel: MainViewModel) {
-    NavHost(
-            navController = navController,
-            startDestination =
-                    // TODO: Considere usar observeAsState de lifecycle-runtime-compose para uma
-                    // observação mais robusta
-                    if (viewModel.firstRunCompleted.value == false) Routes.Onboarding.route
-                    else Routes.Home.route
-    ) {
+    NavHost(navController = navController, startDestination = Routes.Home.route) {
         composable(Routes.Home.route) {
             HomeScreen(viewModel = viewModel, navController = navController)
         }
