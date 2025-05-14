@@ -26,7 +26,10 @@ fun AppNavigation(navController: NavHostController, viewModel: MainViewModel) {
     NavHost(
             navController = navController,
             startDestination =
-                    if (viewModel.isFirstRun()) Routes.Onboarding.route else Routes.Home.route
+                    // TODO: Considere usar observeAsState de lifecycle-runtime-compose para uma
+                    // observação mais robusta
+                    if (viewModel.firstRunCompleted.value == false) Routes.Onboarding.route
+                    else Routes.Home.route
     ) {
         composable(Routes.Home.route) {
             HomeScreen(viewModel = viewModel, navController = navController)

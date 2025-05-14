@@ -1,13 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.CebolaoLotofacilGenerator" parent="Theme.Material3.DayNight">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Theme.CebolaoLotofacilGenerator"
+        parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/green_200</item> <!-- Um verde mais claro para o tema escuro -->
+        <item name="colorPrimaryVariant">@color/green_700</item>
+        <item name="colorOnPrimary">@color/black</item> <!-- Texto preto sobre o verde claro -->
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/orange_200</item> <!-- Um laranja mais claro para o tema
+        escuro -->
+        <item name="colorSecondaryVariant">@color/orange_700</item>
+        <item name="colorOnSecondary">@color/black</item> <!-- Texto preto sobre o laranja claro -->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
     </style>
 
-    <!-- Aplicativo tema para modo noturno. -->
-    <style name="Theme.CebolaoLotofacilGenerator" parent="Base.Theme.CebolaoLotofacilGenerator">
-        <!-- Target API 21+ (LOLLIPOP) attributes -->
-        <!-- <item name="android:statusBarColor">?attr/colorPrimaryVariant</item> -->        <!-- Removido daqui -->
-    </style>
+    <!-- Estilos removidos (se existiam duplicados aqui):
+        Theme.CebolaoLotofacilGenerator.NoActionBar,
+        Theme.CebolaoLotofacilGenerator.AppBarOverlay,
+        Theme.CebolaoLotofacilGenerator.PopupOverlay
+    -->
 </resources>

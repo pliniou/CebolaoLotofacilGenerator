@@ -14,7 +14,13 @@ class MainViewModel(
 ) : AndroidViewModel(application) {
 
     // LiveData para observar se o primeiro run foi completado
-    val firstRunCompleted: LiveData<Boolean> = appDataStore.firstRunCompleted.asLiveData()
+    // TODO: Verifique a dependência androidx.lifecycle:lifecycle-livedata-ktx para habilitar
+    // asLiveData()
+    val firstRunCompleted: LiveData<Boolean> // = appDataStore.firstRunCompleted.asLiveData()
+        get() =
+                MutableLiveData<Boolean>().apply {
+                    viewModelScope.launch { appDataStore.firstRunCompleted.collect { value = it } }
+                }
 
     // LiveData para observar todos os jogos
     val todosJogos: LiveData<List<Jogo>> = jogoRepository.todosJogos
@@ -32,10 +38,11 @@ class MainViewModel(
 
     // Função para indicar que o primeiro run foi completado
     fun completeFirstRun() {
-        viewModelScope.launch { appDataStore.setFirstRunCompleted(true) }
+        viewModelScope.launch { appDataStore.setFirstRunCompleted() }
     }
 }
 
+/* Removida MainViewModelFactory duplicada מכאן
 class MainViewModelFactory(
         private val application: Application,
         private val jogoRepository: JogoRepository,
@@ -49,3 +56,4 @@ class MainViewModelFactory(
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+*/

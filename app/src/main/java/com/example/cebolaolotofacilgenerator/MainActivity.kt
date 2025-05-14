@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
-import com.example.cebolaolotofacilgenerator.data.AppDatabase
-import com.example.cebolaolotofacilgenerator.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
+import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
 import com.example.cebolaolotofacilgenerator.ui.theme.CebolaoLotofacilGeneratorTheme
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModelFactory

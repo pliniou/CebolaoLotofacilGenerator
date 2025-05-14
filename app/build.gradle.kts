@@ -23,32 +23,26 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                argument("room.schemaLocation", "$projectDir/schemas".toString())
-                argument("room.incremental", "true")
-                argument("room.expandProjection", "true")
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true",
+                    "room.expandProjection" to "true"
+                )
             }
         }
     }
 
     buildTypes {
-        named("release") {
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-
-            isDebuggable = false
-
-            resValue("string", "app_mode", "Produção")
         }
-
-        named("debug") {
+        debug {
             isMinifyEnabled = false
             isShrinkResources = false
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            isDebuggable = true
-
-            resValue("string", "app_mode", "Desenvolvimento")
         }
     }
 
@@ -59,17 +53,21 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        )
     }
 
     buildFeatures {
         viewBinding = true
-        dataBinding = false
         compose = true
     }
 
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -78,27 +76,48 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlin.stdlib)
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
+    // AndroidX Core e AppCompat
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+
+    // Material Design
     implementation(libs.material)
-    implementation(libs.androidx.navigation.fragment.ktx)
-
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
-
-    implementation(libs.androidx.navigation.compose)
-
-    implementation(libs.com.google.code.gson)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.ui)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.activity.compose)
 
+    // Compose
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.viewpager2)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    // JSON
+    implementation(libs.gson)
+
+    // Debug
+    debugImplementation(libs.androidx.ui.tooling)
+
+    // Testes
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
-    implementation(libs.androidx.viewpager2)
 }

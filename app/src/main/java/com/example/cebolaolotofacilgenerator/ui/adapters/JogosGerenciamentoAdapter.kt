@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.databinding.ItemJogoGerenciamentoBinding
 import java.text.SimpleDateFormat
@@ -62,9 +63,14 @@ class JogosGerenciamentoAdapter(
         }
 
         fun bind(jogo: Jogo) {
+            val context = binding.root.context
             binding.apply {
                 textViewNumeros.text = jogo.numeros.joinToString(" - ")
-                textViewData.text = dateFormat.format(jogo.dataCriacao)
+                textViewData.text =
+                        context.getString(
+                                R.string.jogo_data_criacao,
+                                dateFormat.format(jogo.dataCriacao)
+                        )
 
                 // Configura o ícone de favorito
                 val iconFavoritoResId =
@@ -75,17 +81,20 @@ class JogosGerenciamentoAdapter(
                         }
                 buttonFavorito.setImageResource(iconFavoritoResId)
 
-                // Exibe as características do jogo de forma compacta
-                textViewCaracteristicas.text = buildString {
-                    append(
-                            "P/I: ${jogo.quantidadePares}/${jogo.quantidadeImpares} | Soma: ${jogo.soma}"
-                    )
-                    append(" | Pri: ${jogo.quantidadePrimos} | Fib: ${jogo.quantidadeFibonacci}")
-                }
+                // Exibe as características do jogo
+                textViewCaracteristicas.text =
+                        context.getString(
+                                R.string.jogo_caracteristicas_compacto,
+                                jogo.quantidadePares,
+                                jogo.quantidadeImpares,
+                                jogo.soma,
+                                jogo.quantidadePrimos,
+                                jogo.quantidadeFibonacci
+                        )
 
                 // Exibe informações de conferência, se aplicável
                 if (jogo.acertos != null) {
-                    textViewResultados.text = "Acertos: ${jogo.acertos}"
+                    textViewResultados.text = context.getString(R.string.jogo_acertos, jogo.acertos)
                     textViewResultados.visibility = android.view.View.VISIBLE
                 } else {
                     textViewResultados.visibility = android.view.View.GONE

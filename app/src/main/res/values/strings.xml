@@ -1,162 +1,127 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Gerais -->
-    <string name="app_name">Cebolao Lotofacil Generator</string>
+    <string name="app_name">Cebolão Lotofácil Generator</string>
     <string name="app_version">1.0.0</string>
     <string name="concurso">Concurso</string>
-    <string name="action_settings">Configurações</string>
-    <string name="home_screen_title">Cebolão Lotofácil</string>
 
-    <!-- Menu de Navegação -->
-    <string name="menu_principal">Principal</string>
-    <string name="menu_filtros">Filtros</string>
-    <string name="menu_conferencia">Conferência</string>
-    <string name="menu_gerenciamento">Jogos</string>
-    <string name="filter_menu">Filtros</string>
-    <string name="generate_games_button">Gerar Jogos</string>
-    <string name="menu_configuracoes">Configurações</string>
+    <!-- Strings relacionadas à funcionalidade de salvar/carregar configurações de filtros -->
+    <string name="filtros_salvos_sucesso">Configurações de filtros salvas com sucesso!</string>
+    <string name="falha_salvar_filtros">Falha ao salvar as configurações de filtros.</string>
+    <string name="filtros_carregados_sucesso">Configurações de filtros carregadas com sucesso!</string>
+    <string name="falha_carregar_filtros">Falha ao carregar as configurações de filtros.</string>
+    <string name="nenhum_filtro_salvo">Nenhuma configuração de filtro salva anteriormente.</string>
 
-    <!-- Tela Principal -->
-    <string name="titulo_tela_principal">Gerador de Jogos da Lotofácil</string>
-    <string name="quantidade_jogos">Quantidade de jogos a gerar</string>
-    <string name="default_quantidade_jogos">1</string>
-    <string name="gerar_jogos">Gerar Jogos</string>
-    <string name="salvar_jogos">Salvar Jogos</string>
-    <string name="nenhum_jogo_gerado">Nenhum jogo gerado. Use o botão acima para gerar jogos.</string>
-    <string name="erro_gerar_jogos">Erro ao gerar jogos. Tente novamente.</string>
-    <string name="nenhum_jogo_para_salvar">Nenhum jogo para salvar.</string>
-    <string name="jogos_salvos_com_sucesso">Jogos salvos com sucesso!</string>
-    <string name="erro_quantidade_jogos_invalida">Quantidade de jogos deve ser maior que zero.</string>
+    <!-- Strings para a tela de Gerenciamento de Jogos -->
+    <string name="titulo_gerenciamento_jogos">Gerenciar Jogos Salvos</string>
+    <string name="salvar_jogo_atual">Salvar Jogo Atual</string>
+    <string name="carregar_ultimo_jogo">Carregar Último Jogo</string>
+    <string name="excluir_todos_jogos">Excluir Todos os Jogos</string>
+    <string name="confirmar_exclusao_titulo">Confirmar Exclusão</string>
+    <string name="confirmar_exclusao_mensagem">Tem certeza que deseja excluir todos os jogos salvos?
+        Esta ação não pode ser desfeita.</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
+    <string name="jogos_excluidos_sucesso">Todos os jogos salvos foram excluídos.</string>
+    <string name="falha_excluir_jogos">Falha ao excluir os jogos salvos.</string>
+    <string name="nenhum_jogo_salvo">Nenhum jogo salvo encontrado.</string>
+    <string name="jogo_carregado_sucesso">Último jogo salvo carregado com sucesso.</string>
+    <string name="falha_carregar_jogo">Falha ao carregar o último jogo salvo.</string>
+    <string name="jogo_salvo_sucesso">Jogo atual salvo com sucesso.</string>
+    <string name="falha_salvar_jogo">Falha ao salvar o jogo atual.</string>
 
-    <!-- Tela de Filtros -->
-    <string name="titulo_tela_filtros">Filtros Estatísticos</string>
-    <string name="filtro_pares_impares">Pares e Ímpares</string>
-    <string name="descricao_filtro_pares_impares">Quantidade de números ímpares no jogo (o restante
-        será par)</string>
-    <string name="valor_filtro_pares_impares">Entre %1$d e %2$d números ímpares</string>
+    <!-- Strings para a tela de Configurações -->
+    <string name="titulo_configuracoes">Configurações</string>
+    <string name="label_manter_tela_ligada">Manter tela ligada durante o uso do app</string>
+    <string name="label_tema_app">Tema do Aplicativo</string>
+    <string-array name="temas_app">
+        <item>Claro</item>
+        <item>Escuro</item>
+        <item>Padrão do Sistema</item>
+    </string-array>
+    <string name="preferencias_salvas">Preferências salvas.</string>
 
-    <string name="filtro_soma_total">Soma Total</string>
-    <string name="descricao_filtro_soma_total">Soma de todos os números do jogo</string>
-    <string name="valor_filtro_soma_total">Entre %1$d e %2$d</string>
+    <!-- Strings para o Fragmento de Conferência de Jogos -->
+    <string name="titulo_conferencia">Conferir Resultado</string>
+    <string name="label_concurso">Número do Concurso (Opcional)</string>
+    <string name="hint_concurso">Ex: 2500</string>
+    <string name="label_numeros_sorteados">Números Sorteados (15 dezenas)</string>
+    <string name="hint_numeros_sorteados">Selecione 15 números</string>
+    <string name="label_seus_jogos">Seus Jogos para Conferência</string>
+    <string name="hint_seus_jogos">Insira seus jogos, um por linha, separados por vírgula ou espaço.
+        Ex: 01,02,03...</string>
+    <string name="botao_conferir">Conferir Jogos</string>
+    <string name="resultado_conferencia">Resultado da conferência: %1$d acertos</string>
+    <string name="erro_entrada_numeros_sorteados">Por favor, insira 15 números sorteados válidos.</string>
+    <string name="erro_entrada_seus_jogos">Por favor, insira pelo menos um jogo para conferir.</string>
+    <string name="erro_numeros_invalidos_jogo">Jogo inválido: %s. Verifique os números.</string>
+    <string name="acertos_label">Acertos: %d</string>
+    <string name="jogo_n_label">Jogo %d:</string>
+    <string name="importar_jogos_salvos">Importar Jogos Salvos</string>
+    <string name="jogos_importados_sucesso">Jogos salvos importados para conferência!</string>
+    <string name="nenhum_jogo_salvo_importar">Nenhum jogo salvo para importar.</string>
+    <string name="falha_importar_jogos">Falha ao importar jogos salvos.</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="informe_15_dezenas_sorteadas">Informe as 15 dezenas sorteadas.</string>
+    <string name="informe_jogos_para_conferencia">Informe os jogos para conferência.</string>
 
-    <string name="filtro_primos">Números Primos</string>
-    <string name="descricao_filtro_primos">Quantidade de números primos (2, 3, 5, 7, 11, 13, 17, 19,
-        23)</string>
-    <string name="valor_filtro_primos">Entre %1$d e %2$d primos</string>
+    <!-- Strings para o Bottom Navigation -->
+    <string name="bottom_nav_item_principal">Principal</string>
+    <string name="bottom_nav_item_filtros">Filtros</string>
+    <string name="bottom_nav_item_conferencia">Conferência</string>
+    <string name="bottom_nav_item_gerenciamento">Jogos</string>
+    <string name="bottom_nav_item_configuracoes">Ajustes</string>
 
-    <string name="filtro_fibonacci">Números de Fibonacci</string>
-    <string name="descricao_filtro_fibonacci">Quantidade de números da sequência de Fibonacci (1, 2,
-        3, 5, 8, 13, 21)</string>
-    <string name="valor_filtro_fibonacci">Entre %1$d e %2$d números de Fibonacci</string>
+    <!-- Outras strings úteis -->
+    <string name="ok">OK</string>
+    <string name="aviso">Aviso</string>
+    <string name="erro">Erro</string>
+    <string name="aguarde">Aguarde...</string>
 
-    <string name="filtro_miolo_moldura">Miolo e Moldura</string>
-    <string name="descricao_filtro_miolo_moldura">Quantidade de números do miolo do volante (7, 8,
-        9, 12, 13, 14, 17, 18, 19)</string>
-    <string name="valor_filtro_miolo_moldura">Entre %1$d e %2$d números do miolo</string>
-
-    <string name="filtro_multiplos_tres">Múltiplos de 3</string>
-    <string name="descricao_filtro_multiplos_tres">Quantidade de números que são múltiplos de 3 (3,
-        6, 9, 12, 15, 18, 21, 24)</string>
-    <string name="valor_filtro_multiplos_tres">Entre %1$d e %2$d múltiplos de 3</string>
-
-    <string name="salvar_filtros">Salvar Filtros</string>
-    <string name="resetar_filtros">Restaurar Padrões</string>
-    <string name="filtros_salvos_com_sucesso">Filtros salvos com sucesso!</string>
-    <string name="filtros_resetados">Filtros restaurados para configuração padrão.</string>
-
-    <!-- Tela de Conferência -->
+    <!-- Strings restauradas que estavam causando 'Cannot resolve symbol' e outras necessárias -->
     <string name="titulo_tela_conferencia">Conferência de Resultados</string>
     <string name="resultados_anteriores">Resultados Anteriores</string>
+    <string name="nenhum_resultado_anterior">Nenhum resultado anterior cadastrado.</string>
     <string name="adicionar_novo_resultado">Adicionar Novo Resultado</string>
     <string name="numero_concurso">Número do Concurso</string>
     <string name="numeros_sorteados">Números Sorteados (separados por espaço, vírgula ou traço)</string>
     <string name="selecionar_data">Selecionar Data</string>
     <string name="salvar_resultado">Salvar Resultado</string>
-    <string name="resultado_salvo_com_sucesso">Resultado salvo com sucesso!</string>
-    <string name="concurso_numero">Concurso: %1$d</string>
-    <string name="conferir_jogos">Conferir Jogos</string>
-    <string name="nenhum_resultado_anterior">Nenhum resultado anterior cadastrado.</string>
     <string name="resultado_atual">Resultado Atual</string>
-    <string name="erro_conferir_jogos">Erro ao conferir jogos. Tente novamente.</string>
-    <string name="erro_numero_concurso_invalido">Número do concurso inválido.</string>
-    <string name="erro_quantidade_numeros_invalida">É necessário informar exatamente 15 números
-        diferentes entre 1 e 25.</string>
+    <string name="conferir_jogos">Conferir Jogos</string>
     <string name="jogos_conferidos">Jogos Conferidos</string>
     <string name="nenhum_jogo_conferido">Nenhum jogo conferido. Use o botão acima para conferir seus
         jogos.</string>
-    <string name="concurso_nao_selecionado">Nenhum concurso selecionado</string>
-    <string name="acertos_formatado">%1$d acertos</string>
-    <string name="premio_15_acertos">Prêmio Principal</string>
-    <string name="premio_14_acertos">2º Prêmio</string>
-    <string name="premio_13_acertos">3º Prêmio</string>
-    <string name="premio_12_acertos">4º Prêmio</string>
-    <string name="premio_11_acertos">5º Prêmio</string>
-    <string name="sem_premio">Sem prêmio</string>
-
-    <!-- Tela de Gerenciamento de Jogos -->
+    <string name="titulo_tela_configuracoes">Configurações</string>
+    <string name="icone_tema">Ícone de tema</string>
+    <string name="tema_aplicativo">Tema do Aplicativo</string>
+    <string name="icone_sobre">Ícone de informações</string>
+    <string name="sobre_o_app">Sobre o Aplicativo</string>
+    <string name="versao_e_creditos">Versão e créditos</string>
     <string name="titulo_tela_gerenciamento">Gerenciamento de Jogos</string>
     <string name="todos">Todos</string>
     <string name="favoritos">Favoritos</string>
     <string name="conferidos">Conferidos</string>
     <string name="nenhum_jogo_encontrado">Nenhum jogo encontrado.</string>
     <string name="limpar_todos">Limpar Todos os Jogos</string>
-    <string name="confirmar_exclusao">Confirmar Exclusão</string>
-    <string name="mensagem_confirmar_exclusao_jogo">Deseja realmente excluir o jogo %1$s?</string>
-    <string name="excluir">Excluir</string>
-    <string name="cancelar">Cancelar</string>
-    <string name="jogo_excluido">Jogo excluído com sucesso!</string>
-    <string name="confirmar_limpar_todos">Confirmar Exclusão em Massa</string>
-    <string name="mensagem_confirmar_limpar_todos">Deseja realmente excluir TODOS os jogos? Esta
-        ação não pode ser desfeita.</string>
-    <string name="confirmar">Confirmar</string>
-    <string name="todos_jogos_excluidos">Todos os jogos foram excluídos.</string>
-    <string name="detalhes_do_jogo">Detalhes do Jogo</string>
-    <string name="numeros_jogados">Números: %1$s</string>
-    <string name="data_geracao">Data de geração: %1$s</string>
-    <string name="caracteristicas_jogo">Características do jogo:</string>
-    <string name="pares_impares">Pares: %1$d, Ímpares: %2$d</string>
-    <string name="soma_total">Soma total: %1$d</string>
-    <string name="numeros_primos">Números primos: %1$d</string>
-    <string name="numeros_fibonacci">Números de Fibonacci: %1$d</string>
-    <string name="miolo_moldura">Miolo: %1$d, Moldura: %2$d</string>
-    <string name="multiplos_tres">Múltiplos de 3: %1$d</string>
-    <string name="resultado_conferencia">Resultado da conferência: %1$d acertos</string>
-    <string name="fechar">Fechar</string>
     <string name="marcar_como_favorito">Marcar como favorito</string>
     <string name="excluir_jogo">Excluir jogo</string>
 
-    <!-- Tela de Configurações -->
-    <string name="titulo_tela_configuracoes">Configurações</string>
-    <string name="tema_aplicativo">Tema do Aplicativo</string>
-    <string name="tema_claro">Claro</string>
-    <string name="tema_escuro">Escuro</string>
-    <string name="tema_sistema">Sistema</string>
-    <string name="icone_tema">Ícone de tema</string>
-    <string name="selecionar_tema">Selecionar Tema</string>
-    <string name="sobre_o_app">Sobre o Aplicativo</string>
-    <string name="icone_sobre">Ícone de informações</string>
-    <string name="versao_e_creditos">Versão e créditos</string>
-    <string name="versao_app">Versão %1$s</string>
-    <string name="descricao_app">O Cebolão Lotofácil Generator é um aplicativo para gerar jogos da
-        Lotofácil utilizando filtros estatísticos que podem aumentar suas chances de premiação.</string>
-    <string name="desenvolvido_por">Desenvolvido por Cebolão Apps</string>
+    <!-- Strings para adapters -->
+    <string name="jogo_caracteristicas">P: %1$d | I: %2$d | Soma: %3$d</string>
+    <string name="jogo_caracteristicas_detalhes">Primos: %1$d | Fib: %2$d\nMiolo: %3$d | Moldura:
+        %4$d\nMúlt. 3: %5$d</string>
+    <string name="jogo_caracteristicas_compacto">P/I: %1$d/%2$d | Soma: %3$d | Pri: %4$d | Fib: %5$d</string>
+    <string name="jogo_acertos">Acertos: %1$d</string>
+    <string name="jogo_data_criacao">Criado em: %1$s</string>
+    <string name="resultado_concurso">Concurso %1$d</string>
+    <string name="resultado_data">Data: %1$s</string>
+    <string name="resultado_numeros_parciais">%1$s…</string>
 
-    <!-- Legacy strings -->
-    <string name="logotipo_do_app">Logotipo do aplicativo</string>
-    <string name="label_numeros_lotofacil">Números da Lotofácil</string>
-    <string name="numeros_gerados_placeholder">Números serão exibidos aqui</string>
-    <string name="gerar_numeros">Gerar Números</string>
-    <string name="copiar_numeros">Copiar Números</string>
-    <string name="abrir_whatsapp">Abrir WhatsApp</string>
-    <string name="numeros_copiados">Números copiados para a área de transferência</string>
-    <string name="gerar_numeros_primeiro">Por favor, gere os números primeiro.</string>
-    <string name="mensagem_whatsapp_padrao">Olá! Estes são meus números da Lotofácil:</string>
-    <string name="compartilhar_numeros_via">Compartilhar números via</string>
-    <string name="whatsapp_nao_instalado">WhatsApp não está instalado.</string>
-
-    <!-- Adicionais -->
-    <string name="initial_explanation">Explicação inicial padrão</string>
-    <string name="title_dashboard">Painel Padrão</string>
-    <string name="title_home">Início Padrão</string>
-    <string name="title_notifications">Notificações Padrão</string>
-    <string name="welcome_message">Bem-vindo Padrão</string>
+    <!-- Strings para prêmios -->
+    <string name="premio_15_acertos">15 acertos - Prêmio principal!</string>
+    <string name="premio_14_acertos">14 acertos - Prêmio secundário</string>
+    <string name="premio_13_acertos">13 acertos - Prêmio terciário</string>
+    <string name="premio_12_acertos">12 acertos</string>
+    <string name="premio_11_acertos">11 acertos</string>
+    <string name="sem_premio">Sem prêmio</string>
 </resources>

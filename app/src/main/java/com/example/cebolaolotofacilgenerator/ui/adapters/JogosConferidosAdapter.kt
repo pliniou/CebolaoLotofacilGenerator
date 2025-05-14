@@ -11,18 +11,16 @@ import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.databinding.ItemJogoConferidoBinding
 import com.example.cebolaolotofacilgenerator.ui.viewmodel.ConferenciaViewModel
 
-/**
- * Adaptador para exibir jogos conferidos com seus respectivos acertos
- */
-class JogosConferidosAdapter : 
-    ListAdapter<ConferenciaViewModel.JogoConferido, JogosConferidosAdapter.JogoConferidoViewHolder>(JogoConferidoDiffCallback()) {
+/** Adaptador para exibir jogos conferidos com seus respectivos acertos */
+class JogosConferidosAdapter :
+        ListAdapter<
+                ConferenciaViewModel.JogoConferido, JogosConferidosAdapter.JogoConferidoViewHolder>(
+                JogoConferidoDiffCallback()
+        ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JogoConferidoViewHolder {
-        val binding = ItemJogoConferidoBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+        val binding =
+                ItemJogoConferidoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return JogoConferidoViewHolder(binding)
     }
 
@@ -31,9 +29,8 @@ class JogosConferidosAdapter :
         holder.bind(jogoConferido)
     }
 
-    class JogoConferidoViewHolder(
-        private val binding: ItemJogoConferidoBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+    class JogoConferidoViewHolder(private val binding: ItemJogoConferidoBinding) :
+            RecyclerView.ViewHolder(binding.root) {
 
         fun bind(jogoConferido: ConferenciaViewModel.JogoConferido) {
             val context = binding.root.context
@@ -45,33 +42,33 @@ class JogosConferidosAdapter :
                 textViewAcertos.text = context.getString(R.string.acertos_formatado, acertos)
 
                 // Define a cor de fundo baseada na quantidade de acertos
-                val corFundo = when {
-                    acertos >= 15 -> R.color.acertos_15
-                    acertos >= 14 -> R.color.acertos_14
-                    acertos >= 13 -> R.color.acertos_13
-                    acertos >= 12 -> R.color.acertos_12
-                    acertos >= 11 -> R.color.acertos_11
-                    else -> R.color.acertos_menor_11
-                }
+                val corFundo =
+                        when {
+                            acertos >= 15 -> R.color.acertos_15
+                            acertos >= 14 -> R.color.acertos_14
+                            acertos >= 13 -> R.color.acertos_13
+                            acertos >= 12 -> R.color.acertos_12
+                            acertos >= 11 -> R.color.acertos_11
+                            else -> R.color.acertos_menor_11
+                        }
 
                 cardView.setCardBackgroundColor(
-                    ColorStateList.valueOf(
-                        ContextCompat.getColor(context, corFundo)
-                    )
+                        ColorStateList.valueOf(ContextCompat.getColor(context, corFundo))
                 )
 
                 // Exibe informações sobre o prêmio
-                val premio = when (acertos) {
-                    15 -> context.getString(R.string.premio_15_acertos)
-                    14 -> context.getString(R.string.premio_14_acertos)
-                    13 -> context.getString(R.string.premio_13_acertos)
-                    12 -> context.getString(R.string.premio_12_acertos)
-                    11 -> context.getString(R.string.premio_11_acertos)
-                    else -> context.getString(R.string.sem_premio)
-                }
+                val premio =
+                        when (acertos) {
+                            15 -> context.getString(R.string.premio_15_acertos)
+                            14 -> context.getString(R.string.premio_14_acertos)
+                            13 -> context.getString(R.string.premio_13_acertos)
+                            12 -> context.getString(R.string.premio_12_acertos)
+                            11 -> context.getString(R.string.premio_11_acertos)
+                            else -> context.getString(R.string.sem_premio)
+                        }
 
                 textViewPremio.text = premio
-                
+
                 // Exibe características do jogo
                 textViewCaracteristicas.text = buildString {
                     append("P/I: ${jogo.quantidadePares}/${jogo.quantidadeImpares}")
@@ -85,15 +82,15 @@ class JogosConferidosAdapter :
 
     class JogoConferidoDiffCallback : DiffUtil.ItemCallback<ConferenciaViewModel.JogoConferido>() {
         override fun areItemsTheSame(
-            oldItem: ConferenciaViewModel.JogoConferido, 
-            newItem: ConferenciaViewModel.JogoConferido
+                oldItem: ConferenciaViewModel.JogoConferido,
+                newItem: ConferenciaViewModel.JogoConferido
         ): Boolean {
             return oldItem.jogo.id == newItem.jogo.id
         }
 
         override fun areContentsTheSame(
-            oldItem: ConferenciaViewModel.JogoConferido, 
-            newItem: ConferenciaViewModel.JogoConferido
+                oldItem: ConferenciaViewModel.JogoConferido,
+                newItem: ConferenciaViewModel.JogoConferido
         ): Boolean {
             return oldItem == newItem
         }

@@ -1,6 +1,7 @@
 package com.example.cebolaolotofacilgenerator
 
 import android.app.Application
+import androidx.room.Room
 import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
 import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
@@ -14,7 +15,8 @@ class CebolaoApplication : Application() {
     private val applicationScope = CoroutineScope(SupervisorJob())
 
     // Instância do banco de dados
-    private val database by lazy { AppDatabase.getDatabase(this) }
+    lateinit var database: AppDatabase
+        private set
 
     // Repositórios
     val jogoRepository by lazy { JogoRepository(database.jogoDao()) }
@@ -22,6 +24,14 @@ class CebolaoApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        // Inicialização adicional pode ser feita aqui
+
+        // Inicializa o banco de dados
+        database =
+                Room.databaseBuilder(
+                                applicationContext,
+                                AppDatabase::class.java,
+                                "cebolao_database"
+                        )
+                        .build()
     }
 }
