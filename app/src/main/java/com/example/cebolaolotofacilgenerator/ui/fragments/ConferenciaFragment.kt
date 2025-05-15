@@ -125,7 +125,7 @@ class ConferenciaFragment : Fragment() {
                         binding.textViewConcursoNumero.text =
                                 getString(R.string.concurso_numero_formatado, resultado.id)
                         binding.textViewDataConcurso.text =
-                                dateFormatter.format(resultado.dataSorteio)
+                                resultado.dataSorteio?.let { dateFormatter.format(it) } ?: getString(R.string.data_nao_disponivel)
 
                         // Preenche os números do resultado
                         val numerosSorteados = resultado.numeros

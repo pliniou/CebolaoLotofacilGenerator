@@ -48,7 +48,7 @@ class ResultadosAdapter(private val onResultadoClick: (Resultado) -> Unit) :
                 textViewData.text =
                         context.getString(
                                 R.string.resultado_data,
-                                dateFormat.format(resultado.dataSorteio)
+                                resultado.dataSorteio?.let { dateFormat.format(it) } ?: context.getString(R.string.data_nao_disponivel)
                         )
 
                 // Exibe os primeiros números do resultado para economizar espaço

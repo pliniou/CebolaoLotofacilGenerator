@@ -51,7 +51,7 @@ fun DezenasSelectorGrid(
 ) {
     LazyVerticalGrid(
             columns = GridCells.Fixed(colunas),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(240.dp),
             contentPadding = PaddingValues(4.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)

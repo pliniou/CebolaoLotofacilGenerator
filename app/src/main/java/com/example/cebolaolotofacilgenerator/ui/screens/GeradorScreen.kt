@@ -85,17 +85,8 @@ fun GeradorScreen(
         // Observar o status da operação e os jogos gerados (se necessário aqui)
         val operacaoStatus by geradorViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
         val mensagem by geradorViewModel.mensagem.observeAsState("")
-        val quantidadeJogosInput by geradorViewModel.quantidadeJogosInput.collectAsState()
-        val quantidadeNumerosInput by geradorViewModel.quantidadeNumerosInput.collectAsState()
 
         // Coletar estados das dezenas fixas e excluídas
-        val numerosFixos by geradorViewModel.numerosFixosState.collectAsState()
-        val numerosExcluidos by geradorViewModel.numerosExcluidosState.collectAsState()
-
-        // Novo: Observar o último resultado
-        val ultimoResultado by mainViewModel.ultimoResultado.collectAsState()
-
-        // Estado local para dezenas selecionadas do último resultado
         val (dezenasSelecionadas, setDezenasSelecionadas) =
                 androidx.compose.runtime.remember {
                         androidx.compose.runtime.mutableStateOf(mutableSetOf<Int>())
@@ -105,8 +96,6 @@ fun GeradorScreen(
         val (data, setData) =
                 androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
 
-        val context = androidx.compose.ui.platform.LocalContext.current
-
         LaunchedEffect(dezenasFixasArg) {
                 val dezenas = dezenasFixasArg?.split(",")?.mapNotNull { it.toIntOrNull() }
                 geradorViewModel.inicializarComNumerosFixos(dezenas)
@@ -114,9 +103,9 @@ fun GeradorScreen(
 
         // Observar mensagens para exibir Snackbars
         LaunchedEffect(geradorViewModel.mensagem.value) {
-                val mensagem = geradorViewModel.mensagem.value
-                if (!mensagem.isNullOrEmpty()) {
-                        SnackbarManager.mostrarMensagem(mensagem)
+                val mensagemAtual = geradorViewModel.mensagem.value
+                if (!mensagemAtual.isNullOrEmpty()) {
+                        SnackbarManager.mostrarMensagem(mensagemAtual)
                 }
         }
 
@@ -139,22 +128,18 @@ fun GeradorScreen(
         // Efeito para observar o status da operação e navegar ou mostrar mensagens
         LaunchedEffect(operacaoStatus) {
                 when (operacaoStatus) {
-                        com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.SUCESSO -> {
+                        OperacaoStatus.SUCESSO -> {
                                 navController.navigate(Screen.JogosGerados.route)
                                 geradorViewModel.resetarStatusOperacao()
                         }
-                        com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO -> {
+                        OperacaoStatus.ERRO -> {
                                 geradorViewModel.resetarStatusOperacao()
                         }
-                        com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
-                                .CARREGANDO -> {
+                        OperacaoStatus.CARREGANDO -> {
                                 // Já tratado pelo CircularProgressIndicator
                         }
-                        com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.OCIOSO -> {
+                        OperacaoStatus.OCIOSO -> {
                                 // Nada a fazer
-                        }
-                        null -> {
-                                // Estado inicial, nada a fazer
                         }
                 }
         }
@@ -701,11 +686,6 @@ fun SeletorDezenasGrid(
                                                 .height(
                                                         280.dp
                                                 ) // Centraliza a grade e define altura fixa
-                                // .height((5 * 56).dp) // Altura aproximada para 5 linhas de botões
-                                // com padding
-                                // A altura dinâmica pode ser complicada com LazyVerticalGrid dentro
-                                // de um VerticalScroll
-                                // Por enquanto, deixaremos a altura ser determinada pelo conteúdo.
                                 ) {
                                 items(todasDezenas) { dezena ->
                                         val isSelected = dezena in dezenasSelecionadas

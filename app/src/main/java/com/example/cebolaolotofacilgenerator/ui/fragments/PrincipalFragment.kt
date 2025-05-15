@@ -45,9 +45,7 @@ class PrincipalFragment : Fragment() {
         setupObservers()
         setupListeners()
         geradorViewModel.operacaoStatus.value?.let {
-            atualizarUIComBaseNoStatus(
-                    it as com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
-            )
+            atualizarUIComBaseNoStatus(it)
         }
         geradorViewModel.jogosGerados.value?.let { atualizarVisibilidadeListaVazia(it.isEmpty()) }
     }
@@ -77,34 +75,30 @@ class PrincipalFragment : Fragment() {
             }
         }
 
-        geradorViewModel.operacaoStatus.observe(viewLifecycleOwner) {
-                status: com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus? ->
+        geradorViewModel.operacaoStatus.observe(viewLifecycleOwner) { status ->
             status?.let { atualizarUIComBaseNoStatus(it) }
         }
 
-        geradorViewModel.mensagem.observe(viewLifecycleOwner) { mensagem: String? ->
+        geradorViewModel.mensagem.observe(viewLifecycleOwner) { mensagem ->
             mensagem?.let {
-                if (geradorViewModel.operacaoStatus.value ==
-                                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO
-                ) {
+                if (geradorViewModel.operacaoStatus.value == OperacaoStatus.ERRO) {
                     mainViewModel.showSnackbar(it)
                     geradorViewModel.limparMensagemUnica()
                 }
             }
         }
 
-        jogoViewModel.operacaoStatus.observe(viewLifecycleOwner) {
-                status: com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus? ->
+        jogoViewModel.operacaoStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
-                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.SUCESSO -> {
+                OperacaoStatus.SUCESSO -> {
                     jogoViewModel.resetarStatus()
                 }
-                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO -> {
+                OperacaoStatus.ERRO -> {
                     mainViewModel.showSnackbar(getString(R.string.erro_salvar_jogos))
                     jogoViewModel.resetarStatus()
                 }
-                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.CARREGANDO,
-                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.OCIOSO,
+                OperacaoStatus.CARREGANDO,
+                OperacaoStatus.OCIOSO,
                 null -> {
                     /* Não faz nada para CARREGANDO, OCIOSO ou null neste observer específico */
                 }
@@ -112,27 +106,24 @@ class PrincipalFragment : Fragment() {
         }
     }
 
-    private fun atualizarUIComBaseNoStatus(
-            status: com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
-    ) {
+    private fun atualizarUIComBaseNoStatus(status: OperacaoStatus) {
         when (status) {
-            com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.CARREGANDO -> {
+            OperacaoStatus.CARREGANDO -> {
                 binding.progressGerador.visibility = View.VISIBLE
                 binding.btnGerarJogos.isEnabled = false
                 binding.btnGerarJogos.text = getString(R.string.gerando_jogos)
             }
-            com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.SUCESSO,
-            com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.OCIOSO -> {
+            OperacaoStatus.SUCESSO,
+            OperacaoStatus.OCIOSO -> {
                 binding.progressGerador.visibility = View.GONE
                 binding.btnGerarJogos.isEnabled = true
                 binding.btnGerarJogos.text = getString(R.string.gerar_jogos)
             }
-            com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO -> {
+            OperacaoStatus.ERRO -> {
                 binding.progressGerador.visibility = View.GONE
                 binding.btnGerarJogos.isEnabled = true
                 binding.btnGerarJogos.text = getString(R.string.gerar_jogos)
             }
-        // else não é necessário se o when for exaustivo com um tipo não anulável
         }
     }
 

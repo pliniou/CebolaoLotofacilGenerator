@@ -148,7 +148,7 @@ fun DezenasGrid(
 ) {
         LazyVerticalGrid(
                 columns = GridCells.Fixed(5), // 5 colunas para as 25 dezenas
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(240.dp),
                 contentPadding = PaddingValues(4.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)

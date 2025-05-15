@@ -57,7 +57,6 @@ fun ListaJogosConferidos(
     mainViewModel: MainViewModel,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     if (resultadoSorteado == null) {
         Box(
             modifier = modifier.fillMaxSize(),
@@ -96,8 +95,7 @@ fun ListaJogosConferidos(
                     val msgResId = if (novoEstadoFavorito) R.string.jogo_adicionado_favoritos
                                   else R.string.jogo_removido_favoritos
                     mainViewModel.showSnackbar(mainViewModel.getApplication<Application>().getString(msgResId))
-                },
-                resultadoCompleto = resultadoSorteado // Passando o resultado completo para cálculo de prêmio futuro
+                }
             )
         }
     }
@@ -111,7 +109,6 @@ fun ListaJogosConferidos(
  * @param numerosSorteados A lista de dezenas sorteadas no resultado do concurso para destaque.
  * @param isFavorito Booleano que indica se o jogo está marcado como favorito.
  * @param onFavoritoClick Lambda a ser executada quando o ícone de favorito é clicado.
- * @param resultadoCompleto O [Resultado] completo do concurso, para eventual cálculo de prêmios.
  * @param modifier Modificador para aplicar a este composable.
  */
 @OptIn(ExperimentalLayoutApi::class)
@@ -121,7 +118,6 @@ fun JogoConferidoItemView(
     numerosSorteados: List<Int>,
     isFavorito: Boolean,
     onFavoritoClick: () -> Unit,
-    resultadoCompleto: Resultado, // Usado para lógica de prêmios, se implementada
     modifier: Modifier = Modifier
 ) {
     val corFundo = when {
@@ -132,7 +128,6 @@ fun JogoConferidoItemView(
         item.acertos >= 11 -> Acertos11Color
         else -> AcertosMenor11Color.copy(alpha = 0.7f) // Atenua a cor para menos de 11 acertos
     }
-    val context = LocalContext.current
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -146,7 +141,7 @@ fun JogoConferidoItemView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(R.string.jogo_id_label_prefix) + (item.jogo.id?.toString() ?: stringResource(R.string.na_maiusculo)),
+                    text = stringResource(R.string.jogo_id_label_prefix) + (item.jogo.id.toString()),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer // Ajustado para contraste com fundos coloridos
                 )
