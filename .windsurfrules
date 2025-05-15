@@ -1,0 +1,14 @@
+Always respond in Portuguese.
+O projeto é um aplicativo Android desenvolvido em Kotlin (JVM target 17), utilizando o Android SDK 34 (minSdk 21).
+Utiliza o sistema de build Gradle com arquivos de configuração em Kotlin Script (build.gradle.kts).
+Principais plugins: com.android.application, org.jetbrains.kotlin.android, ksp e kotlin-parcelize.
+Arquitetura baseada em ViewModel, Room Database (com DAOs, entidades e repositório), Jetpack Compose para UI, DataStore para preferências e Coroutines para operações assíncronas.
+As dependências são gerenciadas via catálogo de versões (libs.versions.toml), incluindo AndroidX, Material, Compose, Room, Navigation, Gson, JUnit e Espresso.
+O namespace principal do app é com.example.cebolaolotofacilgenerator.
+O código-fonte está em app/src/main/java/com/example/cebolaolotofacilgenerator/ com subpastas para ui, model, viewmodel, util e data.
+O projeto utiliza ViewBinding e Jetpack Compose (ativados em buildFeatures).
+O banco de dados Room está definido em AppDatabase.kt e utiliza DAOs como JogoDao e ResultadoDao.
+Scripts Node.js presentes (package.json), mas não são essenciais para o funcionamento do app Android.
+O projeto utiliza Proguard para minificação em builds de release.
+Certifique-se de que o repositório google() está presente em todos os blocos de repositórios do Gradle para evitar erros de dependência.
+Siga o padrão de modularização e mantenha a compatibilidade com as versões das bibliotecas especificadas no catálogo de dependências.
