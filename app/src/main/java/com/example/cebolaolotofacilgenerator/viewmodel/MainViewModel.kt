@@ -38,17 +38,25 @@ class MainViewModel(
                     viewModelScope.launch { appDataStore.firstRunCompleted.collect { value = it } }
                 }
 
-    // Enum para as opções de tema (pode ser movido para um arquivo/local mais adequado se
-    // necessário)
+    /** Enum para definir as opções de tema disponíveis no aplicativo. */
     enum class TemaAplicativo {
+        /** Tema claro padrão. */
         CLARO,
+        /** Tema escuro padrão. */
         ESCURO,
+        /** Usa a configuração de tema do sistema operacional. */
         SISTEMA,
+        /** Tema claro com azul como cor primária. */
         AZUL,
-        VERDE
+        /** Tema claro com verde como cor primária. */
+        VERDE,
+        /** Tema claro com laranja como cor primária. */
+        LARANJA,
+        /** Tema claro com ciano como cor primária. */
+        CIANO
     }
 
-    // StateFlow para o tema do aplicativo
+    /** StateFlow que expõe o tema atual do aplicativo. */
     val temaAplicativo: StateFlow<TemaAplicativo> =
             appDataStore
                     .temaAplicativo // Flow<Int> com o ordinal
@@ -63,10 +71,13 @@ class MainViewModel(
                             initialValue = TemaAplicativo.SISTEMA // Valor inicial padrão
                     )
 
-    // Função para atualizar o tema do aplicativo
+    /** Salva a preferência de tema selecionada pelo usuário. */
     fun salvarTemaAplicativo(tema: TemaAplicativo) {
         viewModelScope.launch { appDataStore.salvarTemaAplicativo(tema.ordinal) }
     }
+
+    // ViewModel para gerenciar as preferências do usuário, como filtros e configurações gerais.
+    val preferenciasViewModel: PreferenciasViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(PreferenciasViewModel::class.java)
 
     // LiveData para observar todos os jogos
     val todosJogos: LiveData<List<Jogo>> = jogoRepository.todosJogos

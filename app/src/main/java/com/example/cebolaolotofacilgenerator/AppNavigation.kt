@@ -37,7 +37,7 @@ fun AppNavigation(
                 popEnterTransition = { slideInHorizontally { -it } },
                 popExitTransition = { slideOutHorizontally { it } }
         ) { 
-            HomeScreen(viewModel = mainViewModel, navController = navController) 
+            HomeScreen(mainViewModel = mainViewModel, navController = navController) 
         }
         
         composable(
@@ -47,7 +47,7 @@ fun AppNavigation(
                 popEnterTransition = { slideInHorizontally { -it } },
                 popExitTransition = { slideOutHorizontally { it } }
         ) { 
-            SettingsScreen(viewModel = mainViewModel, navController = navController) 
+            SettingsScreen(mainViewModel = mainViewModel, navController = navController) 
         }
         
         composable(
@@ -57,7 +57,7 @@ fun AppNavigation(
                 popEnterTransition = { slideInHorizontally { -it } },
                 popExitTransition = { slideOutHorizontally { it } }
         ) { 
-            FavoritosScreen(viewModel = mainViewModel, navController = navController) 
+            FavoritosScreen(mainViewModel = mainViewModel, navController = navController) 
         }
         
         composable(
@@ -67,7 +67,7 @@ fun AppNavigation(
                 popEnterTransition = { slideInHorizontally { -it } },
                 popExitTransition = { slideOutHorizontally { it } }
         ) { 
-            ResultadosScreen(viewModel = mainViewModel, navController = navController) 
+            ResultadosScreen(mainViewModel = mainViewModel, navController = navController) 
         }
     }
 }

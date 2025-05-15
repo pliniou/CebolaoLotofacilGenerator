@@ -171,6 +171,7 @@ class ConferenciaFragment : Fragment() {
 
     private fun setupListeners() {
         // Botão para salvar um novo resultado
+        /* Comentado: Remoção da funcionalidade de salvar novo resultado manualmente nesta tela
         binding.buttonSalvarResultado.setOnClickListener {
             // Valida o número do concurso
             val numeroConcurso = binding.editTextNumeroConcurso.text.toString().toIntOrNull()
@@ -205,15 +206,17 @@ class ConferenciaFragment : Fragment() {
             binding.editTextNumeroConcurso.text?.clear()
             binding.editTextNumerosSorteados.text?.clear()
         }
+        */
 
         // Seletor de data
-        binding.buttonSelecionarData.setOnClickListener { mostrarSeletorData() }
+        // binding.buttonSelecionarData.setOnClickListener { mostrarSeletorData() } // Comentado
 
         // Botão para conferir jogos
         binding.buttonConferirJogos.setOnClickListener { viewModel.conferirJogos() }
     }
 
     private fun mostrarSeletorData() {
+        /* Comentado: Remoção da funcionalidade de salvar novo resultado manualmente nesta tela
         val datePickerDialog =
                 DatePickerDialog(
                         requireContext(),
@@ -231,6 +234,7 @@ class ConferenciaFragment : Fragment() {
                 )
 
         datePickerDialog.show()
+        */
     }
 
     private fun limparCamposResultado() {

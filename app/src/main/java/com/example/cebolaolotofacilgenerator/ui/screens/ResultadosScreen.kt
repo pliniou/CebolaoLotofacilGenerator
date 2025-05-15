@@ -25,13 +25,13 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResultadosScreen(viewModel: MainViewModel, navController: NavController) {
-        val ultimoResultado by viewModel.ultimoResultado.collectAsState()
-        val dezenasSelecionadas by viewModel.dezenasSelecionadasUltimoResultado.collectAsState()
+fun ResultadosScreen(mainViewModel: MainViewModel, navController: NavController) {
+        val ultimoResultado by mainViewModel.ultimoResultado.collectAsState()
+        val dezenasSelecionadas by mainViewModel.dezenasSelecionadasUltimoResultado.collectAsState()
 
         // Carrega as dezenas do último resultado quando ele estiver disponível ou mudar
         LaunchedEffect(ultimoResultado) {
-                viewModel.carregarDezenasDoUltimoResultado(ultimoResultado?.numeros)
+                mainViewModel.carregarDezenasDoUltimoResultado(ultimoResultado?.numeros)
         }
 
         Scaffold(
@@ -98,7 +98,7 @@ fun ResultadosScreen(viewModel: MainViewModel, navController: NavController) {
                                         dezenasSelecionadas = dezenasSelecionadas,
                                         dezenasSorteadasOriginalmente = resultado.numeros.toSet(),
                                         onDezenaClick = { dezena ->
-                                                viewModel.toggleDezenaSelecionadaUltimoResultado(
+                                                mainViewModel.toggleDezenaSelecionadaUltimoResultado(
                                                         dezena
                                                 )
                                         }
@@ -111,7 +111,7 @@ fun ResultadosScreen(viewModel: MainViewModel, navController: NavController) {
                                                 // Navega para GeradorScreen passando as dezenas
                                                 // selecionadas
                                                 val dezenasParaGerador =
-                                                        viewModel.dezenasSelecionadasUltimoResultado
+                                                        mainViewModel.dezenasSelecionadasUltimoResultado
                                                                 .value.toList()
                                                 navController.navigate(
                                                         Screen.Gerador.createRoute(

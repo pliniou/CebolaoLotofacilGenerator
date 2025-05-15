@@ -35,6 +35,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp // Adicionado import para dp
@@ -47,6 +48,7 @@ import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import kotlinx.coroutines.FlowPreview
 import com.example.cebolaolotofacilgenerator.ui.components.BotaoGerarJogos
 import com.example.cebolaolotofacilgenerator.ui.components.SnackbarManager
+import com.example.cebolaolotofacilgenerator.R // Adicionar import R
 
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class) // Adicionar OptIn aqui e FlowPreview
 @Composable
@@ -172,8 +174,8 @@ fun GeradorScreen(
                                 navigationIcon = {
                                         IconButton(onClick = { navController.popBackStack() }) {
                                                 Icon(
-                                                        Icons.AutoMirrored.Filled.ArrowBack,
-                                                        contentDescription = "Voltar"
+                                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                                        contentDescription = stringResource(R.string.voltar)
                                                 )
                                         }
                                 }
@@ -291,290 +293,306 @@ fun GeradorScreen(
                         )
 
                         // Conteúdo dos filtros (anteriormente em FiltrosScreen)
-                        // Filtro Pares e Ímpares
-                        FiltroSwitchItem(
-                                titulo = "Filtrar Pares/Ímpares",
-                                subtitulo = "Definir quantidades de números pares e ímpares.",
-                                checado = filtroParesImparesAtivado,
-                                onCheckedChange = geradorViewModel::setFiltroParesImparesAtivado
-                        )
-                        if (filtroParesImparesAtivado) {
-                                Column(
-                                        modifier =
-                                                Modifier.padding(
-                                                        start = 16.dp,
-                                                        top = 8.dp,
-                                                        end = 16.dp,
-                                                        bottom = 8.dp
-                                                ),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
+                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                FiltroSwitchItem(
+                                        titulo = stringResource(R.string.filtro_pares_impares_titulo),
+                                        subtitulo = stringResource(R.string.filtro_pares_impares_subtitulo),
+                                        checado = filtroParesImparesAtivado,
+                                        onCheckedChange = geradorViewModel::setFiltroParesImparesAtivado
+                                )
+                                if (filtroParesImparesAtivado) {
+                                    Column(
+                                            modifier =
+                                            Modifier.padding(
+                                                    start = 8.dp, // Reduzido padding interno
+                                                    top = 8.dp,
+                                                    end = 8.dp,
+                                                    bottom = 8.dp
+                                            ),
+                                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
                                         OutlinedTextField(
                                                 value = minParesInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMinParesInput(it)
+                                                    geradorViewModel.setMinParesInput(it)
                                                 },
-                                                label = { Text("Mínimo de Pares") },
+                                                label = { Text(stringResource(R.string.filtro_min_pares_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
                                         OutlinedTextField(
                                                 value = maxParesInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMaxParesInput(it)
+                                                    geradorViewModel.setMaxParesInput(it)
                                                 },
-                                                label = { Text("Máximo de Pares") },
+                                                label = { Text(stringResource(R.string.filtro_max_pares_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
+                                    }
                                 }
+                            }
                         }
 
-                        // Filtro Soma Total
-                        FiltroSwitchItem(
-                                titulo = "Filtrar por Soma Total",
-                                subtitulo = "Definir faixa para a soma das dezenas.",
-                                checado = filtroSomaTotalAtivado,
-                                onCheckedChange = geradorViewModel::setFiltroSomaTotalAtivado
-                        )
-                        if (filtroSomaTotalAtivado) {
-                                Column(
-                                        modifier =
-                                                Modifier.padding(
-                                                        start = 16.dp,
-                                                        top = 8.dp,
-                                                        end = 16.dp,
-                                                        bottom = 8.dp
-                                                ),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
+                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                FiltroSwitchItem(
+                                        titulo = stringResource(R.string.filtro_soma_total_titulo),
+                                        subtitulo = stringResource(R.string.filtro_soma_total_subtitulo),
+                                        checado = filtroSomaTotalAtivado,
+                                        onCheckedChange = geradorViewModel::setFiltroSomaTotalAtivado
+                                )
+                                if (filtroSomaTotalAtivado) {
+                                    Column(
+                                            modifier =
+                                            Modifier.padding(
+                                                start = 8.dp,
+                                                top = 8.dp,
+                                                end = 8.dp,
+                                                bottom = 8.dp
+                                            ),
+                                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
                                         OutlinedTextField(
                                                 value = minSomaInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMinSomaInput(it)
+                                                    geradorViewModel.setMinSomaInput(it)
                                                 },
-                                                label = { Text("Soma Mínima") },
+                                                label = { Text(stringResource(R.string.filtro_soma_min_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
                                         OutlinedTextField(
                                                 value = maxSomaInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMaxSomaInput(it)
+                                                    geradorViewModel.setMaxSomaInput(it)
                                                 },
-                                                label = { Text("Soma Máxima") },
+                                                label = { Text(stringResource(R.string.filtro_soma_max_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
+                                    }
                                 }
+                            }
                         }
 
-                        // Filtro Números Primos
-                        FiltroSwitchItem(
-                                titulo = "Filtrar por Números Primos",
-                                subtitulo = "Definir quantidade de números primos.",
-                                checado = filtroPrimosAtivado,
-                                onCheckedChange = geradorViewModel::setFiltroPrimosAtivado
-                        )
-                        if (filtroPrimosAtivado) {
-                                Column(
-                                        modifier =
-                                                Modifier.padding(
-                                                        start = 16.dp,
-                                                        top = 8.dp,
-                                                        end = 16.dp,
-                                                        bottom = 8.dp
-                                                ),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
+                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                FiltroSwitchItem(
+                                        titulo = stringResource(R.string.filtro_primos_titulo),
+                                        subtitulo = stringResource(R.string.filtro_primos_subtitulo),
+                                        checado = filtroPrimosAtivado,
+                                        onCheckedChange = geradorViewModel::setFiltroPrimosAtivado
+                                )
+                                if (filtroPrimosAtivado) {
+                                    Column(
+                                            modifier =
+                                            Modifier.padding(
+                                                start = 8.dp,
+                                                top = 8.dp,
+                                                end = 8.dp,
+                                                bottom = 8.dp
+                                            ),
+                                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
                                         OutlinedTextField(
                                                 value = minPrimosInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMinPrimosInput(it)
+                                                    geradorViewModel.setMinPrimosInput(it)
                                                 },
-                                                label = { Text("Mín. Primos") },
+                                                label = { Text(stringResource(R.string.filtro_min_primos_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
                                         OutlinedTextField(
                                                 value = maxPrimosInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMaxPrimosInput(it)
+                                                    geradorViewModel.setMaxPrimosInput(it)
                                                 },
-                                                label = { Text("Máx. Primos") },
+                                                label = { Text(stringResource(R.string.filtro_max_primos_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
+                                    }
                                 }
+                            }
                         }
 
-                        // Filtro Números de Fibonacci
-                        FiltroSwitchItem(
-                                titulo = "Filtrar por Números de Fibonacci",
-                                subtitulo = "Definir quantidade de números de Fibonacci.",
-                                checado = filtroFibonacciAtivado,
-                                onCheckedChange = geradorViewModel::setFiltroFibonacciAtivado
-                        )
-                        if (filtroFibonacciAtivado) {
-                                Column(
-                                        modifier =
-                                                Modifier.padding(
-                                                        start = 16.dp,
-                                                        top = 8.dp,
-                                                        end = 16.dp,
-                                                        bottom = 8.dp
-                                                ),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
+                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                FiltroSwitchItem(
+                                        titulo = stringResource(R.string.filtro_fibonacci_titulo),
+                                        subtitulo = stringResource(R.string.filtro_fibonacci_subtitulo),
+                                        checado = filtroFibonacciAtivado,
+                                        onCheckedChange = geradorViewModel::setFiltroFibonacciAtivado
+                                )
+                                if (filtroFibonacciAtivado) {
+                                    Column(
+                                            modifier =
+                                            Modifier.padding(
+                                                start = 8.dp,
+                                                top = 8.dp,
+                                                end = 8.dp,
+                                                bottom = 8.dp
+                                            ),
+                                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
                                         OutlinedTextField(
                                                 value = minFibonacciInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMinFibonacciInput(it)
+                                                    geradorViewModel.setMinFibonacciInput(it)
                                                 },
-                                                label = { Text("Mín. Fibonacci") },
+                                                label = { Text(stringResource(R.string.filtro_min_fibonacci_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
                                         OutlinedTextField(
                                                 value = maxFibonacciInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMaxFibonacciInput(it)
+                                                    geradorViewModel.setMaxFibonacciInput(it)
                                                 },
-                                                label = { Text("Máx. Fibonacci") },
+                                                label = { Text(stringResource(R.string.filtro_max_fibonacci_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
+                                    }
                                 }
+                            }
                         }
 
-                        // Filtro Miolo e Moldura
-                        FiltroSwitchItem(
-                                titulo = "Filtrar por Miolo e Moldura",
-                                subtitulo = "Definir balanceamento entre miolo e moldura.",
-                                checado = filtroMioloMolduraAtivado,
-                                onCheckedChange = geradorViewModel::setFiltroMioloMolduraAtivado
-                        )
-                        if (filtroMioloMolduraAtivado) {
-                                Column(
-                                        modifier =
-                                                Modifier.padding(
-                                                        start = 16.dp,
-                                                        top = 8.dp,
-                                                        end = 16.dp,
-                                                        bottom = 8.dp
-                                                ),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
+                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                FiltroSwitchItem(
+                                        titulo = stringResource(R.string.filtro_miolo_moldura_titulo),
+                                        subtitulo = stringResource(R.string.filtro_miolo_moldura_subtitulo),
+                                        checado = filtroMioloMolduraAtivado,
+                                        onCheckedChange = geradorViewModel::setFiltroMioloMolduraAtivado
+                                )
+                                if (filtroMioloMolduraAtivado) {
+                                    Column(
+                                            modifier =
+                                            Modifier.padding(
+                                                start = 8.dp,
+                                                top = 8.dp,
+                                                end = 8.dp,
+                                                bottom = 8.dp
+                                            ),
+                                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
                                         OutlinedTextField(
                                                 value = minMioloInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMinMioloInput(it)
+                                                    geradorViewModel.setMinMioloInput(it)
                                                 },
-                                                label = { Text("Mín. Dezenas Miolo") },
+                                                label = { Text(stringResource(R.string.filtro_min_miolo_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
                                         OutlinedTextField(
                                                 value = maxMioloInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMaxMioloInput(it)
+                                                    geradorViewModel.setMaxMioloInput(it)
                                                 },
-                                                label = { Text("Máx. Dezenas Miolo") },
+                                                label = { Text(stringResource(R.string.filtro_max_miolo_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
+                                    }
                                 }
+                            }
                         }
 
-                        // Filtro Múltiplos de 3
-                        FiltroSwitchItem(
-                                titulo = "Filtrar por Múltiplos de 3",
-                                subtitulo = "Definir quantidade de múltiplos de 3.",
-                                checado = filtroMultiplosDeTresAtivado,
-                                onCheckedChange = geradorViewModel::setFiltroMultiplosDeTresAtivado
-                        )
-                        if (filtroMultiplosDeTresAtivado) {
-                                Column(
-                                        modifier =
-                                                Modifier.padding(
-                                                        start = 16.dp,
-                                                        top = 8.dp,
-                                                        end = 16.dp,
-                                                        bottom = 8.dp
-                                                ),
-                                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
+                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                FiltroSwitchItem(
+                                        titulo = stringResource(R.string.filtro_multiplos_tres_titulo),
+                                        subtitulo = stringResource(R.string.filtro_multiplos_tres_subtitulo),
+                                        checado = filtroMultiplosDeTresAtivado,
+                                        onCheckedChange = geradorViewModel::setFiltroMultiplosDeTresAtivado
+                                )
+                                if (filtroMultiplosDeTresAtivado) {
+                                    Column(
+                                            modifier =
+                                            Modifier.padding(
+                                                start = 8.dp,
+                                                top = 8.dp,
+                                                end = 8.dp,
+                                                bottom = 8.dp
+                                            ),
+                                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
                                         OutlinedTextField(
                                                 value = minMultiplosDeTresInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMinMultiplosDeTresInput(
-                                                                it
-                                                        )
+                                                    geradorViewModel.setMinMultiplosDeTresInput(it)
                                                 },
-                                                label = { Text("Mín. Múltiplos de 3") },
+                                                label = { Text(stringResource(R.string.filtro_min_multiplos_tres_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
                                         OutlinedTextField(
                                                 value = maxMultiplosDeTresInput,
                                                 onValueChange = {
-                                                        geradorViewModel.setMaxMultiplosDeTresInput(
-                                                                it
-                                                        )
+                                                    geradorViewModel.setMaxMultiplosDeTresInput(
+                                                            it
+                                                    )
                                                 },
-                                                label = { Text("Máx. Múltiplos de 3") },
+                                                label = { Text(stringResource(R.string.filtro_max_multiplos_tres_label)) },
                                                 keyboardOptions =
-                                                        KeyboardOptions(
-                                                                keyboardType = KeyboardType.Number
-                                                        ),
+                                                KeyboardOptions(
+                                                        keyboardType = KeyboardType.Number
+                                                ),
                                                 modifier = Modifier.fillMaxWidth(),
                                                 singleLine = true
                                         )
+                                    }
                                 }
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(24.dp)) // Espaço antes do botão

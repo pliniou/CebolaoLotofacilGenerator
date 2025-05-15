@@ -24,9 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cebolaolotofacilgenerator.R
+import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.data.model.Resultado
 import com.example.cebolaolotofacilgenerator.ui.viewmodel.ConferenciaViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 // Cores para os acertos (podem ser movidas para Theme.kt ou um arquivo de Colors.kt)
 val Acertos15Color = Color(0xFF4CAF50) // Verde
@@ -38,6 +41,15 @@ val AcertosMenor11Color = Color(0xFFF44336) // Vermelho
 val AcertoNumeroColor = Color.Black // Exemplo, pode ser ajustado
 val AcertoNumeroBackgroundColor = Color.Yellow // Exemplo para destacar número acertado
 
+/**
+ * Exibe a lista de jogos que foram conferidos contra um resultado.
+ *
+ * @param jogosConferidos A lista de [ConferenciaViewModel.JogoConferido], cada um contendo o jogo e o número de acertos.
+ * @param resultadoSorteado O [Resultado] contra o qual os jogos foram conferidos. Se nulo, exibe mensagem de "nenhum resultado selecionado".
+ * @param mainViewModel O [MainViewModel] principal, usado para interações globais como marcar jogos como favoritos e exibir Snackbars.
+ * @param modifier Modificador para aplicar a este composable.
+ */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListaJogosConferidos(
     jogosConferidos: List<ConferenciaViewModel.JogoConferido>,
@@ -47,14 +59,20 @@ fun ListaJogosConferidos(
 ) {
     val context = LocalContext.current
     if (resultadoSorteado == null) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             Text(stringResource(R.string.nenhum_resultado_selecionado))
         }
         return
     }
 
     if (jogosConferidos.isEmpty()) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             Text(stringResource(R.string.nenhum_jogo_conferido_para_exibir))
         }
         return
@@ -79,19 +97,31 @@ fun ListaJogosConferidos(
                                   else R.string.jogo_removido_favoritos
                     mainViewModel.showSnackbar(mainViewModel.getApplication<Application>().getString(msgResId))
                 },
-                resultadoCompleto = resultadoSorteado
+                resultadoCompleto = resultadoSorteado // Passando o resultado completo para cálculo de prêmio futuro
             )
         }
     }
 }
 
+/**
+ * Exibe um único item de jogo conferido, mostrando os números do jogo,
+ * destacando os acertados, o total de acertos e permitindo favoritar.
+ *
+ * @param item O [ConferenciaViewModel.JogoConferido] a ser exibido.
+ * @param numerosSorteados A lista de dezenas sorteadas no resultado do concurso para destaque.
+ * @param isFavorito Booleano que indica se o jogo está marcado como favorito.
+ * @param onFavoritoClick Lambda a ser executada quando o ícone de favorito é clicado.
+ * @param resultadoCompleto O [Resultado] completo do concurso, para eventual cálculo de prêmios.
+ * @param modifier Modificador para aplicar a este composable.
+ */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun JogoConferidoItemView(
     item: ConferenciaViewModel.JogoConferido,
     numerosSorteados: List<Int>,
     isFavorito: Boolean,
     onFavoritoClick: () -> Unit,
-    resultadoCompleto: Resultado,
+    resultadoCompleto: Resultado, // Usado para lógica de prêmios, se implementada
     modifier: Modifier = Modifier
 ) {
     val corFundo = when {
@@ -100,7 +130,7 @@ fun JogoConferidoItemView(
         item.acertos >= 13 -> Acertos13Color
         item.acertos >= 12 -> Acertos12Color
         item.acertos >= 11 -> Acertos11Color
-        else -> AcertosMenor11Color
+        else -> AcertosMenor11Color.copy(alpha = 0.7f) // Atenua a cor para menos de 11 acertos
     }
     val context = LocalContext.current
 
@@ -118,32 +148,36 @@ fun JogoConferidoItemView(
                 Text(
                     text = stringResource(R.string.jogo_id_label_prefix) + (item.jogo.id?.toString() ?: stringResource(R.string.na_maiusculo)),
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = MaterialTheme.colorScheme.onPrimaryContainer // Ajustado para contraste com fundos coloridos
                 )
                 IconButton(onClick = onFavoritoClick) {
                     Icon(
                         imageVector = if (isFavorito) Icons.Filled.Star else Icons.Outlined.StarBorder,
                         contentDescription = stringResource(if (isFavorito) R.string.desmarcar_como_favorito else R.string.marcar_como_favorito),
-                        tint = if (isFavorito) Color(0xFFFFD700) else MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = if (isFavorito) Color.Yellow /* Cor de estrela favorita */ else MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Exibir números do jogo, destacando os acertados
-            Row(
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 item.jogo.numeros.sorted().forEach { numero ->
                     val isAcerto = numero in numerosSorteados
                     Text(
                         text = numero.toString().padStart(2, '0'),
                         fontWeight = if (isAcerto) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isAcerto) AcertoNumeroColor else MaterialTheme.colorScheme.onPrimaryContainer,
+                        color = if (isAcerto) AcertoNumeroColor else MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
                         fontSize = 16.sp,
-                        modifier = if (isAcerto) Modifier.background(AcertoNumeroBackgroundColor).padding(2.dp) else Modifier.padding(2.dp)
+                        modifier = Modifier
+                            .background(
+                                color = if (isAcerto) AcertoNumeroBackgroundColor.copy(alpha = 0.6f) else Color.Transparent,
+                                shape = MaterialTheme.shapes.extraSmall
+                            )
+                            .padding(horizontal = 6.dp, vertical = 3.dp)
                     )
                 }
             }
@@ -152,8 +186,9 @@ fun JogoConferidoItemView(
                 text = stringResource(R.string.acertos_label_com_valor, item.acertos),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.onPrimaryContainer // Ajustado para contraste
             )
+            // TODO: Implementar exibição de prêmio se a lógica estiver disponível
             // val premio = VerificadorJogos.calcularPremio(item.acertos, resultadoCompleto)
             // Text(text = stringResource(R.string.premio_label, premio.toString()), color = MaterialTheme.colorScheme.onPrimaryContainer)
         }

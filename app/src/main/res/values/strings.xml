@@ -2,6 +2,7 @@
     <!-- Gerais -->
     <string name="app_name">Cebolão Lotofácil Generator</string>
     <string name="app_version">1.0.0</string>
+    <string name="app_version_name">1.0.1</string>
     <string name="concurso">Concurso</string>
 
     <!-- Strings relacionadas à funcionalidade de salvar/carregar configurações de filtros -->
@@ -221,5 +222,75 @@
     <string name="gerar_mais_jogos">Gerar mais jogos</string>
     <string name="mensagem">Mensagem</string>
     <string name="limparMensagem">Limpar mensagem</string>
+
+    <!-- Strings para SettingsScreen -->
+    <string name="tela_configuracoes_titulo">Configurações</string>
+    <string name="preferencias_aparencia_titulo">Preferências de Aparência</string>
+    <string name="tema_app_titulo_grupo">Tema do Aplicativo</string>
+    <string name="tema_azul">Azul</string>
+    <string name="tema_verde">Verde</string>
+    <string name="tema_laranja">Laranja</string>
+    <string name="tema_ciano">Ciano</string>
+    <string name="acoes_app_titulo">Ações do Aplicativo</string>
+    <string name="resetar_configuracoes_app_titulo">Resetar Configurações</string>
+    <string name="resetar_configuracoes_app_subtitulo">Restaura todas as configurações para o padrão</string>
+    <string name="configuracoes_resetadas_confirmacao">Configurações resetadas para o padrão!</string>
+    <string name="informacoes_titulo">Informações</string>
+    <string name="sobre_app_label">Sobre o App</string>
+    <string name="sobre_app_versao_subtitulo">Versão %1$s - %2$s</string>
+    <string name="sobre_app_titulo">Sobre o Cebolão Lotofácil</string>
+    <string name="sobre_app_versao">Versão: %1$s</string>
+    <string name="sobre_app_desenvolvido_por">Desenvolvido por: %1$s</string>
+    <string name="sobre_app_descricao">Seu assistente inteligente para criar e analisar jogos da
+        Lotofácil com base em estatísticas e suas preferências!</string>
+    <!-- Fim das strings para SettingsScreen -->
+
+    <!-- Strings para GeradorScreen Filtros -->
+    <string name="filtro_pares_impares_titulo">Pares/Ímpares</string>
+    <string name="filtro_pares_impares_subtitulo">Definir quantidade de números pares</string>
+    <string name="filtro_min_pares_label">Mínimo de Pares</string>
+    <string name="filtro_max_pares_label">Máximo de Pares</string>
+
+    <string name="filtro_soma_total_titulo">Soma Total das Dezenas</string>
+    <string name="filtro_soma_total_subtitulo">Definir faixa para a soma das dezenas</string>
+    <string name="filtro_soma_min_label">Soma Mínima</string>
+    <string name="filtro_soma_max_label">Soma Máxima</string>
+
+    <string name="filtro_primos_titulo">Números Primos</string>
+    <string name="filtro_primos_subtitulo">Definir quantidade de números primos</string>
+    <string name="filtro_min_primos_label">Mín. Primos</string>
+    <string name="filtro_max_primos_label">Máx. Primos</string>
+
+    <string name="filtro_fibonacci_titulo">Números de Fibonacci</string>
+    <string name="filtro_fibonacci_subtitulo">Definir quantidade de números de Fibonacci</string>
+    <string name="filtro_min_fibonacci_label">Mín. Fibonacci</string>
+    <string name="filtro_max_fibonacci_label">Máx. Fibonacci</string>
+
+    <string name="filtro_miolo_moldura_titulo">Miolo e Moldura</string>
+    <string name="filtro_miolo_moldura_subtitulo">Definir quantidade de dezenas do miolo</string>
+    <string name="filtro_min_miolo_label">Mín. Dezenas Miolo</string>
+    <string name="filtro_max_miolo_label">Máx. Dezenas Miolo</string>
+
+    <string name="filtro_multiplos_tres_titulo">Múltiplos de 3</string>
+    <string name="filtro_multiplos_tres_subtitulo">Definir quantidade de múltiplos de 3</string>
+    <string name="filtro_min_multiplos_tres_label">Mín. Múltiplos de 3</string>
+    <string name="filtro_max_multiplos_tres_label">Máx. Múltiplos de 3</string>
+    <!-- Fim das strings para GeradorScreen Filtros -->
+
+    <!-- Strings para JogosGeradosScreen -->
+    <string name="jogos_gerados_titulo">Jogos Gerados</string>
+    <string name="limpar_jogos_gerados_descricao">Limpar todos os jogos gerados</string>
+    <string name="limpar_jogos_gerados_titulo_dialog">Limpar Jogos Gerados</string>
+    <string name="limpar_jogos_gerados_mensagem_dialog">Tem certeza que deseja excluir todos os
+        jogos desta lista? Eles não foram salvos permanentemente.</string>
+    <string name="jogos_gerados_limpos_confirmacao">Todos os jogos gerados foram limpos da lista.</string>
+    <string name="gerar_novos_jogos">Gerar Novos Jogos</string>
+    <string name="seus_jogos_contagem">Seus jogos (%1$d)</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="salvar_todos_jogos">Salvar Todos os Jogos</string>
+    <!-- A string "nenhum_jogo_gerado_ainda" já existe -->
+    <!-- A string "gerar_mais_jogos" já existe -->
+    <!-- Strings para marcar/desmarcar favorito e data_criacao_label já existem -->
+    <!-- Fim das strings para JogosGeradosScreen -->
 
 </resources>

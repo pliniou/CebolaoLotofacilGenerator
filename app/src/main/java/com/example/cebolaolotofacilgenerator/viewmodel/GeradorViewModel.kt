@@ -17,8 +17,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.stateIn
 
-/** ViewModel para o gerador de jogos da Lotofácil com filtros estatísticos. */
+/**
+ * ViewModel para a tela de geração de jogos da Lotofácil.
+ *
+ * Responsável por:
+ * - Gerenciar as configurações de geração (quantidade de jogos, dezenas fixas/excluídas).
+ * - Aplicar filtros estatísticos selecionados pelo usuário.
+ * - Coordenar o processo de geração de jogos através do [GeradorJogos].
+ * - Expor o estado da operação de geração ([operacaoStatus]) e os jogos gerados ([jogosGerados]).
+ * - Lidar com a persistência de algumas preferências de geração (ex: dezenas fixas) via [PreferenciasViewModel].
+ */
 class GeradorViewModel(
     application: Application,
     private val jogoRepository: com.example.cebolaolotofacilgenerator.data.repository.JogoRepository? = null
@@ -61,6 +71,9 @@ class GeradorViewModel(
     val numerosExcluidosState: StateFlow<List<Int>> = _numerosExcluidosState.asStateFlow()
     private var numerosExcluidosInterno = mutableListOf<Int>() // Lista interna para manipulação
 
+    /**
+     * Bloco de inicialização. Carrega as dezenas fixas persistidas ao criar o ViewModel.
+     */
     init {
         viewModelScope.launch {
             // Carrega as dezenas fixas persistidas na inicialização
@@ -358,6 +371,13 @@ class GeradorViewModel(
         return Pair(true, null)
     }
 
+    /**
+     * Inicia o processo de geração de jogos.
+     * Define o [operacaoStatus] como [OperacaoStatus.CARREGANDO] e, após a conclusão,
+     * atualiza para [OperacaoStatus.SUCESSO] ou [OperacaoStatus.ERRO].
+     * Os jogos gerados são postados em [jogosGerados].
+     * Mensagens de feedback são postadas em [mensagem].
+     */
     /** Gera jogos com base nas configurações atuais. */
     fun gerarJogos() {
         viewModelScope.launch {
@@ -616,6 +636,26 @@ class GeradorViewModel(
         if (novaQuantidade in 15..20) {
             quantidadeNumeros = novaQuantidade
             _quantidadeNumerosInput.value = novaQuantidade.toString()
+        }
+    }
+
+    /** Salva a lista de jogos atualmente em [jogosGerados] no repositório. */
+    fun salvarJogosGerados() {
+        viewModelScope.launch {
+            val jogosParaSalvar = _jogosGerados.value // Pode ser nulo
+            if (!jogosParaSalvar.isNullOrEmpty()) { // Checagem de nulo e vazio
+                try {
+                    // jogoRepository é nullable, precisamos tratar isso também
+                    jogoRepository?.inserirJogos(jogosParaSalvar) // Usar chamada segura e garantir que jogosParaSalvar não é nulo aqui
+                    _operacaoStatus.value = OperacaoStatus.SUCESSO 
+                    _mensagem.value = getApplication<Application>().getString(R.string.jogos_salvos_com_sucesso)
+                } catch (e: Exception) {
+                    _operacaoStatus.value = OperacaoStatus.ERRO
+                    _mensagem.value = getApplication<Application>().getString(R.string.erro_salvar_jogos) + ": " + e.message
+                }
+            } else {
+                _mensagem.value = getApplication<Application>().getString(R.string.nenhum_jogo_para_salvar)
+            }
         }
     }
 

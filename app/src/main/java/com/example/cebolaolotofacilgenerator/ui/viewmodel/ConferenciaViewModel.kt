@@ -11,7 +11,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-/** ViewModel para a tela de Conferência de Jogos */
+/**
+ * ViewModel responsável pela lógica da tela de conferência de jogos.
+ *
+ * Gerencia o estado do resultado selecionado para conferência, a lista de jogos conferidos,
+ * o status da operação de conferência e as estatísticas de acertos.
+ */
 class ConferenciaViewModel(
         private val jogoRepository: JogoRepository,
         private val resultadoRepository: ResultadoRepository
@@ -41,30 +46,44 @@ class ConferenciaViewModel(
     val statusConferencia: StateFlow<StatusConferencia> = _statusConferencia
 
     // Estados para contagem de acertos
+    /** StateFlow que emite a contagem de jogos com 15 acertos. */
     private val _acertos15 = MutableStateFlow(0)
+    /** StateFlow público para a contagem de jogos com 15 acertos. */
     val acertos_15: StateFlow<Int> = _acertos15
 
+    /** StateFlow que emite a contagem de jogos com 14 acertos. */
     private val _acertos14 = MutableStateFlow(0)
+    /** StateFlow público para a contagem de jogos com 14 acertos. */
     val acertos_14: StateFlow<Int> = _acertos14
 
+    /** StateFlow que emite a contagem de jogos com 13 acertos. */
     private val _acertos13 = MutableStateFlow(0)
+    /** StateFlow público para a contagem de jogos com 13 acertos. */
     val acertos_13: StateFlow<Int> = _acertos13
 
+    /** StateFlow que emite a contagem de jogos com 12 acertos. */
     private val _acertos12 = MutableStateFlow(0)
+    /** StateFlow público para a contagem de jogos com 12 acertos. */
     val acertos_12: StateFlow<Int> = _acertos12
 
+    /** StateFlow que emite a contagem de jogos com 11 acertos. */
     private val _acertos11 = MutableStateFlow(0)
+    /** StateFlow público para a contagem de jogos com 11 acertos. */
     val acertos_11: StateFlow<Int> = _acertos11
 
+    /** StateFlow que emite a contagem de jogos com menos de 11 acertos. */
     private val _acertosMenor11 = MutableStateFlow(0)
+    /** StateFlow público para a contagem de jogos com menos de 11 acertos. */
     val acertos_menor_11: StateFlow<Int> = _acertosMenor11
 
-    /** Classe que representa um jogo conferido com seu número de acertos */
+    /** Classe de dados que representa um jogo conferido, incluindo o próprio [Jogo] e a quantidade de [acertos]. */
     data class JogoConferido(val jogo: Jogo, val acertos: Int)
 
     /**
-     * Seleciona um resultado para conferência (renomeado para carregarResultado por consistência
-     * com Fragment)
+     * Carrega e define um [Resultado] específico como o atual para conferência.
+     * Limpa os jogos previamente conferidos e reseta as contagens de acertos.
+     *
+     * @param resultado O [Resultado] a ser definido como atual.
      */
     fun carregarResultado(resultado: Resultado) {
         viewModelScope.launch {
@@ -75,6 +94,7 @@ class ConferenciaViewModel(
         }
     }
 
+    /** Carrega o último resultado salvo no repositório e o define como atual para conferência. */
     fun carregarUltimoResultado() {
         viewModelScope.launch {
             _resultadoAtual.value = resultadoRepository.obterUltimoResultado()
@@ -83,6 +103,7 @@ class ConferenciaViewModel(
         }
     }
 
+    /** Carrega todos os resultados disponíveis do repositório. */
     fun carregarTodosResultados() {
         viewModelScope.launch {
             // Supondo que o LiveData do repositório possa ser coletado ou convertido
@@ -93,6 +114,14 @@ class ConferenciaViewModel(
         }
     }
 
+    /**
+     * Salva um novo [Resultado] no repositório.
+     * Após salvar, atualiza a lista de todos os resultados e define o resultado recém-salvo como o atual.
+     *
+     * @param numeroConcurso O número do concurso.
+     * @param numerosSorteados A lista de dezenas sorteadas.
+     * @param dataSorteio A data do sorteio.
+     */
     fun salvarResultado(numeroConcurso: Int, numerosSorteados: List<Int>, dataSorteio: Date) {
         viewModelScope.launch {
             val novoResultado =
@@ -118,14 +147,18 @@ class ConferenciaViewModel(
         }
     }
 
-    /** Limpa o resultado selecionado (renomeado para limparResultadoAtual) */
+    /** Limpa o resultado atualmente selecionado, a lista de jogos conferidos e reseta as contagens de acertos. */
     fun limparResultadoAtual() {
         _resultadoAtual.value = null
         _jogosConferidos.value = emptyList()
         resetarContadoresAcertos()
     }
 
-    /** Confere jogos contra o resultado selecionado */
+    /**
+     * Inicia o processo de conferência de todos os jogos salvos contra o [resultadoAtual].
+     * Atualiza o [statusConferencia], [jogosConferidos] e as estatísticas de acertos.
+     * Define o status como [StatusConferencia.ERRO] se nenhum resultado estiver selecionado ou se ocorrer uma exceção.
+     */
     fun conferirJogos() { // Modificado para não esperar lista de jogos como parâmetro por agora
         val resultado = _resultadoAtual.value
         if (resultado == null) {

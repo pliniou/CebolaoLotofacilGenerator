@@ -42,6 +42,22 @@ val OnGreenPrimary = Color.White
 val OnGreenSecondary = Color.Black
 val OnGreenTertiary = Color.Black
 
+// Tema Laranja
+val OrangePrimary = Color(0xFFF57C00) // Laranja 700
+val OrangeSecondary = Color(0xFFFFB74D) // Laranja 300
+val OrangeTertiary = Color(0xFFFFE0B2) // Laranja 100
+val OnOrangePrimary = Color.Black
+val OnOrangeSecondary = Color.Black
+val OnOrangeTertiary = Color.Black
+
+// Tema Ciano
+val CyanPrimary = Color(0xFF0097A7) // Ciano 700
+val CyanSecondary = Color(0xFF4DD0E1) // Ciano 300
+val CyanTertiary = Color(0xFFB2EBF2) // Ciano 100
+val OnCyanPrimary = Color.White
+val OnCyanSecondary = Color.Black
+val OnCyanTertiary = Color.Black
+
 
 private val DarkColorScheme =
         darkColorScheme(
@@ -92,6 +108,32 @@ private val AppGreenColorScheme = lightColorScheme(
     onSurface = Color.Black
 )
 
+private val AppOrangeColorScheme = lightColorScheme(
+    primary = OrangePrimary,
+    secondary = OrangeSecondary,
+    tertiary = OrangeTertiary,
+    onPrimary = OnOrangePrimary,
+    onSecondary = OnOrangeSecondary,
+    onTertiary = OnOrangeTertiary,
+    background = Color(0xFFFFF8E1), // Fundo levemente alaranjado
+    surface = Color(0xFFFFFDF5),    // Superfície levemente alaranjada
+    onBackground = Color.Black,
+    onSurface = Color.Black
+)
+
+private val AppCyanColorScheme = lightColorScheme(
+    primary = CyanPrimary,
+    secondary = CyanSecondary,
+    tertiary = CyanTertiary,
+    onPrimary = OnCyanPrimary,
+    onSecondary = OnCyanSecondary,
+    onTertiary = OnCyanTertiary,
+    background = Color(0xFFE0F7FA), // Fundo levemente ciano
+    surface = Color(0xFFF0FDFF),    // Superfície levemente ciano
+    onBackground = Color.Black,
+    onSurface = Color.Black
+)
+
 @Composable
 fun CebolaoLotofacilGeneratorTheme(
         tema: TemaAplicativo = TemaAplicativo.SISTEMA,
@@ -126,6 +168,14 @@ fun CebolaoLotofacilGeneratorTheme(
         TemaAplicativo.VERDE -> {
             useDarkTheme = false // Tema Verde será sempre claro por esta definição
             colorScheme = AppGreenColorScheme
+        }
+        TemaAplicativo.LARANJA -> {
+            useDarkTheme = false // Tema Laranja será sempre claro
+            colorScheme = AppOrangeColorScheme
+        }
+        TemaAplicativo.CIANO -> {
+            useDarkTheme = false // Tema Ciano será sempre claro
+            colorScheme = AppCyanColorScheme
         }
     }
 

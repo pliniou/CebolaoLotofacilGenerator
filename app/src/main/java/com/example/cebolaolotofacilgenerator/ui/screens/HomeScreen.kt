@@ -19,7 +19,7 @@ import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: MainViewModel, navController: NavController) {
+fun HomeScreen(mainViewModel: MainViewModel, navController: NavController) {
         Scaffold(
                 topBar = {
                         TopAppBar(

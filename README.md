@@ -145,14 +145,15 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 - [x] Filtros estatísticos completos na geração de jogos
 - [x] Persistência 100% offline (Room)
 - [x] UI moderna e responsiva (Material 3)
-- [ ] Conferência inteligente de jogos (UI/UX aprimorada)
-- [ ] Feedback ao usuário com Snackbar e mensagens contextuais
-- [ ] Botão "Gerar Jogos" dinâmico/informativo
-- [ ] Implementação completa da tela de Favoritos
-- [ ] Mais opções de temas/cores na SettingsScreen
-- [ ] Melhorias de acessibilidade e internacionalização
-- [ ] Refino visual dos filtros e hierarquia da UI
-- [ ] Documentação de API interna e exemplos de uso
+- [x] Feedback ao usuário com Snackbar e mensagens contextuais
+- [x] Botão "Gerar Jogos" dinâmico/informativo
+- [x] Implementação completa da tela de Favoritos
+- [x] Mais opções de temas/cores na SettingsScreen (Claro, Escuro, Sistema, Azul, Verde, Laranja, Ciano)
+- [x] Refino visual dos filtros e hierarquia da UI (filtros agrupados em Cards na GeradorScreen, melhorias na SettingsScreen)
+- [x] Tela de Jogos Gerados com opções de salvar, gerar mais e favoritar.
+- [ ] Conferência inteligente de jogos (UI/UX aprimorada) - *Apresentação dos resultados em `ConferenciaComposables.kt` melhorada (cores, destaque de acertos, FlowRow). Interação de favoritar adicionada. Considerar melhorias adicionais na interatividade e clareza se necessário.*
+- [ ] Melhorias de acessibilidade (uso consistente de `contentDescription` com `stringResource`) e internacionalização (revisão de strings hardcoded) - *Revisão feita nas telas Settings, Gerador, Conferencia (Composables) e JogosGerados. Continuar varredura em partes mais antigas do app.*
+- [ ] Documentação de API interna (KDoc) e exemplos de uso - *KDoc adicionado/melhorado em ViewModels principais (Main, Gerador, Conferencia, Preferencias) e nos novos Composables (ConferenciaComposables, SettingsScreen, JogosGeradosScreen). Expandir para outras classes e funções públicas importantes.*
 
 ## Dependências Principais
 
