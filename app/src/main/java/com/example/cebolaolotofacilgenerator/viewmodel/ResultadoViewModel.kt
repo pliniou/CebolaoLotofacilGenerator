@@ -86,26 +86,6 @@ class ResultadoViewModel(application: Application) : AndroidViewModel(applicatio
                 }
             }
 
-    /**
-     * Busca um resultado pelo número do concurso.
-     * @param numeroConcurso O número do concurso.
-     */
-    fun buscarResultadoPorConcurso(numeroConcurso: Long) =
-            viewModelScope.launch {
-                try {
-                    _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                    val resultado =
-                            withContext(Dispatchers.IO) {
-                                repository.obterResultadoPorNumero(numeroConcurso)
-                            }
-                    _resultadoSelecionado.value = resultado
-                    _operacaoStatus.value = OperacaoStatus.SUCESSO
-                } catch (e: Exception) {
-                    _resultadoSelecionado.value = null
-                    _operacaoStatus.value = OperacaoStatus.ERRO
-                }
-            }
-
     /** Busca o último resultado cadastrado. */
     fun buscarUltimoResultado() =
             viewModelScope.launch {
@@ -122,17 +102,21 @@ class ResultadoViewModel(application: Application) : AndroidViewModel(applicatio
             }
 
     /**
-     * Verifica se um determinado concurso já existe no banco de dados.
-     * @param concurso O número do concurso.
-     * @return Verdadeiro se o concurso existir, falso caso contrário.
+     * Cria um novo resultado com base nos parâmetros fornecidos.
+     * @param dataSorteio A data do sorteio.
+     * @param numerosSorteadosLista A lista de números sorteados.
+     * @param premiacao15 A premiacao do resultado.
+     * @param ganhadores15 O número de ganhadores do resultado.
+     * @param premiacao14 A premiacao do resultado.
+     * @param ganhadores14 O número de ganhadores do resultado.
+     * @param premiacao13 A premiacao do resultado.
+     * @param ganhadores13 O número de ganhadores do resultado.
+     * @param premiacao12 A premiacao do resultado.
+     * @param ganhadores12 O número de ganhadores do resultado.
+     * @param premiacao11 A premiacao do resultado.
+     * @param ganhadores11 O número de ganhadores do resultado.
      */
-    suspend fun concursoExiste(concurso: Long): Boolean {
-        return withContext(Dispatchers.IO) { repository.concursoExiste(concurso) }
-    }
-
-    /** Cria um novo resultado com base nos parâmetros fornecidos. */
     fun criarNovoResultado(
-            concurso: Long,
             dataSorteio: Date,
             numerosSorteadosLista: List<Int>,
             premiacao15: Double,
@@ -147,7 +131,6 @@ class ResultadoViewModel(application: Application) : AndroidViewModel(applicatio
             ganhadores11: Int
     ): Resultado {
         return Resultado(
-                concurso = concurso,
                 dataSorteio = dataSorteio,
                 numeros = numerosSorteadosLista.sorted(),
                 premiacao15Acertos = premiacao15,

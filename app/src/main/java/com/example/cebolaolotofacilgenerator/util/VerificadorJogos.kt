@@ -32,7 +32,7 @@ class VerificadorJogos {
         fun conferirJogos(jogos: List<Jogo>, resultado: Resultado): List<Jogo> {
             return jogos.map { jogo ->
                 val acertos = verificarAcertos(jogo, resultado)
-                jogo.copy(acertos = acertos, concursoConferido = resultado.concurso)
+                jogo.copy(acertos = acertos, concursoConferido = resultado.id)
             }
         }
 

@@ -66,9 +66,9 @@ class ConferenciaViewModel(
      * Seleciona um resultado para conferência (renomeado para carregarResultado por consistência
      * com Fragment)
      */
-    fun carregarResultado(numeroConcurso: Long) {
+    fun carregarResultado(resultado: Resultado) {
         viewModelScope.launch {
-            _resultadoAtual.value = resultadoRepository.obterResultadoPorNumero(numeroConcurso)
+            _resultadoAtual.value = resultado
             // Limpar jogos conferidos ao carregar novo resultado para conferência
             _jogosConferidos.value = emptyList()
             resetarContadoresAcertos()
@@ -97,7 +97,6 @@ class ConferenciaViewModel(
         viewModelScope.launch {
             val novoResultado =
                     Resultado(
-                            concurso = numeroConcurso.toLong(),
                             dataSorteio = dataSorteio,
                             numeros = numerosSorteados,
                             premiacao15Acertos = 0.0,
@@ -113,7 +112,8 @@ class ConferenciaViewModel(
                     )
             resultadoRepository.inserirResultado(novoResultado)
             carregarTodosResultados() // Atualiza a lista de resultados
-            carregarResultado(novoResultado.concurso) // Define o novo resultado como o atual
+            carregarUltimoResultado() // Alterado para carregar o último, que deve ser o que
+            // acabamos de salvar
         }
     }
 

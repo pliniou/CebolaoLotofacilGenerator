@@ -66,9 +66,7 @@ class ConferenciaFragment : Fragment() {
         // Adapter para resultados anteriores
         resultadosAdapter =
                 ResultadosAdapter(
-                        onResultadoClick = { resultado ->
-                            viewModel.carregarResultado(resultado.concurso)
-                        }
+                        onResultadoClick = { resultado -> viewModel.carregarResultado(resultado) }
                 )
 
         binding.recyclerViewResultadosAnteriores.apply {
@@ -97,7 +95,7 @@ class ConferenciaFragment : Fragment() {
                         // TODO: Adicionar string 'concurso_numero' em strings.xml (ex: <string
                         // name="concurso_numero">Concurso N° %d</string>)
                         binding.textViewConcursoNumero.text =
-                                getString(R.string.concurso_numero_formatado, resultado.concurso)
+                                getString(R.string.concurso_numero_formatado, resultado.id)
                         binding.textViewDataConcurso.text =
                                 dateFormatter.format(resultado.dataSorteio)
 
@@ -153,11 +151,11 @@ class ConferenciaFragment : Fragment() {
                             binding.buttonConferirJogos.isEnabled =
                                     true // Ou false dependendo da lógica inicial
                         }
-                    // else -> {} // Não é mais necessário com when exaustivo sobre enum
                     }
                 }
             }
         }
+
         // Carregar todos os resultados para a lista de seleção
         viewModel.carregarTodosResultados()
     }

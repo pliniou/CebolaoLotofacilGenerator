@@ -44,7 +44,7 @@ class ResultadosAdapter(private val onResultadoClick: (Resultado) -> Unit) :
             val context = binding.root.context
             binding.apply {
                 textViewConcurso.text =
-                        context.getString(R.string.resultado_concurso, resultado.concurso)
+                        context.getString(R.string.resultado_concurso, resultado.id.toString())
                 textViewData.text =
                         context.getString(
                                 R.string.resultado_data,
@@ -65,7 +65,7 @@ class ResultadosAdapter(private val onResultadoClick: (Resultado) -> Unit) :
 
     class ResultadoDiffCallback : DiffUtil.ItemCallback<Resultado>() {
         override fun areItemsTheSame(oldItem: Resultado, newItem: Resultado): Boolean {
-            return oldItem.concurso == newItem.concurso
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Resultado, newItem: Resultado): Boolean {

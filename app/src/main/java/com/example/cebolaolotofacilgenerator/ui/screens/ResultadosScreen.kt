@@ -63,7 +63,7 @@ fun ResultadosScreen(viewModel: MainViewModel, navController: NavController) {
                 ) {
                         ultimoResultado?.let { resultado ->
                                 Text(
-                                        text = "Concurso: ${resultado.concurso}",
+                                        text = "Concurso: ${resultado.id}",
                                         style = MaterialTheme.typography.headlineSmall,
                                         modifier = Modifier.padding(bottom = 4.dp)
                                 )
