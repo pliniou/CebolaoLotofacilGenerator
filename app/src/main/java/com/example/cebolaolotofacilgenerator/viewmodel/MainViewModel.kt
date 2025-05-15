@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+// Novas importações para Snackbar
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 class MainViewModel(
         application: Application,
@@ -114,6 +117,16 @@ class MainViewModel(
         viewModelScope.launch {
             val resultado = Resultado(numeros = dezenas.sorted())
             resultadoRepository.inserirResultado(resultado)
+        }
+    }
+
+    // Snackbar
+    private val _snackbarMessage = MutableSharedFlow<String>()
+    val snackbarMessage = _snackbarMessage.asSharedFlow()
+
+    fun showSnackbar(message: String) {
+        viewModelScope.launch {
+            _snackbarMessage.emit(message)
         }
     }
 }

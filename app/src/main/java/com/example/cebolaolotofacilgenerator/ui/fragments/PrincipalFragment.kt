@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
@@ -15,6 +16,7 @@ import com.example.cebolaolotofacilgenerator.databinding.FragmentPrincipalBindin
 import com.example.cebolaolotofacilgenerator.ui.adapters.JogosAdapter
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.JogoViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 
 class PrincipalFragment : Fragment() {
 
@@ -24,6 +26,7 @@ class PrincipalFragment : Fragment() {
 
     private val geradorViewModel: GeradorViewModel by viewModels()
     private val jogoViewModel: JogoViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var jogosAdapter: JogosAdapter
 
     override fun onCreateView(
@@ -56,12 +59,7 @@ class PrincipalFragment : Fragment() {
                             jogoViewModel.marcarComoFavorito(jogo, favorito)
                         },
                         onJogoClick = { jogo: Jogo ->
-                            Toast.makeText(
-                                            requireContext(),
-                                            "Jogo clicado: ${jogo.numeros.joinToString()}",
-                                            Toast.LENGTH_SHORT
-                                    )
-                                    .show()
+                            mainViewModel.showSnackbar("Jogo clicado: ${jogo.numeros.joinToString()}")
                         }
                 )
 
@@ -89,7 +87,7 @@ class PrincipalFragment : Fragment() {
                 if (geradorViewModel.operacaoStatus.value ==
                                 com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO
                 ) {
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                    mainViewModel.showSnackbar(it)
                     geradorViewModel.limparMensagemUnica()
                 }
             }
@@ -102,8 +100,7 @@ class PrincipalFragment : Fragment() {
                     jogoViewModel.resetarStatus()
                 }
                 com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO -> {
-                    Toast.makeText(requireContext(), "Erro ao salvar jogos.", Toast.LENGTH_SHORT)
-                            .show()
+                    mainViewModel.showSnackbar(getString(R.string.erro_salvar_jogos))
                     jogoViewModel.resetarStatus()
                 }
                 com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.CARREGANDO,
@@ -142,17 +139,11 @@ class PrincipalFragment : Fragment() {
         binding.btnSalvarJogos.setOnClickListener {
             val jogos = geradorViewModel.jogosGerados.value
             if (jogos.isNullOrEmpty()) {
-                Toast.makeText(
-                                requireContext(),
-                                R.string.nenhum_jogo_para_salvar,
-                                Toast.LENGTH_SHORT
-                        )
-                        .show()
+                mainViewModel.showSnackbar(getString(R.string.nenhum_jogo_para_salvar))
                 return@setOnClickListener
             }
             jogoViewModel.inserirJogos(jogos)
-            Toast.makeText(requireContext(), R.string.jogos_salvos_com_sucesso, Toast.LENGTH_SHORT)
-                    .show()
+            mainViewModel.showSnackbar(getString(R.string.jogos_salvos_com_sucesso))
         }
     }
 

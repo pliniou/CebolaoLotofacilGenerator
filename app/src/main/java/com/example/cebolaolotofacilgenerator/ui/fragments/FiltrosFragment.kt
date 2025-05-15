@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
 import com.example.cebolaolotofacilgenerator.databinding.FragmentFiltrosBinding
 import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.google.android.material.slider.RangeSlider
 
 class FiltrosFragment : Fragment() {
@@ -19,6 +21,7 @@ class FiltrosFragment : Fragment() {
         private val binding
                 get() = _binding!!
         private val viewModel: FiltrosViewModel by viewModels()
+        private val mainViewModel: MainViewModel by activityViewModels()
 
         override fun onCreateView(
                 inflater: LayoutInflater,
@@ -65,17 +68,14 @@ class FiltrosFragment : Fragment() {
                         config?.let { atualizarInterface(it) }
                 }
 
-                // Comentado para evitar erros de "Unresolved reference" por enquanto
-                /*
                 viewModel.mensagem.observe(viewLifecycleOwner) { mensagem: String? ->
                         mensagem?.let {
                                 if (it.isNotEmpty()) {
-                                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                                        mainViewModel.showSnackbar(it)
                                         viewModel.limparMensagem()
                                 }
                         }
                 }
-                */
         }
 
         private fun setupListeners() {

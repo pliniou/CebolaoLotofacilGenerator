@@ -6,7 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
@@ -45,7 +48,16 @@ class MainActivity : ComponentActivity() {
                 var showBottomBar by remember { mutableStateOf(true) }
                 val startDestination = Screen.Home.route
 
+                val snackbarHostState = remember { SnackbarHostState() }
+
+                LaunchedEffect(key1 = mainViewModel) {
+                    mainViewModel.snackbarMessage.collect { message ->
+                        snackbarHostState.showSnackbar(message)
+                    }
+                }
+
                 Scaffold(
+                        snackbarHost = { SnackbarHost(snackbarHostState) },
                         bottomBar = {
                             if (showBottomBar) {
                                 BottomNavigationBar(navController = navController)

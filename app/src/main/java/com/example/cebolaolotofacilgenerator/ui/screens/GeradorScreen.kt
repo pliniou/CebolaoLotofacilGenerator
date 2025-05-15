@@ -249,23 +249,13 @@ fun GeradorScreen(
                                                 viewModel.salvarUltimoResultado(
                                                         dezenasSelecionadas.toList()
                                                 )
-                                                Toast.makeText(
-                                                                context,
-                                                                "Último resultado salvo!",
-                                                                Toast.LENGTH_SHORT
-                                                        )
-                                                        .show()
+                                                viewModel.showSnackbar("Último resultado salvo com ${dezenasSelecionadas.size} dezenas!")
                                         } else {
-                                                Toast.makeText(
-                                                                context,
-                                                                "Selecione 15 dezenas.",
-                                                                Toast.LENGTH_SHORT
-                                                        )
-                                                        .show()
+                                                viewModel.showSnackbar("Selecione exatamente 15 dezenas para o resultado.")
                                         }
                                 },
-                                enabled = dezenasSelecionadas.size == 15,
-                                modifier = Modifier.padding(vertical = 12.dp).fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                                enabled = dezenasSelecionadas.size == 15
                         ) { Text("Salvar Último Resultado") }
                         Divider(modifier = Modifier.padding(vertical = 16.dp))
                         Text(

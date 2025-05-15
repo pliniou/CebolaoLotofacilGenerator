@@ -8,19 +8,27 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.databinding.FragmentConferenciaBinding
-import com.example.cebolaolotofacilgenerator.ui.adapters.JogosConferidosAdapter
 import com.example.cebolaolotofacilgenerator.ui.adapters.ResultadosAdapter
 import com.example.cebolaolotofacilgenerator.ui.viewmodel.ConferenciaViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import kotlinx.coroutines.launch
+
+// Novas importações para Compose
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import com.example.cebolaolotofacilgenerator.ui.composables.ListaJogosConferidos
+import com.example.cebolaolotofacilgenerator.ui.theme.CebolaoLotofacilGeneratorTheme // Substitua pelo seu tema se o nome for diferente
 
 class ConferenciaFragment : Fragment() {
 
@@ -29,7 +37,7 @@ class ConferenciaFragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: ConferenciaViewModel by viewModels()
-    private lateinit var jogosConferidosAdapter: JogosConferidosAdapter
+    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var resultadosAdapter: ResultadosAdapter
     private val calendar = Calendar.getInstance()
     private val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -50,23 +58,40 @@ class ConferenciaFragment : Fragment() {
         setupObservers()
         setupListeners()
 
+        binding.composeViewJogosConferidos.apply {
+            // Dispose the Composition when the view's LifecycleOwner
+            // is destroyed
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                CebolaoLotofacilGeneratorTheme { // Use o tema do seu app
+                    val jogosConferidos by viewModel.jogosConferidos.collectAsState()
+                    val resultadoAtual by viewModel.resultadoAtual.collectAsState()
+
+                    ListaJogosConferidos(
+                        jogosConferidos = jogosConferidos,
+                        resultadoSorteado = resultadoAtual,
+                        modifier = Modifier.fillMaxSize() // Opcional, ajuste conforme necessário
+                    )
+                }
+            }
+        }
+
         // Carrega o último resultado salvo, se houver
         viewModel.carregarUltimoResultado()
+        viewModel.carregarTodosResultados() // Para popular a lista de resultados anteriores
     }
 
     private fun setupRecyclerViews() {
-        // Adapter para jogos conferidos
-        jogosConferidosAdapter = JogosConferidosAdapter()
-
-        binding.recyclerViewJogosConferidos.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = jogosConferidosAdapter
-        }
-
         // Adapter para resultados anteriores
         resultadosAdapter =
                 ResultadosAdapter(
-                        onResultadoClick = { resultado -> viewModel.carregarResultado(resultado) }
+                        onResultadoClick = { resultado ->
+                            viewModel.carregarResultado(resultado)
+                            // Limpar a lista de jogos conferidos manualmente ao selecionar um novo resultado,
+                            // pois o ViewModel já faz isso, mas para garantir que a UI reaja imediatamente
+                            // se a composable não estiver observando algo que a force a recompor instantaneamente.
+                            // Na verdade, o ViewModel já limpa `_jogosConferidos` em `carregarResultado`.
+                        }
                 )
 
         binding.recyclerViewResultadosAnteriores.apply {
@@ -112,16 +137,6 @@ class ConferenciaFragment : Fragment() {
             }
         }
 
-        // Observa os jogos conferidos
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.jogosConferidos.collect { jogosConferidos ->
-                    jogosConferidosAdapter.submitList(jogosConferidos)
-                    atualizarVisibilidadeJogosConferidos(jogosConferidos.isEmpty())
-                }
-            }
-        }
-
         // Observa o status da conferência
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -138,13 +153,7 @@ class ConferenciaFragment : Fragment() {
                         ConferenciaViewModel.StatusConferencia.ERRO -> {
                             binding.progressBarConferencia.visibility = View.GONE
                             binding.buttonConferirJogos.isEnabled = true
-                            // TODO: Adicionar string 'erro_conferir_jogos' em strings.xml
-                            Toast.makeText(
-                                            requireContext(),
-                                            R.string.erro_conferir_jogos,
-                                            Toast.LENGTH_SHORT
-                                    )
-                                    .show()
+                            mainViewModel.showSnackbar(getString(R.string.erro_conferir_jogos))
                         }
                         ConferenciaViewModel.StatusConferencia.OCIOSO -> {
                             binding.progressBarConferencia.visibility = View.GONE
@@ -155,9 +164,6 @@ class ConferenciaFragment : Fragment() {
                 }
             }
         }
-
-        // Carregar todos os resultados para a lista de seleção
-        viewModel.carregarTodosResultados()
     }
 
     private fun setupListeners() {
@@ -167,12 +173,7 @@ class ConferenciaFragment : Fragment() {
             val numeroConcurso = binding.editTextNumeroConcurso.text.toString().toIntOrNull()
             if (numeroConcurso == null) {
                 // TODO: Adicionar string 'erro_numero_concurso_invalido' em strings.xml
-                Toast.makeText(
-                                requireContext(),
-                                R.string.erro_numero_concurso_invalido,
-                                Toast.LENGTH_SHORT
-                        )
-                        .show()
+                mainViewModel.showSnackbar(getString(R.string.erro_numero_concurso_invalido))
                 return@setOnClickListener
             }
 
@@ -189,24 +190,13 @@ class ConferenciaFragment : Fragment() {
             // Valida a quantidade de números
             if (numerosList.size != 15) {
                 // TODO: Adicionar string 'erro_quantidade_numeros_invalida' em strings.xml
-                Toast.makeText(
-                                requireContext(),
-                                R.string.erro_quantidade_numeros_invalida,
-                                Toast.LENGTH_SHORT
-                        )
-                        .show()
+                mainViewModel.showSnackbar(getString(R.string.erro_quantidade_numeros_invalida))
                 return@setOnClickListener
             }
 
             // Salva o resultado
             viewModel.salvarResultado(numeroConcurso, numerosList, calendar.time)
-            // TODO: Adicionar string 'resultado_salvo_com_sucesso' em strings.xml
-            Toast.makeText(
-                            requireContext(),
-                            R.string.resultado_salvo_com_sucesso,
-                            Toast.LENGTH_SHORT
-                    )
-                    .show()
+            mainViewModel.showSnackbar(getString(R.string.resultado_salvo_com_sucesso))
 
             // Limpa os campos de entrada
             binding.editTextNumeroConcurso.text?.clear()
@@ -255,16 +245,6 @@ class ConferenciaFragment : Fragment() {
         } else {
             binding.recyclerViewResultadosAnteriores.visibility = View.VISIBLE
             binding.textViewSemResultados.visibility = View.GONE
-        }
-    }
-
-    private fun atualizarVisibilidadeJogosConferidos(listaVazia: Boolean) {
-        if (listaVazia) {
-            binding.recyclerViewJogosConferidos.visibility = View.GONE
-            binding.textViewSemJogosConferidos.visibility = View.VISIBLE
-        } else {
-            binding.recyclerViewJogosConferidos.visibility = View.VISIBLE
-            binding.textViewSemJogosConferidos.visibility = View.GONE
         }
     }
 

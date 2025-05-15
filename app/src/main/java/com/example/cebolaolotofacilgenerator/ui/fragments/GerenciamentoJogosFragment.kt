@@ -8,12 +8,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.databinding.FragmentGerenciamentoJogosBinding
 import com.example.cebolaolotofacilgenerator.ui.adapters.JogosGerenciamentoAdapter
 import com.example.cebolaolotofacilgenerator.viewmodel.JogosViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.google.android.material.tabs.TabLayout
 
 class GerenciamentoJogosFragment : Fragment() {
@@ -23,6 +25,7 @@ class GerenciamentoJogosFragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: JogosViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var jogosAdapter: JogosGerenciamentoAdapter
 
     override fun onCreateView(
@@ -135,8 +138,7 @@ class GerenciamentoJogosFragment : Fragment() {
                 )
                 .setPositiveButton(R.string.excluir_jogo) { _, _ ->
                     viewModel.deletarJogo(jogo)
-                    Toast.makeText(requireContext(), R.string.jogo_excluido, Toast.LENGTH_SHORT)
-                            .show()
+                    mainViewModel.showSnackbar(getString(R.string.jogo_excluido))
                 }
                 .setNegativeButton(R.string.cancelar, null)
                 .show()
@@ -148,12 +150,7 @@ class GerenciamentoJogosFragment : Fragment() {
                 .setMessage(R.string.mensagem_confirmar_limpar_todos)
                 .setPositiveButton(R.string.sim) { _, _ ->
                     viewModel.limparTodosJogos()
-                    Toast.makeText(
-                                    requireContext(),
-                                    R.string.todos_jogos_excluidos,
-                                    Toast.LENGTH_SHORT
-                            )
-                            .show()
+                    mainViewModel.showSnackbar(getString(R.string.todos_jogos_excluidos))
                 }
                 .setNegativeButton(R.string.nao, null)
                 .show()
