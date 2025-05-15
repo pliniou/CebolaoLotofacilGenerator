@@ -5,16 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
 
 class MainViewModelFactory(
         private val application: Application,
         private val jogoRepository: JogoRepository,
+        private val resultadoRepository: ResultadoRepository,
         private val appDataStore: AppDataStore
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(application, jogoRepository, appDataStore) as T
+            return MainViewModel(application, jogoRepository, resultadoRepository, appDataStore) as
+                    T
         }
         if (modelClass.isAssignableFrom(FiltrosViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

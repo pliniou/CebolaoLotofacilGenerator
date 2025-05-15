@@ -4,15 +4,19 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
+import com.example.cebolaolotofacilgenerator.data.model.Resultado
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MainViewModel(
         application: Application,
         private val jogoRepository: JogoRepository,
+        private val resultadoRepository: ResultadoRepository,
         private val appDataStore: AppDataStore
 ) : AndroidViewModel(application) {
 
@@ -32,6 +36,34 @@ class MainViewModel(
                     started = SharingStarted.WhileSubscribed(5000),
                     initialValue = true // Valor inicial, será substituído pelo valor do DataStore
             )
+
+    // Enum para as opções de tema (pode ser movido para um arquivo/local mais adequado se
+    // necessário)
+    enum class TemaAplicativo {
+        CLARO,
+        ESCURO,
+        SISTEMA
+    }
+
+    // StateFlow para o tema do aplicativo
+    val temaAplicativo: StateFlow<TemaAplicativo> =
+            appDataStore
+                    .temaAplicativo // Flow<Int> com o ordinal
+                    .map { ordinal ->
+                        TemaAplicativo.values().getOrElse(ordinal) {
+                            TemaAplicativo.SISTEMA
+                        } // Converte ordinal para Enum
+                    }
+                    .stateIn(
+                            scope = viewModelScope,
+                            started = SharingStarted.WhileSubscribed(5000),
+                            initialValue = TemaAplicativo.SISTEMA // Valor inicial padrão
+                    )
+
+    // Função para atualizar o tema do aplicativo
+    fun salvarTemaAplicativo(tema: TemaAplicativo) {
+        viewModelScope.launch { appDataStore.salvarTemaAplicativo(tema.ordinal) }
+    }
 
     // Função para atualizar o estado das notificações
     fun setNotificationsEnabled(isEnabled: Boolean) {
@@ -55,6 +87,38 @@ class MainViewModel(
     // Função para indicar que o primeiro run foi completado
     fun completeFirstRun() {
         viewModelScope.launch { appDataStore.setFirstRunCompleted() }
+    }
+
+    // LiveData/StateFlow para o último resultado
+    val ultimoResultado: StateFlow<Resultado?> =
+            resultadoRepository
+                    .ultimoResultado // Este é LiveData<Resultado>
+                    .asFlow() // Converte LiveData<Resultado> para Flow<Resultado?>
+                    .stateIn(
+                            scope = viewModelScope,
+                            started = SharingStarted.WhileSubscribed(5000),
+                            initialValue = null
+                    )
+
+    // StateFlow para as dezenas selecionadas pelo usuário na tela de resultados
+    private val _dezenasSelecionadasUltimoResultado = MutableStateFlow<Set<Int>>(emptySet())
+    val dezenasSelecionadasUltimoResultado: StateFlow<Set<Int>> =
+            _dezenasSelecionadasUltimoResultado
+
+    // Função para inicializar ou atualizar as dezenas com base no último resultado
+    fun carregarDezenasDoUltimoResultado(dezenas: List<Int>?) {
+        _dezenasSelecionadasUltimoResultado.value = dezenas?.toSet() ?: emptySet()
+    }
+
+    // Função para o usuário modificar uma dezena selecionada
+    fun toggleDezenaSelecionadaUltimoResultado(dezena: Int) {
+        val atuais = _dezenasSelecionadasUltimoResultado.value.toMutableSet()
+        if (atuais.contains(dezena)) {
+            atuais.remove(dezena)
+        } else {
+            atuais.add(dezena)
+        }
+        _dezenasSelecionadasUltimoResultado.value = atuais
     }
 }
 

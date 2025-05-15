@@ -3,12 +3,9 @@ package com.example.cebolaolotofacilgenerator
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
@@ -16,12 +13,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
 import com.example.cebolaolotofacilgenerator.ui.components.BottomNavigationBar
 import com.example.cebolaolotofacilgenerator.ui.theme.CebolaoLotofacilGeneratorTheme
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModelFactory
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 
 class MainActivity : ComponentActivity() {
 
@@ -36,49 +32,33 @@ class MainActivity : ComponentActivity() {
 
         val database = AppDatabase.getDatabase(applicationContext)
         val jogoRepository = JogoRepository(database.jogoDao())
-        val viewModelFactory = MainViewModelFactory(application, jogoRepository, appDataStore)
+        val resultadoRepository = ResultadoRepository(database.resultadoDao())
+        val viewModelFactory =
+                MainViewModelFactory(application, jogoRepository, resultadoRepository, appDataStore)
         mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         setContent {
-            CebolaoLotofacilGeneratorTheme {
+            val temaAplicativo by mainViewModel.temaAplicativo.collectAsState()
+
+            CebolaoLotofacilGeneratorTheme(tema = temaAplicativo) {
                 val navController = rememberNavController()
-                var showBottomBar by remember { mutableStateOf(false) }
-                var determinedStartDestination by remember { mutableStateOf<String?>(null) }
+                var showBottomBar by remember { mutableStateOf(true) }
+                val startDestination = Screen.Home.route
 
-                LaunchedEffect(navController) {
-                    navController.currentBackStackEntryFlow.collect { backStackEntry ->
-                        showBottomBar = backStackEntry.destination.route != Screen.Onboarding.route
-                    }
-                }
-
-                LaunchedEffect(Unit) {
-                    val isFirstRun = !appDataStore.firstRunCompleted.first()
-                    determinedStartDestination =
-                            if (isFirstRun) Screen.Onboarding.route else Screen.Home.route
-                }
-
-                determinedStartDestination?.let { startDest ->
-                    Scaffold(
-                            bottomBar = {
-                                if (showBottomBar) {
-                                    BottomNavigationBar(navController = navController)
-                                }
+                Scaffold(
+                        bottomBar = {
+                            if (showBottomBar) {
+                                BottomNavigationBar(navController = navController)
                             }
-                    ) { innerPadding ->
-                        AppNavigation(
-                                navController = navController,
-                                viewModel = mainViewModel,
-                                modifier = Modifier.padding(innerPadding),
-                                startDestination = startDest
-                        )
-                    }
-                }
-                        ?: run {
-                            Surface(
-                                    modifier = Modifier.fillMaxSize(),
-                                    color = MaterialTheme.colorScheme.background
-                            ) {}
                         }
+                ) { innerPadding ->
+                    AppNavigation(
+                            navController = navController,
+                            viewModel = mainViewModel,
+                            modifier = Modifier.padding(innerPadding),
+                            startDestination = startDestination
+                    )
+                }
             }
         }
     }

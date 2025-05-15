@@ -49,6 +49,26 @@ class GeradorViewModel(application: Application) : AndroidViewModel(application)
     var minSoma: Int? = null
     var maxSoma: Int? = null
 
+    /**
+     * Inicializa a lista de números fixos com um conjunto de dezenas. Isso normalmente seria
+     * chamado ao entrar na tela se vier de um fluxo específico.
+     */
+    fun inicializarComNumerosFixos(dezenas: List<Int>?) {
+        numerosFixos.clear()
+        if (!dezenas.isNullOrEmpty()) {
+            // Adiciona apenas dezenas válidas (1-25) e que não estejam já nos excluídos
+            // e respeitando o limite de números fixos.
+            dezenas.forEach { dezena ->
+                if (dezena in 1..25 &&
+                                numerosFixos.size < (quantidadeNumeros - 1) &&
+                                dezena !in numerosExcluidos
+                ) {
+                    numerosFixos.add(dezena)
+                }
+            }
+        }
+    }
+
     /** Reseta todas as configurações para os valores padrão. */
     fun resetarConfiguracoes() {
         quantidadeJogos = 10

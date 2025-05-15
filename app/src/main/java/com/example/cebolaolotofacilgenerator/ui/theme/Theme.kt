@@ -1,6 +1,5 @@
 package com.example.cebolaolotofacilgenerator.ui.theme
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,6 +15,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel.TemaAplicativo
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
@@ -44,30 +44,47 @@ private val LightColorScheme =
                 */
                 )
 
-@SuppressLint("NewApi")
 @Composable
 fun CebolaoLotofacilGeneratorTheme(
-        darkTheme: Boolean = isSystemInDarkTheme(),
-        // Dynamic color is available on Android 12+
-        dynamicColor: Boolean = true,
+        tema: TemaAplicativo = TemaAplicativo.SISTEMA,
         content: @Composable () -> Unit
 ) {
+    val useDarkTheme: Boolean
+    val useDynamicColor: Boolean
+
+    when (tema) {
+        TemaAplicativo.CLARO -> {
+            useDarkTheme = false
+            useDynamicColor = false
+        }
+        TemaAplicativo.ESCURO -> {
+            useDarkTheme = true
+            useDynamicColor = false
+        }
+        TemaAplicativo.SISTEMA -> {
+            useDarkTheme = isSystemInDarkTheme()
+            useDynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        }
+    }
+
     val colorScheme =
             when {
-                dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                useDynamicColor -> {
                     val context = LocalContext.current
-                    if (darkTheme) dynamicDarkColorScheme(context)
+                    if (useDarkTheme) dynamicDarkColorScheme(context)
                     else dynamicLightColorScheme(context)
                 }
-                darkTheme -> DarkColorScheme
+                useDarkTheme -> DarkColorScheme
                 else -> LightColorScheme
             }
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                    !useDarkTheme
         }
     }
 

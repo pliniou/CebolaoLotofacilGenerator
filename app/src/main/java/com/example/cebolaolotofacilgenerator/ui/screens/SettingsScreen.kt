@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,20 +27,19 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel.TemaAplicativo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(viewModel: MainViewModel, navController: NavController) {
-        val (isDarkThemeEnabled, setDarkThemeEnabled) = remember { mutableStateOf(false) }
         val areNotificationsEnabled by viewModel.notificationsEnabled.collectAsState()
+        val temaAtual by viewModel.temaAplicativo.collectAsState()
 
         Scaffold(
                 topBar = {
@@ -70,14 +68,17 @@ fun SettingsScreen(viewModel: MainViewModel, navController: NavController) {
                         modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                        Text("Preferências", style = MaterialTheme.typography.titleMedium)
-                        SettingsItem(
-                                icon = Icons.Filled.Palette,
-                                title = "Tema Escuro",
-                                subtitle = "Ativar ou desativar o tema escuro",
-                                isChecked = isDarkThemeEnabled,
-                                onCheckedChange = setDarkThemeEnabled
+                        Text(
+                                "Preferências de Aparência",
+                                style = MaterialTheme.typography.titleMedium
                         )
+                        ThemeSettingsGroup(
+                                temaAtual = temaAtual,
+                                onThemeSelected = { viewModel.salvarTemaAplicativo(it) }
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Outras Preferências", style = MaterialTheme.typography.titleMedium)
                         SettingsItem(
                                 icon = Icons.Filled.Notifications,
                                 title = "Notificações",
@@ -95,6 +96,48 @@ fun SettingsScreen(viewModel: MainViewModel, navController: NavController) {
                                 subtitle = "Versão 1.0.0"
                         ) {
                                 // Ação ao clicar, pode navegar para uma tela de "Sobre"
+                        }
+                }
+        }
+}
+
+@Composable
+fun ThemeSettingsGroup(temaAtual: TemaAplicativo, onThemeSelected: (TemaAplicativo) -> Unit) {
+        val temas = TemaAplicativo.values()
+
+        Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                                "Tema do Aplicativo",
+                                style = MaterialTheme.typography.titleSmall,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        temas.forEach { tema ->
+                                Row(
+                                        Modifier.fillMaxWidth()
+                                                .clickable { onThemeSelected(tema) }
+                                                .padding(vertical = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        RadioButton(
+                                                selected = (tema == temaAtual),
+                                                onClick = { onThemeSelected(tema) }
+                                        )
+                                        Text(
+                                                text =
+                                                        when (tema) {
+                                                                TemaAplicativo.CLARO -> "Claro"
+                                                                TemaAplicativo.ESCURO -> "Escuro"
+                                                                TemaAplicativo.SISTEMA ->
+                                                                        "Padrão do Sistema"
+                                                        },
+                                                style = MaterialTheme.typography.bodyLarge,
+                                                modifier = Modifier.padding(start = 8.dp)
+                                        )
+                                }
                         }
                 }
         }

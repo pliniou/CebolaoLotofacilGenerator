@@ -59,20 +59,29 @@ fun HomeScreen(viewModel: MainViewModel, navController: NavController) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                        // Cabeçalho com título do app
+                        // Mensagem de Boas-vindas
                         Text(
-                                text = "Gerador de Jogos da Lotofácil",
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.Bold,
+                                text = "Bem-vindo ao Cebolão Lotofácil!",
+                                style = MaterialTheme.typography.headlineSmall,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(vertical = 16.dp)
+                                modifier = Modifier.padding(bottom = 8.dp)
+                        )
+
+                        Text(
+                                text = "Seu assistente para gerar jogos inteligentes.",
+                                style = MaterialTheme.typography.titleMedium,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(bottom = 24.dp)
                         )
 
                         // Cartões de funcionalidades principais
                         HomeCard(
                                 title = "Gerar Novos Jogos",
                                 description = "Crie novos jogos com base nas suas preferências",
-                                onClick = { /* TODO: Implementar geração de jogos */},
+                                onClick = {
+                                        // Navega para GeradorScreen sem dezenas fixas
+                                        navController.navigate(Screen.Gerador.createRoute(null))
+                                },
                                 icon = Icons.Default.Add
                         )
 
@@ -91,35 +100,52 @@ fun HomeScreen(viewModel: MainViewModel, navController: NavController) {
                                 icon = Icons.Default.List
                         )
 
-                        // Estatísticas ou informações adicionais
+                        // Informações sobre o App e Como Usar (integrado)
                         Card(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors =
                                         CardDefaults.cardColors(
-                                                containerColor = MaterialTheme.colorScheme.surface
+                                                containerColor =
+                                                        MaterialTheme.colorScheme
+                                                                .surfaceVariant // Cor diferenciada
                                         )
                         ) {
                                 Column(
                                         modifier = Modifier.padding(16.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
+                                        horizontalAlignment =
+                                                Alignment.Start // Alinhar à esquerda para melhor
+                                        // leitura
+                                        ) {
                                         Text(
-                                                text = "Dicas para Jogar",
-                                                style = MaterialTheme.typography.titleMedium,
-                                                fontWeight = FontWeight.Bold
+                                                text = "Sobre o Aplicativo",
+                                                style = MaterialTheme.typography.titleLarge,
+                                                fontWeight = FontWeight.Bold,
+                                                modifier = Modifier.padding(bottom = 8.dp)
                                         )
-                                        Spacer(modifier = Modifier.height(8.dp))
                                         Text(
                                                 text =
-                                                        "A Lotofácil é uma loteria onde você marca de 15 a 20 números dentre os 25 disponíveis. " +
-                                                                "Para ganhar, é preciso acertar 11, 12, 13, 14 ou 15 números.",
+                                                        "Este app ajuda você a gerar jogos da Lotofácil, " +
+                                                                "gerenciar seus jogos favoritos e conferir os resultados.",
                                                 style = MaterialTheme.typography.bodyMedium,
-                                                textAlign = TextAlign.Center
+                                                modifier = Modifier.padding(bottom = 16.dp)
+                                        )
+
+                                        Text(
+                                                text = "Como Usar",
+                                                style = MaterialTheme.typography.titleLarge,
+                                                fontWeight = FontWeight.Bold,
+                                                modifier = Modifier.padding(bottom = 8.dp)
+                                        )
+                                        Text(
+                                                text =
+                                                        "• Use os botões acima para: Gerar novos jogos, acessar Favoritos ou ver Resultados.\n" +
+                                                                "• Explore as Configurações (ícone no topo) para personalizar sua experiência.",
+                                                style = MaterialTheme.typography.bodyMedium
                                         )
                                 }
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(16.dp)) // Espaço no final da coluna
                 }
         }
 }
