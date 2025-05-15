@@ -132,7 +132,7 @@ class ResultadoViewModel(application: Application) : AndroidViewModel(applicatio
     ): Resultado {
         return Resultado(
                 dataSorteio = dataSorteio,
-                numeros = numerosSorteadosLista.sorted(),
+                dezenas = numerosSorteadosLista.sorted(),
                 premiacao15Acertos = premiacao15,
                 ganhadores15 = ganhadores15,
                 premiacao14Acertos = premiacao14,
@@ -162,5 +162,17 @@ class ResultadoViewModel(application: Application) : AndroidViewModel(applicatio
     /** Reseta o status da operação para OCIOSO. */
     fun resetarStatusOperacao() {
         _operacaoStatus.value = OperacaoStatus.OCIOSO
+    }
+
+    /** Recarrega todos os resultados do banco de dados. */
+    fun carregarResultados() = viewModelScope.launch {
+        try {
+            _operacaoStatus.value = OperacaoStatus.CARREGANDO
+            // O repository já atualiza o LiveData todosResultados automaticamente
+            // quando os dados são alterados no banco de dados
+            _operacaoStatus.value = OperacaoStatus.SUCESSO
+        } catch (e: Exception) {
+            _operacaoStatus.value = OperacaoStatus.ERRO
+        }
     }
 }

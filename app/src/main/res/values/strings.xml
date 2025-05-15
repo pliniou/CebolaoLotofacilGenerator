@@ -200,4 +200,26 @@
     <string name="nenhum_jogo_para_salvar">Nenhum jogo gerado para salvar.</string>
     <string name="jogos_salvos_com_sucesso">Jogos salvos com sucesso!</string>
 
+    <!-- Novas strings adicionadas -->
+    <string name="nenhum_resultado_selecionado">Nenhum resultado selecionado</string>
+    <string name="nenhum_jogo_conferido_para_exibir">Nenhum jogo conferido para exibir</string>
+    <string name="jogo_adicionado_favoritos">Jogo adicionado aos favoritos</string>
+    <string name="jogo_removido_favoritos">Jogo removido dos favoritos</string>
+    <string name="jogo_id_label_prefix">Jogo #</string>
+    <string name="na_maiusculo">N/A</string>
+    <string name="desmarcar_como_favorito">Desmarcar como favorito</string>
+    <string name="acertos_label_com_valor">Acertos: %d</string>
+    <string name="erro_salvar_jogos">Erro ao salvar jogos</string>
+    <string name="gerando_jogos">Gerando jogos...</string>
+    <string name="gerar_jogos">Gerar Jogos</string>
+    <string name="tela_favoritos_titulo">Jogos Favoritos</string>
+    <string name="voltar">Voltar</string>
+    <string name="nenhum_jogo_favorito">Você não tem jogos favoritos</string>
+    <string name="jogo_id_label">Jogo #%d</string>
+    <string name="data_criacao_label">Criado em: %s</string>
+    <string name="nenhum_jogo_gerado_ainda">Nenhum jogo gerado ainda</string>
+    <string name="gerar_mais_jogos">Gerar mais jogos</string>
+    <string name="mensagem">Mensagem</string>
+    <string name="limparMensagem">Limpar mensagem</string>
+
 </resources>

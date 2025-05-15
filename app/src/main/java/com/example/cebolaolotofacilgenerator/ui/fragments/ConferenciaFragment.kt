@@ -24,8 +24,10 @@ import java.util.Locale
 import kotlinx.coroutines.launch
 
 // Novas importações para Compose
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.example.cebolaolotofacilgenerator.ui.composables.ListaJogosConferidos
 import com.example.cebolaolotofacilgenerator.ui.theme.CebolaoLotofacilGeneratorTheme // Substitua pelo seu tema se o nome for diferente

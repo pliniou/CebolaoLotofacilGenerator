@@ -97,8 +97,9 @@ class ConferenciaViewModel(
         viewModelScope.launch {
             val novoResultado =
                     Resultado(
+                            concurso = numeroConcurso.toLong(),
                             dataSorteio = dataSorteio,
-                            numeros = numerosSorteados,
+                            dezenas = numerosSorteados,
                             premiacao15Acertos = 0.0,
                             ganhadores15 = 0,
                             premiacao14Acertos = 0.0,
@@ -148,7 +149,7 @@ class ConferenciaViewModel(
 
                 val jogosConferidosCalculados =
                         todosOsJogos.map { jogo ->
-                            val acertos = contarAcertos(jogo.numeros, resultado.numeros)
+                            val acertos = contarAcertos(jogo.numeros, resultado.dezenas)
                             JogoConferido(jogo, acertos)
                         }
                 _jogosConferidos.value = jogosConferidosCalculados

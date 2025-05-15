@@ -39,7 +39,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp // Adicionado import para dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.cebolaolotofacilgenerator.Screen // Import para Screen
 import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus // Garantir que este é o
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
@@ -51,11 +51,11 @@ import com.example.cebolaolotofacilgenerator.ui.components.SnackbarManager
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class) // Adicionar OptIn aqui e FlowPreview
 @Composable
 fun GeradorScreen(
-        navController: NavController,
+        navController: NavHostController,
         dezenasFixasArg: String?, // Recebe as dezenas como String da navegação
-        viewModel: MainViewModel // Novo parâmetro para acessar o último resultado
+        mainViewModel: MainViewModel // Alterado nome do parâmetro para mainViewModel
 ) {
-        val geradorViewModel: GeradorViewModel = viewModel()
+        val geradorViewModel: GeradorViewModel = mainViewModel.geradorViewModel
 
         // Coletar todos os estados dos filtros
         val filtroParesImparesAtivado by geradorViewModel.filtroParesImparesAtivado.collectAsState()
@@ -91,7 +91,7 @@ fun GeradorScreen(
         val numerosExcluidos by geradorViewModel.numerosExcluidosState.collectAsState()
 
         // Novo: Observar o último resultado
-        val ultimoResultado by viewModel.ultimoResultado.collectAsState()
+        val ultimoResultado by mainViewModel.ultimoResultado.collectAsState()
 
         // Estado local para dezenas selecionadas do último resultado
         val (dezenasSelecionadas, setDezenasSelecionadas) =
@@ -111,7 +111,8 @@ fun GeradorScreen(
         }
 
         // Observar mensagens para exibir Snackbars
-        LaunchedEffect(mensagem) {
+        LaunchedEffect(geradorViewModel.mensagem.value) {
+                val mensagem = geradorViewModel.mensagem.value
                 if (!mensagem.isNullOrEmpty()) {
                         SnackbarManager.mostrarMensagem(mensagem)
                 }
@@ -271,12 +272,12 @@ fun GeradorScreen(
                         Button(
                                 onClick = {
                                         if (dezenasSelecionadas.size == 15) {
-                                                viewModel.salvarUltimoResultado(
+                                                mainViewModel.salvarUltimoResultado(
                                                         dezenasSelecionadas.toList()
                                                 )
-                                                viewModel.showSnackbar("Último resultado salvo com ${dezenasSelecionadas.size} dezenas!")
+                                                mainViewModel.showSnackbar("Último resultado salvo com ${dezenasSelecionadas.size} dezenas!")
                                         } else {
-                                                viewModel.showSnackbar("Selecione exatamente 15 dezenas para o resultado.")
+                                                mainViewModel.showSnackbar("Selecione exatamente 15 dezenas para o resultado.")
                                         }
                                 },
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
@@ -715,9 +716,9 @@ fun SeletorDezenasGrid(
                                                                                                 alpha =
                                                                                                         0.12f
                                                                                         ), // Cor
-                                                                        // desabilitada
-                                                                        contentColor =
-                                                                                MaterialTheme
+                                                                                // desabilitada
+                                                                                contentColor =
+                                                                                        MaterialTheme
                                                                                         .colorScheme
                                                                                         .onSurface
                                                                                         .copy(

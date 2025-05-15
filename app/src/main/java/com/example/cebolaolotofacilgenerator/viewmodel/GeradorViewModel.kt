@@ -19,7 +19,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /** ViewModel para o gerador de jogos da Lotofácil com filtros estatísticos. */
-class GeradorViewModel(application: Application) : AndroidViewModel(application) {
+class GeradorViewModel(
+    application: Application,
+    private val jogoRepository: com.example.cebolaolotofacilgenerator.data.repository.JogoRepository? = null
+) : AndroidViewModel(application) {
 
     private val preferenciasViewModel: PreferenciasViewModel =
             ViewModelProvider.AndroidViewModelFactory.getInstance(application)

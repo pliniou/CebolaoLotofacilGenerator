@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -198,16 +200,29 @@ fun ResumoConferencia(jogosConferidos: List<Jogo>) {
             for (acertos in acertosOrdenados) {
                 val quantidade = agrupadosPorAcertos[acertos]?.size ?: 0
                 val porcentagem = quantidade.toFloat() / totalJogos
-                val cor = cores[acertos] ?: MaterialTheme.colorScheme.surfaceVariant
                 
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .weight(porcentagem)
-                        .background(cor)
-                ) {
-                    // Barra colorida apenas
-                }
+                        .fillMaxWidth(porcentagem)
+                        .background(cores[acertos] ?: Color.Gray)
+                )
+            }
+            
+            // Separadores entre as cores
+            acertosOrdenados.forEach { acertos ->
+                val quantidade = agrupadosPorAcertos[acertos]?.size ?: 0
+                val porcentagemAcumulada = jogosConferidos
+                    .count { (it.acertos ?: 0) >= acertos }
+                    .toFloat() / totalJogos
+                
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(1.dp)
+                        .background(MaterialTheme.colorScheme.background)
+                        .fillMaxWidth(porcentagemAcumulada)
+                )
             }
         }
         

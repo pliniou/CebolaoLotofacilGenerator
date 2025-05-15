@@ -20,6 +20,10 @@ class FiltrosViewModel(application: Application) : AndroidViewModel(application)
     val filtrosAplicados: LiveData<ConfiguracaoFiltros>
         get() = _configuracaoFiltros
 
+    // Para mensagens de feedback
+    private val _mensagem = MutableLiveData<String?>()
+    val mensagem: LiveData<String?> = _mensagem
+
     init {
         carregarConfiguracoesIniciais()
     }
@@ -93,5 +97,10 @@ class FiltrosViewModel(application: Application) : AndroidViewModel(application)
         // A ação de "aplicar" geralmente significa usar os filtros para alguma operação.
         // Neste contexto, pode ser apenas salvar as configurações atuais.
         salvarFiltros()
+        _mensagem.value = "Filtros aplicados com sucesso"
+    }
+
+    fun limparMensagem() {
+        _mensagem.value = null
     }
 }

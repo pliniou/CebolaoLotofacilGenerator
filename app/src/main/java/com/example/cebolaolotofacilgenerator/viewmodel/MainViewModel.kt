@@ -26,7 +26,8 @@ class MainViewModel(
 
     // ViewModels secundários para compartilhar entre as telas
     val jogosViewModel = JogosViewModel(jogoRepository)
-    val resultadoViewModel = ResultadoViewModel(application, resultadoRepository)
+    val resultadoViewModel = ResultadoViewModel(application)
+    val geradorViewModel = GeradorViewModel(application, jogoRepository)
 
     // LiveData para observar se o primeiro run foi completado
     // TODO: Verifique a dependência androidx.lifecycle:lifecycle-livedata-ktx para habilitar
@@ -124,7 +125,7 @@ class MainViewModel(
     // Função para salvar o último resultado manualmente informado pelo usuário (apenas dezenas)
     fun salvarUltimoResultado(dezenas: List<Int>) {
         viewModelScope.launch {
-            val resultado = Resultado(numeros = dezenas.sorted())
+            val resultado = Resultado(dezenas = dezenas.sorted())
             resultadoRepository.inserirResultado(resultado)
             // Atualizar a lista de resultados no ResultadoViewModel
             resultadoViewModel.carregarResultados()

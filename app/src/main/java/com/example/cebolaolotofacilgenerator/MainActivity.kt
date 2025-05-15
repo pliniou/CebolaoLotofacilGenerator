@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     AppNavigation(
                             navController = navController,
-                            viewModel = mainViewModel,
+                            mainViewModel = mainViewModel,
                             modifier = Modifier.padding(innerPadding),
                             startDestination = startDestination
                     )
