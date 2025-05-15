@@ -44,7 +44,7 @@ class ResultadosAdapter(private val onResultadoClick: (Resultado) -> Unit) :
             val context = binding.root.context
             binding.apply {
                 textViewConcurso.text =
-                        context.getString(R.string.resultado_concurso, resultado.id.toString())
+                        context.getString(R.string.resultado_concurso, resultado.id)
                 textViewData.text =
                         context.getString(
                                 R.string.resultado_data,

@@ -222,6 +222,7 @@
     <string name="gerar_mais_jogos">Gerar mais jogos</string>
     <string name="mensagem">Mensagem</string>
     <string name="limparMensagem">Limpar mensagem</string>
+    <string name="data_nao_disponivel">Data não disponível</string>
 
     <!-- Strings para SettingsScreen -->
     <string name="tela_configuracoes_titulo">Configurações</string>

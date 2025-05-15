@@ -583,10 +583,7 @@ fun GeradorScreen(
                         Spacer(modifier = Modifier.height(24.dp)) // Espaço antes do botão
 
                         // TODO: Exibir status de carregamento do geradorViewModel.operacaoStatus
-                        if (operacaoStatus ==
-                                        com.example.cebolaolotofacilgenerator.data.model
-                                                .OperacaoStatus.CARREGANDO
-                        ) {
+                        if (operacaoStatus == OperacaoStatus.CARREGANDO) {
                                 CircularProgressIndicator(
                                         modifier = Modifier.padding(vertical = 16.dp)
                                 )
@@ -596,12 +593,7 @@ fun GeradorScreen(
                                 Text(
                                         text = msg,
                                         color =
-                                                if (operacaoStatus ==
-                                                                com.example
-                                                                        .cebolaolotofacilgenerator
-                                                                        .data.model.OperacaoStatus
-                                                                        .ERRO
-                                                )
+                                                if (operacaoStatus == OperacaoStatus.ERRO)
                                                         MaterialTheme.colorScheme.error
                                                 else MaterialTheme.colorScheme.onSurface,
                                         modifier = Modifier.padding(vertical = 8.dp)

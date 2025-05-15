@@ -75,6 +75,32 @@ O aplicativo utiliza navegação moderna baseada em Jetpack Compose Navigation, 
 - **Transições Animadas:** Navegação suave entre telas com animações de slide.
 - **Design Moderno:** Material 3, Compose, responsivo e acessível.
 
+## Status do Projeto
+
+### O que foi feito recentemente:
+
+1. **Correção do erro de formatação no ResultadosAdapter.kt**: Corrigido um problema onde `resultado.id.toString()` estava sendo passado para o recurso de string `resultado_concurso`, que esperava um número inteiro (%1$d). A correção removeu o método `.toString()` para que o parâmetro `resultado.id` fosse passado diretamente.
+
+2. **Compilação e montagem do aplicativo**: O aplicativo agora compila e monta corretamente em modo debug.
+
+3. **Migração para Jetpack Compose**: Grande parte da interface foi migrada para Compose, mantendo compatibilidade com componentes legados usando ViewBinding.
+
+4. **Implementação de telas modernas**: Novas telas como GeradorScreen, ResultadosScreen, SettingsScreen e JogosGeradosScreen foram implementadas usando Compose.
+
+5. **Melhorias na UI/UX**: Adicionadas animações de transição entre telas, feedback visual para o usuário e uma interface mais moderna seguindo os princípios do Material 3.
+
+### O que ainda precisa ser feito:
+
+1. **Correção dos testes unitários**: Os testes unitários apresentam erros relacionados a métodos que não existem mais, como `getNumerosComoLista()` e referências a propriedades como `somaTotal`. Estes testes precisam ser atualizados para refletir as mudanças na estrutura de dados.
+
+2. **Finalização da migração para Compose**: Alguns fragmentos ainda usam layouts XML e ViewBinding. A migração completa para Compose tornaria o código mais consistente.
+
+3. **Melhorias na documentação**: Adicionar KDoc em classes e funções importantes para facilitar a manutenção.
+
+4. **Otimização de desempenho**: Revisar o código para identificar possíveis gargalos, especialmente na geração de jogos com muitos filtros.
+
+5. **Implementação de testes de UI**: Adicionar testes de UI usando Compose Testing para garantir que a interface funcione corretamente.
+
 ## Arquitetura e Tecnologias
 
 - **MVVM:** Separação clara entre UI, lógica e dados.
@@ -137,6 +163,7 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 - **Erros de dependência:** Certifique-se de que o repositório `google()` está presente em todos os blocos de repositórios do Gradle.
 - **Problemas de navegação ou animação:** Verifique se a dependência do Accompanist está corretamente declarada e sincronizada.
 - **Tela preta ou UI incompleta:** Confirme se está usando as versões corretas das bibliotecas e se o tema Compose está aplicado corretamente.
+- **Erros nos testes unitários:** Os testes precisam ser atualizados para refletir as mudanças na estrutura de dados. Métodos como `getNumerosComoLista()` foram removidos e propriedades como `somaTotal` foram renomeadas.
 
 ## Roadmap / Pendências
 
@@ -150,10 +177,37 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 - [x] Implementação completa da tela de Favoritos
 - [x] Mais opções de temas/cores na SettingsScreen (Claro, Escuro, Sistema, Azul, Verde, Laranja, Ciano)
 - [x] Refino visual dos filtros e hierarquia da UI (filtros agrupados em Cards na GeradorScreen, melhorias na SettingsScreen)
-- [x] Tela de Jogos Gerados com opções de salvar, gerar mais e favoritar.
-- [ ] Conferência inteligente de jogos (UI/UX aprimorada) - *Apresentação dos resultados em `ConferenciaComposables.kt` melhorada (cores, destaque de acertos, FlowRow). Interação de favoritar adicionada. Considerar melhorias adicionais na interatividade e clareza se necessário.*
-- [ ] Melhorias de acessibilidade (uso consistente de `contentDescription` com `stringResource`) e internacionalização (revisão de strings hardcoded) - *Revisão feita nas telas Settings, Gerador, Conferencia (Composables) e JogosGerados. Continuar varredura em partes mais antigas do app.*
-- [ ] Documentação de API interna (KDoc) e exemplos de uso - *KDoc adicionado/melhorado em ViewModels principais (Main, Gerador, Conferencia, Preferencias) e nos novos Composables (ConferenciaComposables, SettingsScreen, JogosGeradosScreen). Expandir para outras classes e funções públicas importantes.*
+- [x] Tela de Jogos Gerados com opções de salvar, gerar mais e favoritar
+- [x] Correção do erro de formatação no ResultadosAdapter.kt
+- [ ] Atualização dos testes unitários para refletir as mudanças na estrutura de dados
+- [ ] Conferência inteligente de jogos (UI/UX aprimorada)
+- [ ] Melhorias de acessibilidade (uso consistente de `contentDescription` com `stringResource`) e internacionalização (revisão de strings hardcoded)
+- [ ] Documentação de API interna (KDoc) e exemplos de uso
+- [ ] Migração completa para Jetpack Compose (eliminação gradual de layouts XML)
+- [ ] Implementação de testes de UI com Compose Testing
+- [ ] Otimização de desempenho na geração de jogos com múltiplos filtros
+
+## Sugestões de Melhorias
+
+1. **Análise Estatística Avançada**: Implementar análise de padrões históricos dos concursos para sugerir jogos com maior probabilidade.
+   
+2. **Exportação de Jogos**: Adicionar funcionalidade para exportar jogos em formatos como PDF ou CSV.
+
+3. **Widgets para Tela Inicial**: Criar widgets Android para acesso rápido aos jogos favoritos e últimos resultados.
+
+4. **Modo Offline Aprimorado**: Implementar um sistema de cache mais robusto para armazenar resultados históricos.
+
+5. **Sincronização com Serviços de Nuvem**: Opção para sincronizar jogos entre dispositivos (Google Drive, Dropbox).
+
+6. **Notificações Personalizadas**: Alertar o usuário sobre resultados de concursos com base nos jogos salvos.
+
+7. **Compartilhamento Social**: Facilitar o compartilhamento de jogos com amigos via aplicativos de mensagem.
+
+8. **Modo Escuro Aprimorado**: Refinar a experiência do modo escuro com mais opções de personalização.
+
+9. **Acessibilidade**: Melhorar o suporte para leitores de tela e outras tecnologias assistivas.
+
+10. **Suporte a Tablets**: Otimizar layouts para telas maiores, aproveitando melhor o espaço disponível.
 
 ## Dependências Principais
 

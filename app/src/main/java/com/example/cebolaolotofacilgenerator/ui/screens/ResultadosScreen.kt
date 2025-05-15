@@ -69,7 +69,7 @@ fun ResultadosScreen(mainViewModel: MainViewModel, navController: NavController)
                                 )
                                 Text(
                                         text =
-                                                "Data: ${SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(resultado.dataSorteio)}",
+                                                "Data: ${resultado.dataSorteio?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it) } ?: "Data não disponível"}",
                                         style = MaterialTheme.typography.bodyLarge,
                                         modifier = Modifier.padding(bottom = 16.dp)
                                 )
