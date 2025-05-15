@@ -6,210 +6,194 @@ import kotlin.random.Random
 /** Classe utilitária para geração de jogos da Lotofácil com filtros estatísticos. */
 class GeradorJogos {
 
+    // Data classes para configuração de filtros
+    data class FiltroRange(val min: Int?, val max: Int?)
+    data class FiltroRepeticao(val dezenasAnteriores: List<Int>, val range: FiltroRange?)
+
+    data class ConfiguracaoGeracao(
+        val quantidadeJogos: Int,
+        val quantidadeNumerosPorJogo: Int,
+        val numerosFixos: List<Int> = emptyList(),
+        val numerosExcluidos: List<Int> = emptyList(),
+        val filtroParesImpares: FiltroRange? = null, // Este agora se refere a ÍMPARES
+        val filtroSomaTotal: FiltroRange? = null,
+        val filtroPrimos: FiltroRange? = null,
+        val filtroFibonacci: FiltroRange? = null,
+        val filtroMiolo: FiltroRange? = null,
+        val filtroMultiplosDeTres: FiltroRange? = null,
+        val filtroRepeticaoAnterior: FiltroRepeticao? = null,
+        val ultimoResultadoConcursoAnterior: List<Int>? = null // Pode ser redundante se filtroRepeticaoAnterior for usado consistentemente
+    )
+
     companion object {
         // Constantes
-        private const val TOTAL_NUMEROS = 25 // Lotofácil usa números de 1 a 25
-        private const val MIN_NUMEROS = 15
-        private const val MAX_NUMEROS = 20
+        private const val TOTAL_NUMEROS_LOTOFACIL = 25 // Nome mais específico
+        private const val MIN_NUMEROS_POR_JOGO = 15
+        private const val MAX_NUMEROS_POR_JOGO = 20 // Embora o app foque em 15, a lógica pode ser genérica
 
-        // Valores de Fibonacci em Lotofácil (1-25)
-        private val FIBONACCI = setOf(1, 2, 3, 5, 8, 13, 21)
+        val FIBONACCI = setOf(1, 2, 3, 5, 8, 13, 21)
+        val PRIMOS = setOf(2, 3, 5, 7, 11, 13, 17, 19, 23)
+        val MIOLO = setOf(7, 8, 9, 12, 13, 14, 17, 18, 19)
+        val MOLDURA = setOf(1, 2, 3, 4, 5, 6, 10, 11, 15, 16, 20, 21, 22, 23, 24, 25)
+        val MULTIPLOS_DE_TRES = setOf(3, 6, 9, 12, 15, 18, 21, 24)
 
-        // Números primos em Lotofácil (1-25)
-        private val PRIMOS = setOf(2, 3, 5, 7, 11, 13, 17, 19, 23)
-
-        // Números no miolo do volante (centro)
-        private val MIOLO = setOf(7, 8, 9, 12, 13, 14, 17, 18, 19)
-
-        // Números na moldura do volante (bordas)
-        private val MOLDURA = setOf(1, 2, 3, 4, 5, 6, 10, 11, 15, 16, 20, 21, 22, 23, 24, 25)
 
         /**
-         * Gera jogos da Lotofácil com base nos filtros especificados.
-         *
-         * @param quantidadeJogos Quantidade de jogos a serem gerados
-         * @param quantidadeNumeros Quantidade de números por jogo (15 a 20)
-         * @param numerosFixos Lista de números que devem estar presentes em todos os jogos
-         * @param numerosExcluidos Lista de números que não devem estar presentes em nenhum jogo
-         * @param minPares Mínimo de números pares (null para ignorar)
-         * @param maxPares Máximo de números pares (null para ignorar)
-         * @param minPrimos Mínimo de números primos (null para ignorar)
-         * @param maxPrimos Máximo de números primos (null para ignorar)
-         * @param minFibonacci Mínimo de números de Fibonacci (null para ignorar)
-         * @param maxFibonacci Máximo de números de Fibonacci (null para ignorar)
-         * @param minMiolo Mínimo de números do miolo (null para ignorar)
-         * @param maxMiolo Máximo de números do miolo (null para ignorar)
-         * @param minMultiplosTres Mínimo de múltiplos de 3 (null para ignorar)
-         * @param maxMultiplosTres Máximo de múltiplos de 3 (null para ignorar)
-         * @param minSoma Valor mínimo para a soma dos números (null para ignorar)
-         * @param maxSoma Valor máximo para a soma dos números (null para ignorar)
-         * @return Lista de jogos gerados que atendem aos critérios
+         * Gera jogos da Lotofácil com base na configuração especificada.
          */
-        fun gerarJogos(
-                quantidadeJogos: Int,
-                quantidadeNumeros: Int,
-                numerosFixos: List<Int> = emptyList(),
-                numerosExcluidos: List<Int> = emptyList(),
-                minPares: Int? = null,
-                maxPares: Int? = null,
-                minPrimos: Int? = null,
-                maxPrimos: Int? = null,
-                minFibonacci: Int? = null,
-                maxFibonacci: Int? = null,
-                minMiolo: Int? = null,
-                maxMiolo: Int? = null,
-                minMultiplosTres: Int? = null,
-                maxMultiplosTres: Int? = null,
-                minSoma: Int? = null,
-                maxSoma: Int? = null
-        ): List<Jogo> {
+        fun gerarJogos(config: ConfiguracaoGeracao): List<Jogo> {
             // Validações iniciais
-            if (quantidadeNumeros !in MIN_NUMEROS..MAX_NUMEROS) {
+            if (config.quantidadeNumerosPorJogo !in MIN_NUMEROS_POR_JOGO..MAX_NUMEROS_POR_JOGO) {
                 throw IllegalArgumentException(
-                        "Quantidade de números deve estar entre $MIN_NUMEROS e $MAX_NUMEROS"
+                    "Quantidade de números por jogo deve estar entre $MIN_NUMEROS_POR_JOGO e $MAX_NUMEROS_POR_JOGO"
                 )
             }
 
-            if (quantidadeJogos <= 0) {
+            if (config.quantidadeJogos <= 0) {
                 throw IllegalArgumentException("Quantidade de jogos deve ser maior que zero")
             }
 
-            if (numerosFixos.size > quantidadeNumeros) {
+            if (config.numerosFixos.size > config.quantidadeNumerosPorJogo) {
                 throw IllegalArgumentException(
-                        "Quantidade de números fixos não pode ser maior que a quantidade de números por jogo"
+                    "Quantidade de números fixos não pode ser maior que a quantidade de números por jogo"
                 )
             }
 
-            if (TOTAL_NUMEROS - numerosExcluidos.size < quantidadeNumeros) {
+            if (TOTAL_NUMEROS_LOTOFACIL - config.numerosExcluidos.size < config.quantidadeNumerosPorJogo) {
                 throw IllegalArgumentException(
-                        "Muitos números excluídos, impossível gerar jogos com a quantidade solicitada"
+                    "Muitos números excluídos, impossível gerar jogos com a quantidade solicitada"
                 )
             }
 
-            // Validar que os números fixos e excluídos não se sobrepõem
-            val sobreposicao = numerosFixos.intersect(numerosExcluidos.toSet())
+            val sobreposicao = config.numerosFixos.intersect(config.numerosExcluidos.toSet())
             if (sobreposicao.isNotEmpty()) {
                 throw IllegalArgumentException(
-                        "Há números que estão tanto na lista de fixos quanto na lista de excluídos: $sobreposicao"
+                    "Há números que estão tanto na lista de fixos quanto na lista de excluídos: $sobreposicao"
                 )
             }
 
             val jogosGerados = mutableListOf<Jogo>()
-            val tentativasMaximas =
-                    quantidadeJogos * 100 // Limite de tentativas para evitar loop infinito
+            // Aumentar um pouco o fator para dar mais margem em filtros muito restritivos
+            val tentativasMaximas = config.quantidadeJogos * 200 + 1000
             var tentativas = 0
 
-            while (jogosGerados.size < quantidadeJogos && tentativas < tentativasMaximas) {
+            val numerosDisponiveisBase = (1..TOTAL_NUMEROS_LOTOFACIL)
+                .filter { it !in config.numerosExcluidos }
+                .toList()
+
+            while (jogosGerados.size < config.quantidadeJogos && tentativas < tentativasMaximas) {
                 tentativas++
 
                 try {
-                    // Inicia com os números fixos
-                    val numerosSorteados = numerosFixos.toMutableList()
+                    val numerosSorteados = config.numerosFixos.toMutableSet()
+                    val numerosRestantesParaSortear = config.quantidadeNumerosPorJogo - numerosSorteados.size
 
-                    // Determina quantos números ainda precisam ser sorteados
-                    val numerosRestantes = quantidadeNumeros - numerosSorteados.size
+                    if (numerosRestantesParaSortear < 0) continue // Já tem mais fixos que o necessário
 
-                    // Lista de números disponíveis para sorteio (excluindo fixos e excluídos)
-                    val numerosDisponiveis =
-                            (1..TOTAL_NUMEROS)
-                                    .filter { it !in numerosFixos && it !in numerosExcluidos }
-                                    .shuffled(Random(System.nanoTime()))
-                                    .toMutableList()
+                    // Filtra os disponíveis que não estão nos fixos, para evitar duplicidade no sorteio
+                    val numerosParaEscolha = numerosDisponiveisBase
+                        .filter { it !in numerosSorteados }
+                        .shuffled(Random(System.nanoTime() + tentativas)) // Adicionar tentativas para variar a seed
 
-                    // Adiciona números aleatórios até completar a quantidade desejada
-                    for (i in 0 until numerosRestantes) {
-                        if (numerosDisponiveis.isEmpty()) break
-
-                        numerosSorteados.add(numerosDisponiveis.removeAt(0))
+                    if (numerosParaEscolha.size < numerosRestantesParaSortear) {
+                         // Não há números suficientes disponíveis para completar o jogo com os filtros de exclusão/fixos
+                        continue
+                    }
+                    
+                    for (i in 0 until numerosRestantesParaSortear) {
+                        numerosSorteados.add(numerosParaEscolha[i])
                     }
 
-                    // Se não conseguiu completar a quantidade de números, pula para a próxima
-                    // tentativa
-                    if (numerosSorteados.size < quantidadeNumeros) continue
+                    if (numerosSorteados.size != config.quantidadeNumerosPorJogo) continue
 
-                    // Verifica se o jogo atende aos critérios estatísticos
-                    if (!verificarCriteriosEstatisticos(
-                                    numerosSorteados,
-                                    minPares,
-                                    maxPares,
-                                    minPrimos,
-                                    maxPrimos,
-                                    minFibonacci,
-                                    maxFibonacci,
-                                    minMiolo,
-                                    maxMiolo,
-                                    minMultiplosTres,
-                                    maxMultiplosTres,
-                                    minSoma,
-                                    maxSoma
-                            )
-                    ) {
+                    val jogoComoLista = numerosSorteados.toList().sorted()
+
+                    if (!verificarCriteriosEstatisticos(jogoComoLista, config)) {
                         continue
                     }
 
                     // Verifica se o jogo já foi gerado anteriormente
-                    val jogoOrdenado = numerosSorteados.sorted()
-
-                    if (jogosGerados.any { it.numeros == jogoOrdenado }) {
+                    if (jogosGerados.any { it.numeros == jogoComoLista }) {
+                        // Para evitar duplicidade exata, tentar gerar um novo se possível
+                        // Em cenários de filtros muito restritivos, isso pode limitar a quantidade de jogos únicos.
                         continue
                     }
 
-                    // Adiciona o jogo à lista de jogos gerados
-                    jogosGerados.add(Jogo.fromList(jogoOrdenado))
+                    jogosGerados.add(Jogo.fromList(jogoComoLista))
                 } catch (e: Exception) {
-                    // Ignora exceções e continua tentando
+                    // Logar a exceção pode ser útil para depuração, mas por ora continua
+                    // e.printStackTrace() // Descomentar para depuração
                     continue
                 }
             }
-
             return jogosGerados
         }
 
         /** Verifica se um jogo atende aos critérios estatísticos configurados. */
         private fun verificarCriteriosEstatisticos(
-                numeros: List<Int>,
-                minPares: Int?,
-                maxPares: Int?,
-                minPrimos: Int?,
-                maxPrimos: Int?,
-                minFibonacci: Int?,
-                maxFibonacci: Int?,
-                minMiolo: Int?,
-                maxMiolo: Int?,
-                minMultiplosTres: Int?,
-                maxMultiplosTres: Int?,
-                minSoma: Int?,
-                maxSoma: Int?
+            numeros: List<Int>,
+            config: ConfiguracaoGeracao
         ): Boolean {
-            // Contagem de números pares
-            val pares = numeros.count { it % 2 == 0 }
-            if (minPares != null && pares < minPares) return false
-            if (maxPares != null && pares > maxPares) return false
+            // Filtro Pares/Ímpares (agora focado em ÍMPARES)
+            config.filtroParesImpares?.let { filtro ->
+                val impares = numeros.count { it % 2 != 0 }
+                if (filtro.min != null && impares < filtro.min) return false
+                if (filtro.max != null && impares > filtro.max) return false
+            }
 
-            // Contagem de números primos
-            val primos = numeros.count { it in PRIMOS }
-            if (minPrimos != null && primos < minPrimos) return false
-            if (maxPrimos != null && primos > maxPrimos) return false
+            // Filtro Números Primos
+            config.filtroPrimos?.let { filtro ->
+                val primosNoJogo = numeros.count { it in PRIMOS }
+                if (filtro.min != null && primosNoJogo < filtro.min) return false
+                if (filtro.max != null && primosNoJogo > filtro.max) return false
+            }
 
-            // Contagem de números de Fibonacci
-            val fibonacci = numeros.count { it in FIBONACCI }
-            if (minFibonacci != null && fibonacci < minFibonacci) return false
-            if (maxFibonacci != null && fibonacci > maxFibonacci) return false
+            // Filtro Números de Fibonacci
+            config.filtroFibonacci?.let { filtro ->
+                val fibonacciNoJogo = numeros.count { it in FIBONACCI }
+                if (filtro.min != null && fibonacciNoJogo < filtro.min) return false
+                if (filtro.max != null && fibonacciNoJogo > filtro.max) return false
+            }
 
-            // Contagem de números no miolo
-            val miolo = numeros.count { it in MIOLO }
-            if (minMiolo != null && miolo < minMiolo) return false
-            if (maxMiolo != null && miolo > maxMiolo) return false
+            // Filtro Miolo
+            config.filtroMiolo?.let { filtro ->
+                val mioloNoJogo = numeros.count { it in MIOLO }
+                if (filtro.min != null && mioloNoJogo < filtro.min) return false
+                if (filtro.max != null && mioloNoJogo > filtro.max) return false
+            }
 
-            // Contagem de múltiplos de 3
-            val multiplosTres = numeros.count { it % 3 == 0 }
-            if (minMultiplosTres != null && multiplosTres < minMultiplosTres) return false
-            if (maxMultiplosTres != null && multiplosTres > maxMultiplosTres) return false
+            // Filtro Múltiplos de 3
+            config.filtroMultiplosDeTres?.let { filtro ->
+                val multiplosTresNoJogo = numeros.count { it in MULTIPLOS_DE_TRES }
+                if (filtro.min != null && multiplosTresNoJogo < filtro.min) return false
+                if (filtro.max != null && multiplosTresNoJogo > filtro.max) return false
+            }
 
-            // Soma dos números
-            val soma = numeros.sum()
-            if (minSoma != null && soma < minSoma) return false
-            if (maxSoma != null && soma > maxSoma) return false
+            // Filtro Soma dos números
+            config.filtroSomaTotal?.let { filtro ->
+                val soma = numeros.sum()
+                if (filtro.min != null && soma < filtro.min) return false
+                if (filtro.max != null && soma > filtro.max) return false
+            }
+            
+            // Filtro Repetição de Dezenas do Concurso Anterior
+            config.filtroRepeticaoAnterior?.let { filtroRep ->
+                val dezenasAnteriores = filtroRep.dezenasAnteriores
+                val rangeRepeticao = filtroRep.range // Atribui a uma val para simplificar
+
+                if (dezenasAnteriores.isNotEmpty()) { // Só aplica se houver dezenas anteriores
+                    val repetidas = numeros.count { it in dezenasAnteriores }
+                    // Usa a val rangeRepeticao aqui
+                    if (rangeRepeticao?.min != null && repetidas < rangeRepeticao.min) return false
+                    if (rangeRepeticao?.max != null && repetidas > rangeRepeticao.max) return false
+                } else {
+                    // dezenasAnteriores está vazia
+                    // Se o filtro exige repetição (min > 0) mas não há dezenas anteriores, falha o filtro.
+                    if (rangeRepeticao?.min != null && rangeRepeticao.min > 0) {
+                        return false
+                    }
+                }
+            }
 
             return true
         }

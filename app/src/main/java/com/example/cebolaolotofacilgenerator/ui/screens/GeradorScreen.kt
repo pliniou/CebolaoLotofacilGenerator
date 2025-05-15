@@ -58,6 +58,10 @@ fun GeradorScreen(
         mainViewModel: MainViewModel // Alterado nome do parâmetro para mainViewModel
 ) {
         val geradorViewModel: GeradorViewModel = mainViewModel.geradorViewModel
+        // Seta a referência do MainViewModel no GeradorViewModel
+        LaunchedEffect(key1 = mainViewModel) {
+            geradorViewModel.setMainViewModelRef(mainViewModel)
+        }
 
         // Coletar todos os estados dos filtros
         val filtroParesImparesAtivado by geradorViewModel.filtroParesImparesAtivado.collectAsState()
@@ -71,6 +75,8 @@ fun GeradorScreen(
         val filtroMioloMolduraAtivado by geradorViewModel.filtroMioloMolduraAtivado.collectAsState()
         val filtroMultiplosDeTresAtivado by
                 geradorViewModel.filtroMultiplosDeTresAtivado.collectAsState()
+        // Novo filtro de Repetição de Dezenas
+        val filtroRepeticaoDezenasAtivado by geradorViewModel.filtroRepeticaoDezenasAtivado.collectAsState()
 
         // Novos StateFlows para inputs dos filtros restantes
         val minPrimosInput by geradorViewModel.minPrimosInput.collectAsState()
@@ -81,6 +87,9 @@ fun GeradorScreen(
         val maxMioloInput by geradorViewModel.maxMioloInput.collectAsState()
         val minMultiplosDeTresInput by geradorViewModel.minMultiplosDeTresInput.collectAsState()
         val maxMultiplosDeTresInput by geradorViewModel.maxMultiplosDeTresInput.collectAsState()
+        // Inputs para o novo filtro de Repetição de Dezenas
+        val minRepeticaoInput by geradorViewModel.minRepeticaoInput.collectAsState()
+        val maxRepeticaoInput by geradorViewModel.maxRepeticaoInput.collectAsState()
 
         // Observar o status da operação e os jogos gerados (se necessário aqui)
         val operacaoStatus by geradorViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
@@ -270,317 +279,107 @@ fun GeradorScreen(
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                                 enabled = dezenasSelecionadas.size == 15
                         ) { Text("Salvar Último Resultado") }
-                        Divider(modifier = Modifier.padding(vertical = 16.dp))
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                         Text(
                                 "Filtros Estatísticos:",
                                 style = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.align(Alignment.Start).padding(bottom = 8.dp)
+                                modifier = Modifier.align(Alignment.Start).padding(bottom = 12.dp)
                         )
 
-                        // Conteúdo dos filtros (anteriormente em FiltrosScreen)
-                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                FiltroSwitchItem(
-                                        titulo = stringResource(R.string.filtro_pares_impares_titulo),
-                                        subtitulo = stringResource(R.string.filtro_pares_impares_subtitulo),
-                                        checado = filtroParesImparesAtivado,
-                                        onCheckedChange = geradorViewModel::setFiltroParesImparesAtivado
-                                )
-                                if (filtroParesImparesAtivado) {
-                                    Column(
-                                            modifier =
-                                            Modifier.padding(
-                                                    start = 8.dp, // Reduzido padding interno
-                                                    top = 8.dp,
-                                                    end = 8.dp,
-                                                    bottom = 8.dp
-                                            ),
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        OutlinedTextField(
-                                                value = minParesInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMinParesInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_min_pares_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                        OutlinedTextField(
-                                                value = maxParesInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMaxParesInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_max_pares_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        // Conteúdo dos filtros refatorado
+                        FiltroCardMinMax(
+                            titulo = stringResource(R.string.filtro_pares_impares_titulo),
+                            subtitulo = stringResource(R.string.filtro_pares_impares_subtitulo),
+                            checado = filtroParesImparesAtivado,
+                            onCheckedChange = geradorViewModel::setFiltroParesImparesAtivado,
+                            minInput = minParesInput,
+                            onMinInputChange = geradorViewModel::setMinParesInput,
+                            maxInput = maxParesInput,
+                            onMaxInputChange = geradorViewModel::setMaxParesInput,
+                            labelMin = stringResource(R.string.filtro_min_impares_label),
+                            labelMax = stringResource(R.string.filtro_max_impares_label)
+                        )
 
-                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                FiltroSwitchItem(
-                                        titulo = stringResource(R.string.filtro_soma_total_titulo),
-                                        subtitulo = stringResource(R.string.filtro_soma_total_subtitulo),
-                                        checado = filtroSomaTotalAtivado,
-                                        onCheckedChange = geradorViewModel::setFiltroSomaTotalAtivado
-                                )
-                                if (filtroSomaTotalAtivado) {
-                                    Column(
-                                            modifier =
-                                            Modifier.padding(
-                                                start = 8.dp,
-                                                top = 8.dp,
-                                                end = 8.dp,
-                                                bottom = 8.dp
-                                            ),
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        OutlinedTextField(
-                                                value = minSomaInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMinSomaInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_soma_min_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                        OutlinedTextField(
-                                                value = maxSomaInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMaxSomaInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_soma_max_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        FiltroCardMinMax(
+                            titulo = stringResource(R.string.filtro_soma_total_titulo),
+                            subtitulo = stringResource(R.string.filtro_soma_total_subtitulo),
+                            checado = filtroSomaTotalAtivado,
+                            onCheckedChange = geradorViewModel::setFiltroSomaTotalAtivado,
+                            minInput = minSomaInput,
+                            onMinInputChange = geradorViewModel::setMinSomaInput,
+                            maxInput = maxSomaInput,
+                            onMaxInputChange = geradorViewModel::setMaxSomaInput,
+                            labelMin = stringResource(R.string.filtro_soma_min_label),
+                            labelMax = stringResource(R.string.filtro_soma_max_label)
+                        )
 
-                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                FiltroSwitchItem(
-                                        titulo = stringResource(R.string.filtro_primos_titulo),
-                                        subtitulo = stringResource(R.string.filtro_primos_subtitulo),
-                                        checado = filtroPrimosAtivado,
-                                        onCheckedChange = geradorViewModel::setFiltroPrimosAtivado
-                                )
-                                if (filtroPrimosAtivado) {
-                                    Column(
-                                            modifier =
-                                            Modifier.padding(
-                                                start = 8.dp,
-                                                top = 8.dp,
-                                                end = 8.dp,
-                                                bottom = 8.dp
-                                            ),
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        OutlinedTextField(
-                                                value = minPrimosInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMinPrimosInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_min_primos_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                        OutlinedTextField(
-                                                value = maxPrimosInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMaxPrimosInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_max_primos_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        FiltroCardMinMax(
+                            titulo = stringResource(R.string.filtro_primos_titulo),
+                            subtitulo = stringResource(R.string.filtro_primos_subtitulo),
+                            checado = filtroPrimosAtivado,
+                            onCheckedChange = geradorViewModel::setFiltroPrimosAtivado,
+                            minInput = minPrimosInput,
+                            onMinInputChange = geradorViewModel::setMinPrimosInput,
+                            maxInput = maxPrimosInput,
+                            onMaxInputChange = geradorViewModel::setMaxPrimosInput,
+                            labelMin = stringResource(R.string.filtro_min_primos_label),
+                            labelMax = stringResource(R.string.filtro_max_primos_label)
+                        )
 
-                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                FiltroSwitchItem(
-                                        titulo = stringResource(R.string.filtro_fibonacci_titulo),
-                                        subtitulo = stringResource(R.string.filtro_fibonacci_subtitulo),
-                                        checado = filtroFibonacciAtivado,
-                                        onCheckedChange = geradorViewModel::setFiltroFibonacciAtivado
-                                )
-                                if (filtroFibonacciAtivado) {
-                                    Column(
-                                            modifier =
-                                            Modifier.padding(
-                                                start = 8.dp,
-                                                top = 8.dp,
-                                                end = 8.dp,
-                                                bottom = 8.dp
-                                            ),
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        OutlinedTextField(
-                                                value = minFibonacciInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMinFibonacciInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_min_fibonacci_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                        OutlinedTextField(
-                                                value = maxFibonacciInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMaxFibonacciInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_max_fibonacci_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        FiltroCardMinMax(
+                            titulo = stringResource(R.string.filtro_fibonacci_titulo),
+                            subtitulo = stringResource(R.string.filtro_fibonacci_subtitulo),
+                            checado = filtroFibonacciAtivado,
+                            onCheckedChange = geradorViewModel::setFiltroFibonacciAtivado,
+                            minInput = minFibonacciInput,
+                            onMinInputChange = geradorViewModel::setMinFibonacciInput,
+                            maxInput = maxFibonacciInput,
+                            onMaxInputChange = geradorViewModel::setMaxFibonacciInput,
+                            labelMin = stringResource(R.string.filtro_min_fibonacci_label),
+                            labelMax = stringResource(R.string.filtro_max_fibonacci_label)
+                        )
+                        
+                        FiltroCardMinMax(
+                            titulo = stringResource(R.string.filtro_miolo_moldura_titulo),
+                            subtitulo = stringResource(R.string.filtro_miolo_moldura_subtitulo),
+                            checado = filtroMioloMolduraAtivado,
+                            onCheckedChange = geradorViewModel::setFiltroMioloMolduraAtivado,
+                            minInput = minMioloInput,
+                            onMinInputChange = geradorViewModel::setMinMioloInput,
+                            maxInput = maxMioloInput,
+                            onMaxInputChange = geradorViewModel::setMaxMioloInput,
+                            labelMin = stringResource(R.string.filtro_min_miolo_label),
+                            labelMax = stringResource(R.string.filtro_max_miolo_label)
+                        )
 
-                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                FiltroSwitchItem(
-                                        titulo = stringResource(R.string.filtro_miolo_moldura_titulo),
-                                        subtitulo = stringResource(R.string.filtro_miolo_moldura_subtitulo),
-                                        checado = filtroMioloMolduraAtivado,
-                                        onCheckedChange = geradorViewModel::setFiltroMioloMolduraAtivado
-                                )
-                                if (filtroMioloMolduraAtivado) {
-                                    Column(
-                                            modifier =
-                                            Modifier.padding(
-                                                start = 8.dp,
-                                                top = 8.dp,
-                                                end = 8.dp,
-                                                bottom = 8.dp
-                                            ),
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        OutlinedTextField(
-                                                value = minMioloInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMinMioloInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_min_miolo_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                        OutlinedTextField(
-                                                value = maxMioloInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMaxMioloInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_max_miolo_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        FiltroCardMinMax(
+                            titulo = stringResource(R.string.filtro_multiplos_de_tres_titulo),
+                            subtitulo = stringResource(R.string.filtro_multiplos_de_tres_subtitulo),
+                            checado = filtroMultiplosDeTresAtivado,
+                            onCheckedChange = geradorViewModel::setFiltroMultiplosDeTresAtivado,
+                            minInput = minMultiplosDeTresInput,
+                            onMinInputChange = geradorViewModel::setMinMultiplosDeTresInput,
+                            maxInput = maxMultiplosDeTresInput,
+                            onMaxInputChange = geradorViewModel::setMaxMultiplosDeTresInput,
+                            labelMin = stringResource(R.string.filtro_min_multiplos_de_tres_label),
+                            labelMax = stringResource(R.string.filtro_max_multiplos_de_tres_label)
+                        )
 
-                        Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-                            Column(modifier = Modifier.padding(16.dp)) {
-                                FiltroSwitchItem(
-                                        titulo = stringResource(R.string.filtro_multiplos_tres_titulo),
-                                        subtitulo = stringResource(R.string.filtro_multiplos_tres_subtitulo),
-                                        checado = filtroMultiplosDeTresAtivado,
-                                        onCheckedChange = geradorViewModel::setFiltroMultiplosDeTresAtivado
-                                )
-                                if (filtroMultiplosDeTresAtivado) {
-                                    Column(
-                                            modifier =
-                                            Modifier.padding(
-                                                start = 8.dp,
-                                                top = 8.dp,
-                                                end = 8.dp,
-                                                bottom = 8.dp
-                                            ),
-                                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        OutlinedTextField(
-                                                value = minMultiplosDeTresInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMinMultiplosDeTresInput(it)
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_min_multiplos_tres_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                        OutlinedTextField(
-                                                value = maxMultiplosDeTresInput,
-                                                onValueChange = {
-                                                    geradorViewModel.setMaxMultiplosDeTresInput(
-                                                            it
-                                                    )
-                                                },
-                                                label = { Text(stringResource(R.string.filtro_max_multiplos_tres_label)) },
-                                                keyboardOptions =
-                                                KeyboardOptions(
-                                                        keyboardType = KeyboardType.Number
-                                                ),
-                                                modifier = Modifier.fillMaxWidth(),
-                                                singleLine = true
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        // Novo Filtro: Repetição de Dezenas do Concurso Anterior
+                        FiltroCardMinMax(
+                            titulo = stringResource(R.string.filtro_repeticao_dezenas_titulo),
+                            subtitulo = stringResource(R.string.filtro_repeticao_dezenas_subtitulo),
+                            checado = filtroRepeticaoDezenasAtivado,
+                            onCheckedChange = geradorViewModel::setFiltroRepeticaoDezenasAtivado,
+                            minInput = minRepeticaoInput,
+                            onMinInputChange = geradorViewModel::setMinRepeticaoInput,
+                            maxInput = maxRepeticaoInput,
+                            onMaxInputChange = geradorViewModel::setMaxRepeticaoInput,
+                            labelMin = stringResource(R.string.filtro_min_repeticao_label),
+                            labelMax = stringResource(R.string.filtro_max_repeticao_label)
+                        )
 
-                        Spacer(modifier = Modifier.height(24.dp)) // Espaço antes do botão
+                        Spacer(modifier = Modifier.height(16.dp))
 
                         // TODO: Exibir status de carregamento do geradorViewModel.operacaoStatus
                         if (operacaoStatus == OperacaoStatus.CARREGANDO) {
@@ -607,7 +406,8 @@ fun GeradorScreen(
                             quantidadeNumeros = geradorViewModel.quantidadeNumeros,
                             filtrosAtivos = filtroParesImparesAtivado || filtroSomaTotalAtivado || 
                                 filtroPrimosAtivado || filtroFibonacciAtivado || 
-                                filtroMioloMolduraAtivado || filtroMultiplosDeTresAtivado,
+                                filtroMioloMolduraAtivado || filtroMultiplosDeTresAtivado ||
+                                filtroRepeticaoDezenasAtivado,
                             dezenasFixas = geradorViewModel.numerosFixosState.collectAsState().value,
                             onGerarClick = { geradorViewModel.gerarJogos() }
                         )
@@ -619,7 +419,7 @@ fun GeradorScreen(
         }
 }
 
-// Composable FiltroSwitchItem (copiado de FiltrosScreen.kt)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltroSwitchItem(
         titulo: String,
@@ -628,19 +428,84 @@ fun FiltroSwitchItem(
         onCheckedChange: (Boolean) -> Unit,
         modifier: Modifier = Modifier
 ) {
-        Card(modifier = modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
-                Row(
-                        modifier =
-                                Modifier.fillMaxWidth()
-                                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                        Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
-                                Text(titulo, style = MaterialTheme.typography.bodyLarge)
-                                Text(subtitulo, style = MaterialTheme.typography.bodySmall)
+        Row(
+                modifier = modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+                Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
+                        Text(titulo, style = MaterialTheme.typography.titleMedium)
+                        Text(subtitulo, style = MaterialTheme.typography.bodySmall)
+                }
+                Switch(
+                        checked = checado,
+                        onCheckedChange = onCheckedChange,
+                        colors = SwitchDefaults.colors(
+                                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                                checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                                uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                )
+        }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FiltroCardMinMax(
+        titulo: String,
+        subtitulo: String,
+        checado: Boolean,
+        onCheckedChange: (Boolean) -> Unit,
+        minInput: String,
+        onMinInputChange: (String) -> Unit,
+        maxInput: String,
+        onMaxInputChange: (String) -> Unit,
+        labelMin: String,
+        labelMax: String,
+        modifier: Modifier = Modifier
+) {
+        Card(
+                modifier = modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = MaterialTheme.shapes.medium
+        ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                        FiltroSwitchItem(
+                                titulo = titulo,
+                                subtitulo = subtitulo,
+                                checado = checado,
+                                onCheckedChange = onCheckedChange
+                        )
+                        if (checado) {
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        OutlinedTextField(
+                                                value = minInput,
+                                                onValueChange = onMinInputChange,
+                                                label = { Text(labelMin) },
+                                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                                modifier = Modifier.weight(1f),
+                                                singleLine = true
+                                        )
+                                        OutlinedTextField(
+                                                value = maxInput,
+                                                onValueChange = onMaxInputChange,
+                                                label = { Text(labelMax) },
+                                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                                modifier = Modifier.weight(1f),
+                                                singleLine = true
+                                        )
+                                }
                         }
-                        Switch(checked = checado, onCheckedChange = onCheckedChange)
                 }
         }
 }

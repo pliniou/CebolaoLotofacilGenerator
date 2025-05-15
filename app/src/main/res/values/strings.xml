@@ -248,35 +248,59 @@
 
     <!-- Strings para GeradorScreen Filtros -->
     <string name="filtro_pares_impares_titulo">Pares/Ímpares</string>
-    <string name="filtro_pares_impares_subtitulo">Definir quantidade de números pares</string>
-    <string name="filtro_min_pares_label">Mínimo de Pares</string>
-    <string name="filtro_max_pares_label">Máximo de Pares</string>
+    <string name="filtro_pares_impares_subtitulo">Quantidade de dezenas pares e ímpares</string>
+    <string name="filtro_min_impares_label">Mín. Ímpares</string>
+    <string name="filtro_max_impares_label">Máx. Ímpares</string>
 
-    <string name="filtro_soma_total_titulo">Soma Total das Dezenas</string>
-    <string name="filtro_soma_total_subtitulo">Definir faixa para a soma das dezenas</string>
-    <string name="filtro_soma_min_label">Soma Mínima</string>
-    <string name="filtro_soma_max_label">Soma Máxima</string>
+    <string name="filtro_soma_total_titulo">Soma das Dezenas</string>
+    <string name="filtro_soma_total_subtitulo">Faixa da soma total das 15 dezenas</string>
+    <string name="filtro_soma_min_label">Soma Mín.</string>
+    <string name="filtro_soma_max_label">Soma Máx.</string>
 
     <string name="filtro_primos_titulo">Números Primos</string>
-    <string name="filtro_primos_subtitulo">Definir quantidade de números primos</string>
+    <string name="filtro_primos_subtitulo">Quantidade de números primos</string>
     <string name="filtro_min_primos_label">Mín. Primos</string>
     <string name="filtro_max_primos_label">Máx. Primos</string>
 
     <string name="filtro_fibonacci_titulo">Números de Fibonacci</string>
-    <string name="filtro_fibonacci_subtitulo">Definir quantidade de números de Fibonacci</string>
+    <string name="filtro_fibonacci_subtitulo">Quantidade de números de Fibonacci</string>
     <string name="filtro_min_fibonacci_label">Mín. Fibonacci</string>
     <string name="filtro_max_fibonacci_label">Máx. Fibonacci</string>
 
     <string name="filtro_miolo_moldura_titulo">Miolo e Moldura</string>
-    <string name="filtro_miolo_moldura_subtitulo">Definir quantidade de dezenas do miolo</string>
-    <string name="filtro_min_miolo_label">Mín. Dezenas Miolo</string>
-    <string name="filtro_max_miolo_label">Máx. Dezenas Miolo</string>
+    <string name="filtro_miolo_moldura_subtitulo">Quantidade de dezenas no miolo e na moldura</string>
+    <string name="filtro_min_miolo_label">Mín. Miolo</string>
+    <string name="filtro_max_miolo_label">Máx. Miolo</string>
 
-    <string name="filtro_multiplos_tres_titulo">Múltiplos de 3</string>
-    <string name="filtro_multiplos_tres_subtitulo">Definir quantidade de múltiplos de 3</string>
-    <string name="filtro_min_multiplos_tres_label">Mín. Múltiplos de 3</string>
-    <string name="filtro_max_multiplos_tres_label">Máx. Múltiplos de 3</string>
-    <!-- Fim das strings para GeradorScreen Filtros -->
+    <string name="filtro_multiplos_de_tres_titulo">Múltiplos de 3</string>
+    <string name="filtro_multiplos_de_tres_subtitulo">Quantidade de múltiplos de 3</string>
+    <string name="filtro_min_multiplos_de_tres_label">Mín. Múlt. 3</string>
+    <string name="filtro_max_multiplos_de_tres_label">Máx. Múlt. 3</string>
+
+    <string name="filtro_repeticao_dezenas_titulo">Repetição do Anterior</string>
+    <string name="filtro_repeticao_dezenas_subtitulo">Dezenas repetidas do concurso anterior</string>
+    <string name="filtro_min_repeticao_label">Mín. Repetidas</string>
+    <string name="filtro_max_repeticao_label">Máx. Repetidas</string>
+
+    <!-- Mensagens de Erro para Validação de Filtros -->
+    <string name="erro_filtro_pares_impares_invalido">Valores inválidos para o filtro Pares/Ímpares.
+        Verifique o intervalo (0–15).</string>
+    <string name="erro_filtro_soma_total_invalido">Valores inválidos para o filtro Soma Total.
+        Verifique o intervalo.</string>
+    <string name="erro_filtro_primos_invalido">Valores inválidos para o filtro Números Primos.
+        Verifique o intervalo (0–9).</string>
+    <string name="erro_filtro_fibonacci_invalido">Valores inválidos para o filtro Fibonacci.
+        Verifique o intervalo (0–7).</string>
+    <string name="erro_filtro_miolo_invalido">Valores inválidos para o filtro Miolo. Verifique o
+        intervalo (0–9).</string>
+    <string name="erro_filtro_multiplos_tres_invalido">Valores inválidos para o filtro Múltiplos de
+        3. Verifique o intervalo (0–8).</string>
+    <string name="erro_filtro_repeticao_invalido">Valores inválidos para o filtro Repetição do
+        Anterior. Verifique o intervalo (0–15).</string>
+    <string name="erro_ultimo_resultado_nao_salvo_para_filtro_repeticao">Salve um último resultado
+        antes de usar o filtro de repetição.</string>
+
+    <!-- Fim Strings para GeradorScreen Filtros -->
 
     <!-- Strings para JogosGeradosScreen -->
     <string name="jogos_gerados_titulo">Jogos Gerados</string>

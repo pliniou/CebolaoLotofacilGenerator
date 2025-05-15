@@ -23,19 +23,6 @@ Aplicativo Android 100% offline para geração, conferência e gerenciamento de 
 - Kotlin Coroutines 1.7.3
 - Material 3
 
-## Como compilar e rodar
-
-1. **Clone o repositório:**
-   ```sh
-   git clone <url-do-repositorio>
-   cd CebolaoLotofacilGenerator
-   ```
-2. **Abra no Android Studio** (recomendado) ou rode pelo terminal:
-   ```sh
-   ./gradlew assembleDebug
-   ```
-3. **Execute no emulador ou dispositivo físico** (SDK 21+).
-
 ## Estrutura do Projeto
 
 - `app/src/main/java/com/example/cebolaolotofacilgenerator/` - Código principal
@@ -69,6 +56,7 @@ O aplicativo utiliza navegação moderna baseada em Jetpack Compose Navigation, 
   - Números de Fibonacci
   - Miolo/Moldura
   - Múltiplos de 3
+  - Repetição de Dezenas do Concurso Anterior
 - **100% Offline:** Nenhuma dependência de conexão.
 - **Armazenamento Local:** Room Database para jogos e resultados.
 - **Conferência de Jogos:** Verificação dos jogos gerados com base nos resultados informados.
@@ -76,18 +64,6 @@ O aplicativo utiliza navegação moderna baseada em Jetpack Compose Navigation, 
 - **Design Moderno:** Material 3, Compose, responsivo e acessível.
 
 ## Status do Projeto
-
-### O que foi feito recentemente:
-
-1. **Correção do erro de formatação no ResultadosAdapter.kt**: Corrigido um problema onde `resultado.id.toString()` estava sendo passado para o recurso de string `resultado_concurso`, que esperava um número inteiro (%1$d). A correção removeu o método `.toString()` para que o parâmetro `resultado.id` fosse passado diretamente.
-
-2. **Compilação e montagem do aplicativo**: O aplicativo agora compila e monta corretamente em modo debug.
-
-3. **Migração para Jetpack Compose**: Grande parte da interface foi migrada para Compose, mantendo compatibilidade com componentes legados usando ViewBinding.
-
-4. **Implementação de telas modernas**: Novas telas como GeradorScreen, ResultadosScreen, SettingsScreen e JogosGeradosScreen foram implementadas usando Compose.
-
-5. **Melhorias na UI/UX**: Adicionadas animações de transição entre telas, feedback visual para o usuário e uma interface mais moderna seguindo os princípios do Material 3.
 
 ### O que ainda precisa ser feito:
 
@@ -141,22 +117,6 @@ CebolaoLotofacilGenerator/
 └── README.md
 ```
 
-## Compilação
-
-O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
-
-```bash
-./gradlew assembleDebug    # Versão de debug
-./gradlew assembleRelease  # Versão de produção
-```
-
-## Testes
-
-```bash
-./gradlew test            # Testes unitários
-./gradlew connectedCheck  # Testes instrumentados
-```
-
 ## Solução de Problemas
 
 - **Erro ao deletar arquivos de build:** Feche o Android Studio, emuladores e qualquer Explorer na pasta do projeto. Delete manualmente a pasta `build` e tente novamente.
@@ -169,7 +129,7 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 
 - [x] Seleção manual do último resultado (grade de 1 a 25, persistência local)
 - [x] Transições animadas entre telas (Accompanist Navigation Animation)
-- [x] Filtros estatísticos completos na geração de jogos
+- [x] Filtros estatísticos completos na geração de jogos (incluindo Repetição de Dezenas, Pares/Ímpares, Soma, Primos, Fibonacci, Miolo/Moldura, Múltiplos de 3)
 - [x] Persistência 100% offline (Room)
 - [x] UI moderna e responsiva (Material 3)
 - [x] Feedback ao usuário com Snackbar e mensagens contextuais
@@ -178,7 +138,6 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 - [x] Mais opções de temas/cores na SettingsScreen (Claro, Escuro, Sistema, Azul, Verde, Laranja, Ciano)
 - [x] Refino visual dos filtros e hierarquia da UI (filtros agrupados em Cards na GeradorScreen, melhorias na SettingsScreen)
 - [x] Tela de Jogos Gerados com opções de salvar, gerar mais e favoritar
-- [x] Correção do erro de formatação no ResultadosAdapter.kt
 - [ ] Atualização dos testes unitários para refletir as mudanças na estrutura de dados
 - [ ] Conferência inteligente de jogos (UI/UX aprimorada)
 - [ ] Melhorias de acessibilidade (uso consistente de `contentDescription` com `stringResource`) e internacionalização (revisão de strings hardcoded)
@@ -189,25 +148,15 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 
 ## Sugestões de Melhorias
 
-1. **Análise Estatística Avançada**: Implementar análise de padrões históricos dos concursos para sugerir jogos com maior probabilidade.
-   
-2. **Exportação de Jogos**: Adicionar funcionalidade para exportar jogos em formatos como PDF ou CSV.
+**Modo Offline Aprimorado**: Implementar um sistema de cache mais robusto para armazenar resultados históricos.
 
-3. **Widgets para Tela Inicial**: Criar widgets Android para acesso rápido aos jogos favoritos e últimos resultados.
+**Compartilhamento Social**: Facilitar o compartilhamento de jogos com amigos via aplicativos de mensagem.
 
-4. **Modo Offline Aprimorado**: Implementar um sistema de cache mais robusto para armazenar resultados históricos.
+**Modo Escuro Aprimorado**: Refinar a experiência do modo escuro com mais opções de personalização.
 
-5. **Sincronização com Serviços de Nuvem**: Opção para sincronizar jogos entre dispositivos (Google Drive, Dropbox).
+**Acessibilidade**: Melhorar o suporte para leitores de tela e outras tecnologias assistivas.
 
-6. **Notificações Personalizadas**: Alertar o usuário sobre resultados de concursos com base nos jogos salvos.
-
-7. **Compartilhamento Social**: Facilitar o compartilhamento de jogos com amigos via aplicativos de mensagem.
-
-8. **Modo Escuro Aprimorado**: Refinar a experiência do modo escuro com mais opções de personalização.
-
-9. **Acessibilidade**: Melhorar o suporte para leitores de tela e outras tecnologias assistivas.
-
-10. **Suporte a Tablets**: Otimizar layouts para telas maiores, aproveitando melhor o espaço disponível.
+**Suporte a Tablets**: Otimizar layouts para telas maiores, aproveitando melhor o espaço disponível.
 
 ## Dependências Principais
 

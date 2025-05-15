@@ -107,37 +107,54 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
         ) {
             Text(
                 stringResource(R.string.preferencias_aparencia_titulo),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
             ThemeSettingsGroup(
                 temaAtual = temaAtual,
                 onThemeSelected = { mainViewModel.salvarTemaAplicativo(it) }
             )
 
-            Spacer(modifier = Modifier.height(8.dp)) // Espaçador reduzido, pois "Outras Preferências" foi removido
-            // Text(stringResource(R.string.outras_preferencias_titulo), style = MaterialTheme.typography.titleMedium)
-            // Spacer(modifier = Modifier.height(16.dp)) // Removido Spacer extra
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Text(stringResource(R.string.acoes_app_titulo), style = MaterialTheme.typography.titleMedium)
-            ActionItem(
-                icon = Icons.Filled.Refresh,
-                title = stringResource(R.string.resetar_configuracoes_app_titulo),
-                subtitle = stringResource(R.string.resetar_configuracoes_app_subtitulo),
-                onClick = {
-                    mainViewModel.preferenciasViewModel.resetarConfiguracoes()
-                    mainViewModel.showSnackbar(context.getString(R.string.configuracoes_resetadas_confirmacao))
-                }
+            Text(
+                stringResource(R.string.acoes_app_titulo),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                ActionItem(
+                    icon = Icons.Filled.Refresh,
+                    title = stringResource(R.string.resetar_configuracoes_app_titulo),
+                    subtitle = stringResource(R.string.resetar_configuracoes_app_subtitulo),
+                    onClick = {
+                        mainViewModel.preferenciasViewModel.resetarConfiguracoes()
+                        mainViewModel.showSnackbar(context.getString(R.string.configuracoes_resetadas_confirmacao))
+                    }
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(stringResource(R.string.informacoes_titulo), style = MaterialTheme.typography.titleMedium)
-            InfoItem(
-                icon = Icons.Filled.Info,
-                title = stringResource(R.string.sobre_app_label),
-                subtitle = stringResource(R.string.sobre_app_versao_subtitulo, stringResource(R.string.app_version_name), "Cebola Studios"),
-                onClick = { showSobreDialog = true }
+            Text(
+                stringResource(R.string.informacoes_titulo),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                InfoItem(
+                    icon = Icons.Filled.Info,
+                    title = stringResource(R.string.sobre_app_label),
+                    subtitle = stringResource(R.string.sobre_app_versao_subtitulo, stringResource(R.string.app_version_name), "Cebola Studios"),
+                    onClick = { showSobreDialog = true }
+                )
+            }
         }
     }
 }
@@ -204,27 +221,21 @@ fun ThemeSettingsGroup(temaAtual: TemaAplicativo, onThemeSelected: (TemaAplicati
  */
 @Composable
 fun InfoItem(icon: ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .clickable(onClick = onClick)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                icon,
-                contentDescription = title, // O título geralmente serve como boa descrição para o ícone neste contexto
-                modifier = Modifier.padding(end = 16.dp)
-            )
-            Column {
-                Text(title, style = MaterialTheme.typography.bodyLarge)
-                Text(subtitle, style = MaterialTheme.typography.bodySmall)
-            }
+        Icon(
+            icon,
+            contentDescription = title,
+            modifier = Modifier.padding(end = 16.dp)
+        )
+        Column {
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -239,27 +250,21 @@ fun InfoItem(icon: ImageVector, title: String, subtitle: String, onClick: () -> 
  */
 @Composable
 fun ActionItem(icon: ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .clickable(onClick = onClick)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                icon,
-                contentDescription = title, // O título geralmente serve como boa descrição para o ícone neste contexto
-                modifier = Modifier.padding(end = 16.dp)
-            )
-            Column {
-                Text(title, style = MaterialTheme.typography.bodyLarge)
-                Text(subtitle, style = MaterialTheme.typography.bodySmall)
-            }
+        Icon(
+            icon,
+            contentDescription = title,
+            modifier = Modifier.padding(end = 16.dp)
+        )
+        Column {
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
