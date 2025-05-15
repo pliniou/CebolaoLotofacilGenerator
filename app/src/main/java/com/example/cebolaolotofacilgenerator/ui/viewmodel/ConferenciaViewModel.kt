@@ -43,7 +43,7 @@ class ConferenciaViewModel(
 
     // Estado do status da conferência
     private val _statusConferencia = MutableStateFlow(StatusConferencia.OCIOSO)
-    val statusConferencia: StateFlow<StatusConferencia> = _statusConferencia
+    val statusConferencia: StateFlow<StatusConferencia> = _statusConferencia.asStateFlow()
 
     // Estados para contagem de acertos
     /** StateFlow que emite a contagem de jogos com 15 acertos. */
@@ -224,5 +224,22 @@ class ConferenciaViewModel(
         _acertos12.value = 0
         _acertos11.value = 0
         _acertosMenor11.value = 0
+    }
+
+    // Funções para Preview no Jetpack Compose
+    fun clearResultadoAtualForPreview() {
+        _resultadoAtual.value = null
+    }
+
+    fun setResultadoAtualForPreview(resultado: Resultado) {
+        _resultadoAtual.value = resultado
+    }
+
+    fun setTodosResultadosForPreview(resultados: List<Resultado>) {
+        _todosResultados.value = resultados
+    }
+
+    init {
+        // ... existing code ...
     }
 }

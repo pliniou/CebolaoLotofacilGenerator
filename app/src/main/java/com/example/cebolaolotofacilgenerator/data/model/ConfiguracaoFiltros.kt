@@ -1,10 +1,14 @@
 package com.example.cebolaolotofacilgenerator.data.model
 
 data class ConfiguracaoFiltros(
+        val quantidadeJogos: Int = 10,
+        val quantidadeNumerosPorJogo: Int = 15,
+        val numerosFixos: List<Int> = emptyList(),
+        val numerosExcluidos: List<Int> = emptyList(),
+
         val filtroParesImpares: Boolean = true,
-        val minImpares: Int =
-                6, // Exemplo: tipicamente Lotofácil tem 12 ou 13 ímpares de 25 números
-        val maxImpares: Int = 9, // e 15 números por jogo, então ímpares + pares = 15.
+        val minImpares: Int = 6,
+        val maxImpares: Int = 9,
         // Se minImpares = 6, maxImpares = 9, então minPares = 6, maxPares = 9.
 
         val filtroSomaTotal: Boolean = true,
@@ -26,17 +30,8 @@ data class ConfiguracaoFiltros(
         val minMultiplos: Int = 3,
         val maxMultiplos: Int = 6,
 
-// Estes campos parecem ser usados diretamente no FiltrosFragment para popular a UI inicial
-// e podem ser redundantes se os ranges acima forem a fonte da verdade.
-// No entanto, observeViewModel em FiltrosFragment usa `filtros.quantidadePares`
-// Poderia ser um valor derivado ou uma preferência separada.
-// Para simplificar, vamos assumir que `minImpares` e `maxImpares` são a fonte,
-// e `quantidadePares` não é um campo direto de `ConfiguracaoFiltros`.
-// O fragmento terá que derivar/ajustar a UI para `rangeSliderPares` e `rangeSliderImpares`.
-// Se `quantidadePares` for realmente necessário aqui, precisaria de mais contexto.
-
-// Erros em FiltrosFragment.kt (linhas 67-70) usam `filtros.quantidadePares` etc.
-// mas o observeViewModel usa `value` (que deve ser um Float) e não um `ConfiguracaoFiltros` direto.
-// Vou manter a classe sem `quantidadePares`, `quantidadeImpares` por enquanto
-// e focar nas propriedades que o `atualizarInterface` usa.
+        val filtroRepeticaoConcursoAnterior: Boolean = true,
+        val minRepeticaoConcursoAnterior: Int = 8, // Valores típicos de repetição para Lotofácil
+        val maxRepeticaoConcursoAnterior: Int = 10,
+        val dezenasConcursoAnterior: List<Int> = emptyList() // Lista das dezenas do último concurso informado
 )

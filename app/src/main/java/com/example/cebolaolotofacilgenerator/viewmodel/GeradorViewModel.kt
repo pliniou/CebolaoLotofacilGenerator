@@ -4,11 +4,15 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.cebolaolotofacilgenerator.R
+import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
+import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.ui.viewmodel.FiltrosViewModel
 import com.example.cebolaolotofacilgenerator.util.GeradorJogos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,9 +33,24 @@ import kotlinx.coroutines.flow.stateIn
  * - Expor o estado da operação de geração ([operacaoStatus]) e os jogos gerados ([jogosGerados]).
  * - Lidar com a persistência de algumas preferências de geração (ex: dezenas fixas) via [PreferenciasViewModel].
  */
+class GeradorViewModelFactory(
+    private val application: Application,
+    private val filtrosViewModel: FiltrosViewModel,
+    private val jogoRepository: JogoRepository? // Mantendo opcional por enquanto
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(GeradorViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return GeradorViewModel(application, filtrosViewModel, jogoRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+    }
+}
+
 class GeradorViewModel(
     application: Application,
-    private val jogoRepository: com.example.cebolaolotofacilgenerator.data.repository.JogoRepository? = null
+    private val filtrosViewModel: FiltrosViewModel, // Injetar FiltrosViewModel
+    private val jogoRepository: JogoRepository? = null
 ) : AndroidViewModel(application) {
 
     private val preferenciasViewModel: PreferenciasViewModel =
@@ -52,15 +71,8 @@ class GeradorViewModel(
     val mensagem: LiveData<String?> = _mensagem
 
     // Configurações de geração
-    private val _quantidadeJogosInput = MutableStateFlow("10") // Valor padrão como String
-    val quantidadeJogosInput: StateFlow<String> = _quantidadeJogosInput.asStateFlow()
-    var quantidadeJogos = 10 // Mantém o Int para lógica interna
-        private set // Para garantir que seja alterado apenas via setQuantidadeJogosInput
-
-    private val _quantidadeNumerosInput = MutableStateFlow("15") // Valor padrão como String
-    val quantidadeNumerosInput: StateFlow<String> = _quantidadeNumerosInput.asStateFlow()
-    var quantidadeNumeros = 15 // Mantém o Int para lógica interna
-        private set
+    val quantidadeJogosInput: StateFlow<String> = filtrosViewModel.configuracaoFiltros.map { it.quantidadeJogos.toString() }
+        .stateIn(viewModelScope, kotlinx.coroutines.flow.SharingStarted.Eagerly, "10")
 
     // Dezenas Fixas e Excluídas com StateFlow para observação na UI
     private val _numerosFixosState = MutableStateFlow<List<Int>>(emptyList())
@@ -79,13 +91,9 @@ class GeradorViewModel(
             // Carrega as dezenas fixas persistidas na inicialização
             // Usar .first() para pegar o valor inicial do StateFlow das preferências
             val dezenasFixasPersistidas = preferenciasViewModel.numerosFixosState.first()
-            if (dezenasFixasPersistidas.isNotEmpty()) {
-                // Não chama inicializarComNumerosFixos diretamente para evitar salvar novamente
-                // a menos que seja uma ação explícita do usuário
-                numerosFixosInterno.clear()
-                numerosFixosInterno.addAll(dezenasFixasPersistidas)
-                _numerosFixosState.value = numerosFixosInterno.toList()
-            }
+            // Se `filtrosViewModel` já carrega isso do DataStore, esta lógica pode ser redundante
+            // ou precisar de sincronização.
+            // Por ora, vamos priorizar o `filtrosViewModel.configuracaoFiltros` na geração.
         }
     }
 
@@ -404,73 +412,52 @@ class GeradorViewModel(
      */
     /** Gera jogos com base nas configurações atuais. */
     fun gerarJogos() {
+        _operacaoStatus.value = OperacaoStatus.CARREGANDO
         viewModelScope.launch {
-            val (valido, msgErroValidacao) = validarConfiguracoes()
-            if (!valido) {
-                _mensagem.postValue(msgErroValidacao)
-                _operacaoStatus.postValue(OperacaoStatus.ERRO)
-                _jogosGerados.postValue(emptyList()) // Limpa jogos se a validação falhar
-                return@launch
-            }
-
-            // Acessa o último resultado através da referência ao MainViewModel
-            val ultimoResultadoSalvo = mainViewModelRef?.ultimoResultado?.value?.numeros
-
-            _operacaoStatus.postValue(OperacaoStatus.CARREGANDO)
-            _mensagem.postValue(null) // Limpar mensagem anterior
-
-            // Cria o objeto de configuração
-            val config = GeradorJogos.ConfiguracaoGeracao(
-                quantidadeJogos = quantidadeJogos, // Usar a propriedade da classe diretamente
-                quantidadeNumerosPorJogo = quantidadeNumeros, // Usar a propriedade da classe diretamente
-                numerosFixos = numerosFixosInterno.toList(),
-                numerosExcluidos = numerosExcluidosInterno.toList(),
-                filtroParesImpares = if (_filtroParesImparesAtivado.value) GeradorJogos.FiltroRange(minPares, maxPares) else null, // minPares/maxPares aqui são para ÍMPARES
-                filtroSomaTotal = if (_filtroSomaTotalAtivado.value) GeradorJogos.FiltroRange(minSoma, maxSoma) else null,
-                filtroPrimos = if (_filtroPrimosAtivado.value) GeradorJogos.FiltroRange(minPrimos, maxPrimos) else null,
-                filtroFibonacci = if (_filtroFibonacciAtivado.value) GeradorJogos.FiltroRange(minFibonacci, maxFibonacci) else null,
-                filtroMiolo = if (_filtroMioloMolduraAtivado.value) GeradorJogos.FiltroRange(minMiolo, maxMiolo) else null,
-                filtroMultiplosDeTres = if (_filtroMultiplosDeTresAtivado.value) GeradorJogos.FiltroRange(minMultiplosTres, maxMultiplosTres) else null,
-                filtroRepeticaoAnterior = if (_filtroRepeticaoDezenasAtivado.value && ultimoResultadoSalvo != null && ultimoResultadoSalvo.isNotEmpty()) {
-                    GeradorJogos.FiltroRepeticao(ultimoResultadoSalvo, GeradorJogos.FiltroRange(minRepeticao, maxRepeticao))
-                } else null,
-                ultimoResultadoConcursoAnterior = if (_filtroRepeticaoDezenasAtivado.value) ultimoResultadoSalvo else null
-            )
-
             try {
-                val resultado = withContext(Dispatchers.Default) {
-                    // Chama GeradorJogos.gerarJogos com o objeto de configuração
-                    GeradorJogos.gerarJogos(config)
+                val configFiltros: ConfiguracaoFiltros = filtrosViewModel.configuracaoFiltros.first() // Pega o valor atual
+
+                // Mapear ConfiguracaoFiltros para GeradorJogos.ConfiguracaoGeracao
+                val configGeracao = GeradorJogos.ConfiguracaoGeracao(
+                    quantidadeJogos = configFiltros.quantidadeJogos,
+                    quantidadeNumerosPorJogo = configFiltros.quantidadeNumerosPorJogo,
+                    numerosFixos = configFiltros.numerosFixos,
+                    numerosExcluidos = configFiltros.numerosExcluidos,
+                    filtroParesImpares = if (configFiltros.filtroParesImpares) GeradorJogos.FiltroRange(configFiltros.minImpares, configFiltros.maxImpares) else null,
+                    filtroSomaTotal = if (configFiltros.filtroSomaTotal) GeradorJogos.FiltroRange(configFiltros.minSoma, configFiltros.maxSoma) else null,
+                    filtroPrimos = if (configFiltros.filtroPrimos) GeradorJogos.FiltroRange(configFiltros.minPrimos, configFiltros.maxPrimos) else null,
+                    filtroFibonacci = if (configFiltros.filtroFibonacci) GeradorJogos.FiltroRange(configFiltros.minFibonacci, configFiltros.maxFibonacci) else null,
+                    filtroMiolo = if (configFiltros.filtroMioloMoldura) GeradorJogos.FiltroRange(configFiltros.minMiolo, configFiltros.maxMiolo) else null,
+                    filtroMultiplosDeTres = if (configFiltros.filtroMultiplosDeTres) GeradorJogos.FiltroRange(configFiltros.minMultiplos, configFiltros.maxMultiplos) else null,
+                    filtroRepeticaoAnterior = if (configFiltros.filtroRepeticaoConcursoAnterior && configFiltros.dezenasConcursoAnterior.isNotEmpty()) {
+                        GeradorJogos.FiltroRepeticao(
+                            dezenasAnteriores = configFiltros.dezenasConcursoAnterior,
+                            range = GeradorJogos.FiltroRange(configFiltros.minRepeticaoConcursoAnterior, configFiltros.maxRepeticaoConcursoAnterior)
+                        )
+                    } else null,
+                    ultimoResultadoConcursoAnterior = configFiltros.dezenasConcursoAnterior // Adicionado para consistência
+                )
+
+                val jogos = withContext(Dispatchers.Default) {
+                    GeradorJogos.gerarJogos(configGeracao)
                 }
 
-                if (resultado.isNotEmpty()) {
-                    _jogosGerados.postValue(resultado)
+                if (jogos.isNotEmpty()) {
+                    _jogosGerados.postValue(jogos)
                     _operacaoStatus.postValue(OperacaoStatus.SUCESSO)
                 } else {
-                    _mensagem.postValue(
-                            getApplication<Application>()
-                                    .getString(R.string.info_nenhum_jogo_gerado_filtros)
-                    )
-                    _operacaoStatus.postValue(
-                            OperacaoStatus.OCIOSO
-                    ) // Ou ERRO, dependendo da preferência
+                    _jogosGerados.postValue(emptyList())
+                    _operacaoStatus.postValue(OperacaoStatus.SUCESSO) // Sucesso, mas sem jogos
+                    _mensagem.postValue(getApplication<Application>().getString(R.string.info_nenhum_jogo_gerado_filtros))
                 }
             } catch (e: IllegalArgumentException) {
                 _jogosGerados.postValue(emptyList())
-                _mensagem.postValue(
-                        e.message
-                                ?: getApplication<Application>()
-                                        .getString(R.string.erro_gerar_jogos_parametros_invalidos)
-                )
                 _operacaoStatus.postValue(OperacaoStatus.ERRO)
+                _mensagem.postValue(e.message ?: getApplication<Application>().getString(R.string.erro_gerar_jogos_parametros_invalidos))
             } catch (e: Exception) {
                 _jogosGerados.postValue(emptyList())
-                _mensagem.postValue(
-                        getApplication<Application>()
-                                .getString(R.string.erro_desconhecido_geracao) +
-                                " ${e.localizedMessage}"
-                )
                 _operacaoStatus.postValue(OperacaoStatus.ERRO)
+                _mensagem.postValue(e.message ?: getApplication<Application>().getString(R.string.erro_desconhecido_geracao))
             }
         }
     }

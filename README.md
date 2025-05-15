@@ -129,7 +129,7 @@ CebolaoLotofacilGenerator/
 
 - [x] Seleção manual do último resultado (grade de 1 a 25, persistência local)
 - [x] Transições animadas entre telas (Accompanist Navigation Animation)
-- [x] Filtros estatísticos completos na geração de jogos (incluindo Repetição de Dezenas, Pares/Ímpares, Soma, Primos, Fibonacci, Miolo/Moldura, Múltiplos de 3)
+- [x] Filtros estatísticos completos na geração de jogos (incluindo Repetição de Dezenas, Pares/Ímpares, Soma, Primos, Fibonacci, Miolo/Moldura, Múltiplos de 3) - **Interface de configuração e persistência implementadas em `FiltrosScreen` e `FiltrosViewModel`. Integração com `GeradorViewModel` realizada.**
 - [x] Persistência 100% offline (Room)
 - [x] UI moderna e responsiva (Material 3)
 - [x] Feedback ao usuário com Snackbar e mensagens contextuais
@@ -138,13 +138,14 @@ CebolaoLotofacilGenerator/
 - [x] Mais opções de temas/cores na SettingsScreen (Claro, Escuro, Sistema, Azul, Verde, Laranja, Ciano)
 - [x] Refino visual dos filtros e hierarquia da UI (filtros agrupados em Cards na GeradorScreen, melhorias na SettingsScreen)
 - [x] Tela de Jogos Gerados com opções de salvar, gerar mais e favoritar
-- [ ] Atualização dos testes unitários para refletir as mudanças na estrutura de dados
+- [ ] **Filtro de Repetição do Concurso Anterior:** Permitir carregar dezenas do último resultado salvo no app (atualmente entrada manual).
+- [ ] Atualização dos testes unitários para refletir as mudanças na estrutura de dados e ViewModel.
 - [ ] Conferência inteligente de jogos (UI/UX aprimorada)
-- [ ] Melhorias de acessibilidade (uso consistente de `contentDescription` com `stringResource`) e internacionalização (revisão de strings hardcoded)
-- [ ] Documentação de API interna (KDoc) e exemplos de uso
-- [ ] Migração completa para Jetpack Compose (eliminação gradual de layouts XML)
-- [ ] Implementação de testes de UI com Compose Testing
-- [ ] Otimização de desempenho na geração de jogos com múltiplos filtros
+- [ ] Melhorias de acessibilidade (uso consistente de `contentDescription` com `stringResource`) e internacionalização (revisão de strings hardcoded).
+- [ ] Documentação de API interna (KDoc) e exemplos de uso.
+- [x] Migração completa para Jetpack Compose (eliminação gradual de layouts XML) - **Avanço significativo com as telas de Conferência e Filtros. `PrincipalScreen` também em Compose.**
+- [ ] Implementação de testes de UI com Compose Testing.
+- [ ] Otimização de desempenho na geração de jogos com múltiplos filtros.
 
 ## Sugestões de Melhorias
 

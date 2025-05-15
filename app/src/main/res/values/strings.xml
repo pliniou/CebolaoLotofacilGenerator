@@ -210,7 +210,6 @@
     <string name="na_maiusculo">N/A</string>
     <string name="desmarcar_como_favorito">Desmarcar como favorito</string>
     <string name="acertos_label_com_valor">Acertos: %d</string>
-    <string name="erro_salvar_jogos">Erro ao salvar jogos</string>
     <string name="gerando_jogos">Gerando jogos...</string>
     <string name="gerar_jogos">Gerar Jogos</string>
     <string name="tela_favoritos_titulo">Jogos Favoritos</string>
@@ -317,5 +316,83 @@
     <!-- A string "gerar_mais_jogos" já existe -->
     <!-- Strings para marcar/desmarcar favorito e data_criacao_label já existem -->
     <!-- Fim das strings para JogosGeradosScreen -->
+
+    <string name="app_name_short">Lotofácil Gen</string>
+    <string name="gerador_de_jogos">Gerador de Jogos</string>
+    <string name="instrucao_gerador_jogos">Configure os filtros e gere seus jogos da Lotofácil.</string>
+    <string name="jogos_gerados">Jogos Gerados</string>
+    <string name="jogo_clicado_feedback">Jogo clicado: %s</string>
+    <string name="caracteristicas_jogo_format">P: %1$d | I: %2$d | Soma: %3$d\nPrimos: %4$d | Fib:
+        %5$d\nMiolo: %6$d | Moldura: %7$d\nMúlt. 3: %8$d</string>
+    <string name="erro_salvar_jogos">Erro ao salvar jogos</string>
+
+    <!-- Strings para FiltrosScreen (Compose) -->
+    <string name="filtros_basicos_titulo">Filtros Básicos</string>
+    <string name="numeros_especiais_titulo">Números Especiais</string>
+    <string name="quantidade_de_jogos_label">Quantidade de Jogos a Gerar</string>
+    <string name="quantidade_de_numeros_label">Dezenas por Jogo (15-20)</string>
+    <string name="numeros_fixos_label">Fixar Dezenas</string>
+    <string name="numeros_fixos_placeholder">Ex: 1, 5, 10, 22 (separadas por vírgula/espaço)</string>
+    <string name="numeros_excluidos_label">Excluir Dezenas</string>
+    <string name="numeros_excluidos_placeholder">Ex: 7, 13, 18, 25 (separadas por vírgula/espaço)</string>
+    <string name="filtros_estatisticos_titulo">Filtros Estatísticos Avançados</string>
+    <string name="filtros_estatisticos_desenvolvimento">Filtros Estatísticos (Em desenvolvimento)</string>
+    <string name="aplicar_filtros_botao">Aplicar</string>
+    <string name="salvar_filtros_botao">Salvar Config.</string>
+    <string name="resetar_filtros_botao">Resetar</string>
+    <!-- A string R.string.filtro_pares_impares_titulo já existe -->
+    <!-- A string R.string.valor_filtro_pares_impares já existe -->
+    <!-- A string R.string.na_aplicado já existe -->
+    <!-- A string R.string.bottom_nav_item_filtros já existe (usada no TopAppBar) -->
+
+    <!-- Strings para FiltrosScreen (revisadas e adicionadas) -->
+    <string name="filtros_basicos_titulo">Filtros Básicos</string>
+    <string name="quantidade_de_jogos_label">Quantidade de Jogos a Gerar</string>
+    <string name="quantidade_de_numeros_label">Dezenas por Jogo (15-20)</string>
+    <string name="numeros_especiais_titulo">Definição de Números</string>
+    <string name="numeros_fixos_label">Fixar Dezenas</string>
+    <string name="numeros_fixos_placeholder">Ex: 1, 5, 10, 22 (separadas por vírgula/espaço)</string>
+    <string name="numeros_excluidos_label">Excluir Dezenas</string>
+    <string name="numeros_excluidos_placeholder">Ex: 7, 13, 18, 25 (separadas por vírgula/espaço)</string>
+    <string name="filtros_estatisticos_titulo">Filtros Estatísticos Avançados</string>
+
+    <string name="filtro_soma_total_titulo">Soma Total das Dezenas</string>
+    <string name="filtro_primos_titulo">Quantidade de Números Primos</string>
+    <string name="filtro_fibonacci_titulo">Quantidade de Números de Fibonacci</string>
+    <string name="filtro_miolo_moldura_titulo">Quantidade de Números do Miolo</string> <!-- O slider
+    controla o Miolo -->
+    <string name="filtro_multiplos_de_tres_titulo">Quantidade de Múltiplos de 3</string>
+    <!-- A string valor_filtro_multiplos_tres já existe e está correta para o formato %1$d-%2$d -->
+
+    <string name="aplicar_filtros_botao">Aplicar</string>
+    <string name="salvar_filtros_botao">Salvar Config.</string>
+    <string name="resetar_filtros_botao">Resetar</string>
+    <!-- Fim das strings para FiltrosScreen -->
+
+    <string name="titulo_tela_filtros">Configurar Filtros</string>
+    <string name="instrucao_filtros">Defina os filtros para a geração de jogos:</string>
+    <!-- Mantendo as de label_numeros_fixos e placeholder_numeros_fixos da primeira versão da tela,
+    caso sejam usadas em outro local, 
+         mas a tela atual usa as mais específicas acima -->
+    <string name="label_numeros_fixos">Números Fixos (separados por vírgula)</string>
+    <string name="placeholder_numeros_fixos">Ex: 1, 10, 25</string>
+    <string name="label_numeros_excluidos">Números Excluídos (separados por vírgula)</string>
+    <string name="placeholder_numeros_excluidos">Ex: 7, 13, 22</string>
+    <string name="label_qtd_pares">Quantidade de Números Pares</string>
+    <string name="placeholder_qtd_pares">Ex: 7 ou 8</string>
+    <string name="botao_resetar_filtros">Resetar</string>
+    <string name="botao_salvar_filtros">Salvar e Aplicar</string>
+
+    <!-- Strings para Filtro de Repetição do Concurso Anterior -->
+    <string name="filtro_repeticao_anterior_titulo">Repetição do Concurso Anterior</string>
+    <string name="label_dezenas_concurso_anterior">Dezenas do Concurso Anterior (15 números)</string>
+    <string name="placeholder_dezenas_concurso_anterior">Ex: 1,2,3,...,15 (separadas por
+        vírgula/espaço)</string>
+    <string name="valor_filtro_repeticao_anterior">Repetidas: %1$d-%2$d</string>
+    <!-- Fim das strings para Filtro de Repetição -->
+
+    <!-- Strings para Filtros Estatísticos (usadas na FiltrosScreen) -->
+    <string name="filtro_pares_impares_titulo">Pares/Ímpares</string> <!-- Já existia em
+    GeradorScreen Filtros, OK -->
 
 </resources>

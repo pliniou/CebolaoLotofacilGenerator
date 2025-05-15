@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
             CebolaoLotofacilGeneratorTheme(tema = temaAplicativo) {
                 val navController = rememberNavController()
                 var showBottomBar by remember { mutableStateOf(true) }
-                val startDestination = Screen.Home.route
+                val startDestination = Screen.Principal.route
 
                 val snackbarHostState = remember { SnackbarHostState() }
                 
