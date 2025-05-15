@@ -6,8 +6,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,28 +23,13 @@ fun HomeScreen(viewModel: MainViewModel, navController: NavController) {
         Scaffold(
                 topBar = {
                         TopAppBar(
-                                title = { Text("Cebolão Lotofácil") },
+                                title = { Text("Lotofácil Generator 1.0") },
                                 colors =
                                         TopAppBarDefaults.topAppBarColors(
                                                 containerColor = MaterialTheme.colorScheme.primary,
                                                 titleContentColor =
                                                         MaterialTheme.colorScheme.onPrimary
-                                        ),
-                                actions = {
-                                        IconButton(
-                                                onClick = {
-                                                        navController.navigate(
-                                                                Screen.Settings.route
-                                                        )
-                                                }
-                                        ) {
-                                                Icon(
-                                                        Icons.Default.Settings,
-                                                        contentDescription = "Configurações",
-                                                        tint = MaterialTheme.colorScheme.onPrimary
-                                                )
-                                        }
-                                }
+                                        )
                         )
                 }
         ) { paddingValues ->
@@ -71,7 +54,7 @@ fun HomeScreen(viewModel: MainViewModel, navController: NavController) {
                                 text = "Seu assistente para gerar jogos inteligentes.",
                                 style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(bottom = 24.dp)
+                                modifier = Modifier.padding(bottom = 32.dp)
                         )
 
                         // Cartões de funcionalidades principais
@@ -92,13 +75,7 @@ fun HomeScreen(viewModel: MainViewModel, navController: NavController) {
                                 icon = Icons.Default.Favorite
                         )
 
-                        HomeCard(
-                                title = "Resultados Anteriores",
-                                description =
-                                        "Confira os números sorteados em concursos anteriores",
-                                onClick = { navController.navigate(Screen.Resultados.route) },
-                                icon = Icons.Default.List
-                        )
+                        Spacer(modifier = Modifier.height(24.dp))
 
                         // Informações sobre o App e Como Usar (integrado)
                         Card(

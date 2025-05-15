@@ -30,14 +30,6 @@ class MainViewModel(
                     viewModelScope.launch { appDataStore.firstRunCompleted.collect { value = it } }
                 }
 
-    // StateFlow para o estado das notificações
-    val notificationsEnabled: StateFlow<Boolean> =
-            appDataStore.notificationsEnabled.stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(5000),
-                    initialValue = true // Valor inicial, será substituído pelo valor do DataStore
-            )
-
     // Enum para as opções de tema (pode ser movido para um arquivo/local mais adequado se
     // necessário)
     enum class TemaAplicativo {
@@ -64,11 +56,6 @@ class MainViewModel(
     // Função para atualizar o tema do aplicativo
     fun salvarTemaAplicativo(tema: TemaAplicativo) {
         viewModelScope.launch { appDataStore.salvarTemaAplicativo(tema.ordinal) }
-    }
-
-    // Função para atualizar o estado das notificações
-    fun setNotificationsEnabled(isEnabled: Boolean) {
-        viewModelScope.launch { appDataStore.setNotificationsEnabled(isEnabled) }
     }
 
     // LiveData para observar todos os jogos

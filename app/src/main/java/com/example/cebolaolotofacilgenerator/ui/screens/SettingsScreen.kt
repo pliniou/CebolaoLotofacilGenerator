@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -22,7 +21,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -44,7 +42,6 @@ import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel.TemaAplicat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(viewModel: MainViewModel, navController: NavController) {
-        val areNotificationsEnabled by viewModel.notificationsEnabled.collectAsState()
         val temaAtual by viewModel.temaAplicativo.collectAsState()
         var showSobreDialog by remember { mutableStateOf(false) }
 
@@ -57,10 +54,10 @@ fun SettingsScreen(viewModel: MainViewModel, navController: NavController) {
                                         Text(
                                                 "Versão: 1.0.0"
                                         ) // Pode ser obtida dinamicamente no futuro
-                                        Text("Desenvolvido por: Seu Nome/Empresa Aqui")
+                                        Text("Desenvolvido por: Cebola Studios")
                                         Text(
-                                                "Este aplicativo ajuda você a gerar jogos da Lotofácil, " +
-                                                        "gerenciar seus jogos favoritos e conferir os resultados."
+                                                "Seu assistente inteligente para criar e analisar " +
+                                                        "jogos da Lotofácil com base em estatísticas e suas preferências!"
                                         )
                                         // Adicionar mais informações se desejar, como links, etc.
                                 }
@@ -109,13 +106,6 @@ fun SettingsScreen(viewModel: MainViewModel, navController: NavController) {
 
                         Spacer(modifier = Modifier.height(8.dp))
                         Text("Outras Preferências", style = MaterialTheme.typography.titleMedium)
-                        SettingsItem(
-                                icon = Icons.Filled.Notifications,
-                                title = "Notificações",
-                                subtitle = "Receber notificações sobre resultados",
-                                isChecked = areNotificationsEnabled,
-                                onCheckedChange = { viewModel.setNotificationsEnabled(it) }
-                        )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -123,7 +113,7 @@ fun SettingsScreen(viewModel: MainViewModel, navController: NavController) {
                         InfoItem(
                                 icon = Icons.Filled.Info,
                                 title = "Sobre o App",
-                                subtitle = "Versão 1.0.0"
+                                subtitle = "Versão 1.0.0 - Cebola Studios"
                         ) { showSobreDialog = true }
                 }
         }
@@ -167,39 +157,6 @@ fun ThemeSettingsGroup(temaAtual: TemaAplicativo, onThemeSelected: (TemaAplicati
                                         )
                                 }
                         }
-                }
-        }
-}
-
-@Composable
-fun SettingsItem(
-        icon: ImageVector,
-        title: String,
-        subtitle: String,
-        isChecked: Boolean,
-        onCheckedChange: (Boolean) -> Unit
-) {
-        Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-        ) {
-                Row(
-                        modifier = Modifier.fillMaxWidth().padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                        icon,
-                                        contentDescription = title,
-                                        modifier = Modifier.padding(end = 16.dp)
-                                )
-                                Column {
-                                        Text(title, style = MaterialTheme.typography.bodyLarge)
-                                        Text(subtitle, style = MaterialTheme.typography.bodySmall)
-                                }
-                        }
-                        Switch(checked = isChecked, onCheckedChange = onCheckedChange)
                 }
         }
 }

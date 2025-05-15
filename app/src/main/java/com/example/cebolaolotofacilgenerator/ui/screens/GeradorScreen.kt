@@ -592,7 +592,11 @@ fun SeletorDezenasGrid(
                                         ), // Sem padding interno da LazyVerticalGrid
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                modifier = Modifier.align(Alignment.Center) // Centraliza a grade
+                                modifier =
+                                        Modifier.align(Alignment.Center)
+                                                .height(
+                                                        280.dp
+                                                ) // Centraliza a grade e define altura fixa
                                 // .height((5 * 56).dp) // Altura aproximada para 5 linhas de botões
                                 // com padding
                                 // A altura dinâmica pode ser complicada com LazyVerticalGrid dentro
