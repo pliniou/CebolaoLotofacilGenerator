@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel.TemaAplicativo
 
+// Cores Padrão
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
@@ -24,15 +25,36 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
+
+// Tema Azul
+val BluePrimary = Color(0xFF1976D2) // Azul 700
+val BlueSecondary = Color(0xFF64B5F6) // Azul 300
+val BlueTertiary = Color(0xFFBBDEFB) // Azul 100
+val OnBluePrimary = Color.White
+val OnBlueSecondary = Color.Black
+val OnBlueTertiary = Color.Black
+
+// Tema Verde
+val GreenPrimary = Color(0xFF388E3C) // Verde 700
+val GreenSecondary = Color(0xFF81C784) // Verde 300
+val GreenTertiary = Color(0xFFA5D6A7) // Verde 200
+val OnGreenPrimary = Color.White
+val OnGreenSecondary = Color.Black
+val OnGreenTertiary = Color.Black
+
+
 private val DarkColorScheme =
-        darkColorScheme(primary = Purple80, secondary = PurpleGrey80, tertiary = Pink80)
+        darkColorScheme(
+            primary = Purple80,
+            secondary = PurpleGrey80,
+            tertiary = Pink80
+        )
 
 private val LightColorScheme =
         lightColorScheme(
                 primary = Purple40,
                 secondary = PurpleGrey40,
                 tertiary = Pink40
-
                 /* Other default colors to override
                 background = Color(0xFFFFFBFE),
                 surface = Color(0xFFFFFBFE),
@@ -42,49 +64,77 @@ private val LightColorScheme =
                 onBackground = Color(0xFF1C1B1F),
                 onSurface = Color(0xFF1C1B1F),
                 */
-                )
+        )
+
+private val AppBlueColorScheme = lightColorScheme(
+    primary = BluePrimary,
+    secondary = BlueSecondary,
+    tertiary = BlueTertiary,
+    onPrimary = OnBluePrimary,
+    onSecondary = OnBlueSecondary,
+    onTertiary = OnBlueTertiary,
+    background = Color(0xFFF0F4FF), // Fundo levemente azulado
+    surface = Color(0xFFF8FAFF),    // Superfície levemente azulada
+    onBackground = Color.Black,
+    onSurface = Color.Black
+)
+
+private val AppGreenColorScheme = lightColorScheme(
+    primary = GreenPrimary,
+    secondary = GreenSecondary,
+    tertiary = GreenTertiary,
+    onPrimary = OnGreenPrimary,
+    onSecondary = OnGreenSecondary,
+    onTertiary = OnGreenTertiary,
+    background = Color(0xFFF0FFF0), // Fundo levemente esverdeado
+    surface = Color(0xFFF5FFF5),    // Superfície levemente esverdeada
+    onBackground = Color.Black,
+    onSurface = Color.Black
+)
 
 @Composable
 fun CebolaoLotofacilGeneratorTheme(
         tema: TemaAplicativo = TemaAplicativo.SISTEMA,
         content: @Composable () -> Unit
 ) {
-    val useDarkTheme: Boolean
-    val useDynamicColor: Boolean
+    var useDarkTheme: Boolean = isSystemInDarkTheme()
+    var colorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme // Padrão inicial
 
     when (tema) {
         TemaAplicativo.CLARO -> {
             useDarkTheme = false
-            useDynamicColor = false
+            colorScheme = LightColorScheme
         }
         TemaAplicativo.ESCURO -> {
             useDarkTheme = true
-            useDynamicColor = false
+            colorScheme = DarkColorScheme
         }
         TemaAplicativo.SISTEMA -> {
-            useDarkTheme = isSystemInDarkTheme()
-            useDynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+            // useDarkTheme já está definido pelo isSystemInDarkTheme()
+            val context = LocalContext.current
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                colorScheme = if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            } else {
+                // Mantém Light/DarkColorScheme padrão para versões < S
+                colorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme
+            }
+        }
+        TemaAplicativo.AZUL -> {
+            useDarkTheme = false // Tema Azul será sempre claro por esta definição
+            colorScheme = AppBlueColorScheme
+        }
+        TemaAplicativo.VERDE -> {
+            useDarkTheme = false // Tema Verde será sempre claro por esta definição
+            colorScheme = AppGreenColorScheme
         }
     }
-
-    val colorScheme =
-            when {
-                useDynamicColor -> {
-                    val context = LocalContext.current
-                    if (useDarkTheme) dynamicDarkColorScheme(context)
-                    else dynamicLightColorScheme(context)
-                }
-                useDarkTheme -> DarkColorScheme
-                else -> LightColorScheme
-            }
 
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
-                    !useDarkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !useDarkTheme
         }
     }
 

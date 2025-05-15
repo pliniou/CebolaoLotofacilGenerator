@@ -70,6 +70,7 @@ class ConferenciaFragment : Fragment() {
                     ListaJogosConferidos(
                         jogosConferidos = jogosConferidos,
                         resultadoSorteado = resultadoAtual,
+                        mainViewModel = mainViewModel,
                         modifier = Modifier.fillMaxSize() // Opcional, ajuste conforme necessário
                     )
                 }

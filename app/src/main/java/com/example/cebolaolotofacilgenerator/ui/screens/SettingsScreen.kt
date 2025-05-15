@@ -151,6 +151,8 @@ fun ThemeSettingsGroup(temaAtual: TemaAplicativo, onThemeSelected: (TemaAplicati
                                                                 TemaAplicativo.ESCURO -> "Escuro"
                                                                 TemaAplicativo.SISTEMA ->
                                                                         "Padrão do Sistema"
+                                                                TemaAplicativo.AZUL -> "Azul"
+                                                                TemaAplicativo.VERDE -> "Verde"
                                                         },
                                                 style = MaterialTheme.typography.bodyLarge,
                                                 modifier = Modifier.padding(start = 8.dp)

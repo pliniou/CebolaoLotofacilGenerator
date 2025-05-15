@@ -18,6 +18,7 @@ import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
 import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
 import com.example.cebolaolotofacilgenerator.ui.components.BottomNavigationBar
+import com.example.cebolaolotofacilgenerator.ui.components.ObservarMensagensSnackbar
 import com.example.cebolaolotofacilgenerator.ui.theme.CebolaoLotofacilGeneratorTheme
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModelFactory
@@ -49,10 +50,16 @@ class MainActivity : ComponentActivity() {
                 val startDestination = Screen.Home.route
 
                 val snackbarHostState = remember { SnackbarHostState() }
+                
+                // Observar mensagens do SnackbarManager
+                ObservarMensagensSnackbar(snackbarHostState)
 
+                // Observar também mensagens do MainViewModel para compatibilidade
                 LaunchedEffect(key1 = mainViewModel) {
                     mainViewModel.snackbarMessage.collect { message ->
-                        snackbarHostState.showSnackbar(message)
+                        if (message.isNotEmpty()) {
+                            snackbarHostState.showSnackbar(message)
+                        }
                     }
                 }
 

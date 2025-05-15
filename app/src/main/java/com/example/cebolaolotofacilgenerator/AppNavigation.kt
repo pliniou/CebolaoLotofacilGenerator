@@ -89,6 +89,6 @@ fun AppNavigation(
                 exitTransition = { slideOutHorizontally { -it } },
                 popEnterTransition = { slideInHorizontally { -it } },
                 popExitTransition = { slideOutHorizontally { it } }
-        ) { JogosGeradosScreen(navController = navController, geradorViewModel = viewModel()) }
+        ) { JogosGeradosScreen(navController = navController, mainViewModel = viewModel, geradorViewModel = viewModel()) }
     }
 }

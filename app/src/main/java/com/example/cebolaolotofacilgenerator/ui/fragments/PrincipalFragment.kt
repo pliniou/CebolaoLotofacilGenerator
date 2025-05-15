@@ -119,15 +119,18 @@ class PrincipalFragment : Fragment() {
             com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.CARREGANDO -> {
                 binding.progressGerador.visibility = View.VISIBLE
                 binding.btnGerarJogos.isEnabled = false
+                binding.btnGerarJogos.text = getString(R.string.gerando_jogos)
             }
             com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.SUCESSO,
             com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.OCIOSO -> {
                 binding.progressGerador.visibility = View.GONE
                 binding.btnGerarJogos.isEnabled = true
+                binding.btnGerarJogos.text = getString(R.string.gerar_jogos)
             }
             com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO -> {
                 binding.progressGerador.visibility = View.GONE
                 binding.btnGerarJogos.isEnabled = true
+                binding.btnGerarJogos.text = getString(R.string.gerar_jogos)
             }
         // else não é necessário se o when for exaustivo com um tipo não anulável
         }

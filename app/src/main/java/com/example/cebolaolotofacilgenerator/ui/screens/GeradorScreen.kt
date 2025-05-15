@@ -45,6 +45,8 @@ import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus // Garant
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import kotlinx.coroutines.FlowPreview
+import com.example.cebolaolotofacilgenerator.ui.components.BotaoGerarJogos
+import com.example.cebolaolotofacilgenerator.ui.components.SnackbarManager
 
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class) // Adicionar OptIn aqui e FlowPreview
 @Composable
@@ -79,8 +81,8 @@ fun GeradorScreen(
         val maxMultiplosDeTresInput by geradorViewModel.maxMultiplosDeTresInput.collectAsState()
 
         // Observar o status da operação e os jogos gerados (se necessário aqui)
-        val operacaoStatus by geradorViewModel.operacaoStatus.observeAsState()
-        val mensagemStatus by geradorViewModel.mensagem.observeAsState()
+        val operacaoStatus by geradorViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
+        val mensagem by geradorViewModel.mensagem.observeAsState("")
         val quantidadeJogosInput by geradorViewModel.quantidadeJogosInput.collectAsState()
         val quantidadeNumerosInput by geradorViewModel.quantidadeNumerosInput.collectAsState()
 
@@ -106,6 +108,29 @@ fun GeradorScreen(
         LaunchedEffect(dezenasFixasArg) {
                 val dezenas = dezenasFixasArg?.split(",")?.mapNotNull { it.toIntOrNull() }
                 geradorViewModel.inicializarComNumerosFixos(dezenas)
+        }
+
+        // Observar mensagens para exibir Snackbars
+        LaunchedEffect(mensagem) {
+                if (!mensagem.isNullOrEmpty()) {
+                        SnackbarManager.mostrarMensagem(mensagem)
+                }
+        }
+
+        // Observar mudanças de operação para exibir mensagens específicas
+        LaunchedEffect(operacaoStatus) {
+                when(operacaoStatus) {
+                        OperacaoStatus.SUCESSO -> {
+                                val jogosGerados = geradorViewModel.jogosGerados.value
+                                if (!jogosGerados.isNullOrEmpty()) {
+                                        SnackbarManager.mostrarMensagem("${jogosGerados.size} jogos gerados com sucesso!")
+                                }
+                        }
+                        OperacaoStatus.ERRO -> {
+                                SnackbarManager.mostrarMensagem("Erro ao gerar jogos. Verifique os filtros e tente novamente.")
+                        }
+                        else -> {} // Não exibir mensagem para outros estados
+                }
         }
 
         // Efeito para observar o status da operação e navegar ou mostrar mensagens
@@ -563,7 +588,7 @@ fun GeradorScreen(
                                 )
                         }
 
-                        mensagemStatus?.let { msg ->
+                        mensagem?.let { msg ->
                                 Text(
                                         text = msg,
                                         color =
@@ -579,16 +604,17 @@ fun GeradorScreen(
                                 )
                         }
 
-                        Button(
-                                onClick = { geradorViewModel.gerarJogos() },
-                                enabled =
-                                        operacaoStatus !=
-                                                com.example.cebolaolotofacilgenerator.data.model
-                                                        .OperacaoStatus
-                                                        .CARREGANDO, // Desabilitar botão durante
-                                // carregamento
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
-                        ) { Text("Gerar Jogos", style = MaterialTheme.typography.titleMedium) }
+                        // Botão dinâmico para geração de jogos
+                        BotaoGerarJogos(
+                            status = operacaoStatus,
+                            quantidadeJogos = geradorViewModel.quantidadeJogos,
+                            quantidadeNumeros = geradorViewModel.quantidadeNumeros,
+                            filtrosAtivos = filtroParesImparesAtivado || filtroSomaTotalAtivado || 
+                                filtroPrimosAtivado || filtroFibonacciAtivado || 
+                                filtroMioloMolduraAtivado || filtroMultiplosDeTresAtivado,
+                            dezenasFixas = geradorViewModel.numerosFixosState.collectAsState().value,
+                            onGerarClick = { geradorViewModel.gerarJogos() }
+                        )
 
                         // TODO: Exibir mensagens de erro/sucesso do geradorViewModel.mensagem
                         // TODO: Exibir status de carregamento do geradorViewModel.operacaoStatus

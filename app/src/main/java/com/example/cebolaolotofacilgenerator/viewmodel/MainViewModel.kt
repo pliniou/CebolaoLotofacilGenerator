@@ -24,6 +24,10 @@ class MainViewModel(
         private val appDataStore: AppDataStore
 ) : AndroidViewModel(application) {
 
+    // ViewModels secundários para compartilhar entre as telas
+    val jogosViewModel = JogosViewModel(jogoRepository)
+    val resultadoViewModel = ResultadoViewModel(application, resultadoRepository)
+
     // LiveData para observar se o primeiro run foi completado
     // TODO: Verifique a dependência androidx.lifecycle:lifecycle-livedata-ktx para habilitar
     // asLiveData()
@@ -38,7 +42,9 @@ class MainViewModel(
     enum class TemaAplicativo {
         CLARO,
         ESCURO,
-        SISTEMA
+        SISTEMA,
+        AZUL,
+        VERDE
     }
 
     // StateFlow para o tema do aplicativo
@@ -72,6 +78,9 @@ class MainViewModel(
         viewModelScope.launch {
             val jogoAtualizado = jogo.copy(favorito = favorito)
             jogoRepository.atualizarJogo(jogoAtualizado)
+            // Atualizar a lista de jogos no JogosViewModel
+            jogosViewModel.carregarJogos()
+            jogosViewModel.carregarJogosFavoritos()
         }
     }
 
@@ -117,6 +126,8 @@ class MainViewModel(
         viewModelScope.launch {
             val resultado = Resultado(numeros = dezenas.sorted())
             resultadoRepository.inserirResultado(resultado)
+            // Atualizar a lista de resultados no ResultadoViewModel
+            resultadoViewModel.carregarResultados()
         }
     }
 
