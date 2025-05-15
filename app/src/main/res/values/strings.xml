@@ -367,6 +367,7 @@
     <string name="aplicar_filtros_botao">Aplicar</string>
     <string name="salvar_filtros_botao">Salvar Config.</string>
     <string name="resetar_filtros_botao">Resetar</string>
+    <string name="filtros_aplicados_com_sucesso">Filtros aplicados com sucesso!</string>
     <!-- Fim das strings para FiltrosScreen -->
 
     <string name="titulo_tela_filtros">Configurar Filtros</string>
@@ -389,6 +390,11 @@
     <string name="placeholder_dezenas_concurso_anterior">Ex: 1,2,3,...,15 (separadas por
         vírgula/espaço)</string>
     <string name="valor_filtro_repeticao_anterior">Repetidas: %1$d-%2$d</string>
+    <string name="dezenas_ultimo_resultado_carregadas">Dezenas do último resultado carregadas para o
+        filtro.</string>
+    <string name="nenhum_resultado_salvo_para_carregar_dezenas">Nenhum resultado salvo para carregar
+        dezenas.</string>
+    <string name="carregar_dezenas_salvas_botao">Carregar Dezenas Salvas</string>
     <!-- Fim das strings para Filtro de Repetição -->
 
     <!-- Strings para Filtros Estatísticos (usadas na FiltrosScreen) -->

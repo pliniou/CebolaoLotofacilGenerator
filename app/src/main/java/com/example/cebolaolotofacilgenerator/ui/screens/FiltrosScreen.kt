@@ -18,23 +18,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.cebolaolotofacilgenerator.R
+import com.example.cebolaolotofacilgenerator.data.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
+import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
 import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModelFactory
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import java.util.Locale
-import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltrosScreen(
     mainViewModel: MainViewModel,
-    filtrosViewModel: FiltrosViewModel = viewModel(),
-    navController: NavController
+    navController: NavController // Mantido para consistência, pode ser usado no futuro
 ) {
     val context = LocalContext.current
+    val application = context.applicationContext as Application
+
+    // Obter ResultadoRepository para a factory do FiltrosViewModel
+    val resultadoDao = AppDatabase.getDatabase(application).resultadoDao()
+    val resultadoRepository = ResultadoRepository(resultadoDao)
+
+    val filtrosViewModel: FiltrosViewModel = viewModel(
+        factory = FiltrosViewModelFactory(application, resultadoRepository)
+    )
+
     val configuracaoFiltros by filtrosViewModel.configuracaoFiltros.observeAsState(ConfiguracaoFiltros())
     val mensagemFiltros by filtrosViewModel.mensagem.observeAsState()
+    val temUltimoResultado by filtrosViewModel.temUltimoResultadoSalvo.collectAsState()
 
     LaunchedEffect(mensagemFiltros) {
         mensagemFiltros?.let {
@@ -48,7 +61,7 @@ fun FiltrosScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.bottom_nav_item_filtros)) }
+                title = { Text(stringResource(R.string.titulo_tela_filtros)) } // Usar string mais descritiva
             )
         }
     ) { paddingValues ->
@@ -64,7 +77,7 @@ fun FiltrosScreen(
             Spacer(modifier = Modifier.height(16.dp))
             NumerosEspeciaisCard(configuracaoFiltros, filtrosViewModel)
             Spacer(modifier = Modifier.height(16.dp))
-            FiltrosEstatisticosSection(configuracaoFiltros, filtrosViewModel)
+            FiltrosEstatisticosSection(configuracaoFiltros, filtrosViewModel, temUltimoResultado)
             Spacer(modifier = Modifier.height(24.dp))
             AcoesFiltrosButtons(filtrosViewModel)
         }
@@ -156,8 +169,12 @@ fun NumerosEspeciaisCard(config: ConfiguracaoFiltros, viewModel: FiltrosViewMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FiltrosEstatisticosSection(config: ConfiguracaoFiltros, viewModel: FiltrosViewModel) {
-    Text(stringResource(R.string.filtros_estatisticos_titulo), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(vertical = 8.dp)) 
+fun FiltrosEstatisticosSection(
+    config: ConfiguracaoFiltros, 
+    viewModel: FiltrosViewModel, 
+    temUltimoResultado: Boolean
+) {
+    Text(stringResource(R.string.filtros_estatisticos_titulo), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(vertical = 8.dp))
 
     val filtroItems = listOf(
         Triple(R.string.filtro_pares_impares_titulo, config.filtroParesImpares, R.string.valor_filtro_pares_impares) {
@@ -194,29 +211,39 @@ fun FiltrosEstatisticosSection(config: ConfiguracaoFiltros, viewModel: FiltrosVi
         0f to 7f,     // Fibonacci (Lotofácil tem 7 de Fibonacci de 1 a 25)
         0f to 9f,     // Miolo (Lotofácil tem 9 no miolo)
         0f to 8f,     // Múltiplos de 3 (Lotofácil tem 8 múltiplos de 3)
-        0f to 15f
+        0f to 15f     // Repetição do Anterior
     )
 
     filtroItems.forEachIndexed { index, (tituloRes, isChecked, valorLabelFormatRes, onUpdate) ->
         val (currentMin, currentMax) = ranges[index]
         val (sliderFrom, sliderTo) = sliderBounds[index]
 
+        // Seção específica para o filtro de repetição
         if (tituloRes == R.string.filtro_repeticao_anterior_titulo) {
-            OutlinedTextField(
-                value = config.dezenasConcursoAnterior.joinToString(","),
-                onValueChange = {
-                    val numeros = it.split(Regex("[^\\d]+")).filter { s -> s.isNotBlank() }.mapNotNull { s -> s.toIntOrNull()?.coerceIn(1,25) }.distinct().sorted()
-                    if (numeros.size <= 15) { // Permitir até 15 dezenas
-                        viewModel.atualizarFiltro(config.copy(dezenasConcursoAnterior = numeros))
-                    }
-                },
-                label = { Text(stringResource(R.string.label_dezenas_concurso_anterior)) },
-                placeholder = { Text(stringResource(R.string.placeholder_dezenas_concurso_anterior)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                singleLine = true,
-                enabled = isChecked
-            )
+            Column(modifier = Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = config.dezenasConcursoAnterior.joinToString(","),
+                    onValueChange = {
+                        val numeros = it.split(Regex("[^\\d]+")).filter { s -> s.isNotBlank() }.mapNotNull { s -> s.toIntOrNull()?.coerceIn(1,25) }.distinct().sorted()
+                        if (numeros.size <= 15) { // Permitir até 15 dezenas
+                            viewModel.atualizarFiltro(config.copy(dezenasConcursoAnterior = numeros))
+                        }
+                    },
+                    label = { Text(stringResource(R.string.label_dezenas_concurso_anterior)) },
+                    placeholder = { Text(stringResource(R.string.placeholder_dezenas_concurso_anterior)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
+                    singleLine = true,
+                    enabled = isChecked // Habilitar/desabilitar o text field com o switch
+                )
+                Button(
+                    onClick = { viewModel.carregarDezenasDoUltimoResultadoSalvo() },
+                    enabled = isChecked && temUltimoResultado, // Habilitado se o filtro estiver ativo E houver resultado salvo
+                    modifier = Modifier.align(Alignment.End).padding(bottom = 8.dp)
+                ) {
+                    Text(stringResource(R.string.carregar_dezenas_salvas_botao)) // Adicionar esta string
+                }
+            }
         }
 
         FiltroEstatisticoItem(
@@ -259,7 +286,7 @@ fun FiltroEstatisticoItem(
             Switch(checked = isChecked, onCheckedChange = onCheckedChange)
         }
         Text(
-            text = if (isChecked) String.format(Locale.getDefault(), valorLabelFormat, valorMin, valorMax) 
+            text = if (isChecked) String.format(Locale.getDefault(), valorLabelFormat, valorMin, valorMax)
                      else stringResource(id = R.string.na_aplicado),
             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
             textAlign = TextAlign.Center,
@@ -297,10 +324,10 @@ fun AcoesFiltrosButtons(viewModel: FiltrosViewModel) {
 @Preview(showBackground = true, name = "Filtros Screen Completa")
 @Composable
 fun DefaultPreviewFiltrosScreen() {
-    val mockMainViewModel = MainViewModel(Application()) // Necessita Application para DataStore
-    val mockFiltrosViewModel = FiltrosViewModel(Application()) // Necessita Application para DataStore
+    val mockMainViewModel = MainViewModel(Application(), AppDatabase.getDatabase(LocalContext.current.applicationContext as Application).jogoDao().let { com.example.cebolaolotofacilgenerator.data.repository.JogoRepository(it) }, AppDatabase.getDatabase(LocalContext.current.applicationContext as Application).resultadoDao().let { ResultadoRepository(it) }, com.example.cebolaolotofacilgenerator.data.AppDataStore(LocalContext.current.applicationContext as Application)) // Necessita Application para DataStore
+    val mockFiltrosViewModel = FiltrosViewModel(LocalContext.current.applicationContext as Application, AppDatabase.getDatabase(LocalContext.current.applicationContext as Application).resultadoDao().let { ResultadoRepository(it) })
     // Popular mockFiltrosViewModel com dados se necessário para o preview
-    FiltrosScreen(mainViewModel = mockMainViewModel, filtrosViewModel = mockFiltrosViewModel, navController = null)
+    FiltrosScreen(mainViewModel = mockMainViewModel, navController = NavController(LocalContext.current))
 }
 
 @Preview(showBackground = true, name = "Filtro Estatístico Item")
