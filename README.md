@@ -1,6 +1,6 @@
 # Cebolão Lotofácil Generator
 
-Aplicativo Android para geração e gerenciamento de jogos da Lotofácil, desenvolvido em Kotlin com Jetpack Compose, arquitetura MVVM, Room, DataStore e navegação moderna.
+Aplicativo Android 100% offline para geração, conferência e gerenciamento de jogos da Lotofácil, desenvolvido em Kotlin com Jetpack Compose, arquitetura MVVM, Room, DataStore e navegação moderna com transições animadas.
 
 ## Requisitos
 
@@ -18,8 +18,8 @@ Aplicativo Android para geração e gerenciamento de jogos da Lotofácil, desenv
 - Jetpack Compose (UI moderna)
 - Room (persistência local)
 - DataStore (preferências)
-- ViewModel + LiveData (arquitetura MVVM)
-- Navegação Compose
+- ViewModel + StateFlow (arquitetura MVVM)
+- Navegação Compose com transições animadas (Accompanist)
 - Kotlin Coroutines 1.7.3
 - Material 3
 
@@ -43,64 +43,47 @@ Aplicativo Android para geração e gerenciamento de jogos da Lotofácil, desenv
   - `viewmodel/` - ViewModels
   - `data/` - Persistência e repositórios
   - `model/` - Modelos de dados
+  - `ui/components/` - Componentes reutilizáveis Compose
+  - `ui/theme/` - Temas e estilos
 - `app/src/main/res/` - Recursos (layouts, strings, temas)
 
 ## Navegação e UI
 
-O aplicativo possui uma navegação moderna baseada em Jetpack Compose Navigation, com as seguintes telas:
+O aplicativo utiliza navegação moderna baseada em Jetpack Compose Navigation, com transições animadas entre telas (Accompanist Navigation Animation). As principais telas são:
 
-- **Tela Principal (Home):** Interface central do aplicativo e ponto de entrada principal. Apresenta cartões para as principais funcionalidades (geração de jogos, favoritos, resultados) e também integra informações sobre o aplicativo e como usá-lo.
-- **Tela de Geração de Jogos (`GeradorScreen.kt`):** Permite ao usuário definir dezenas fixas (opcional), configurar diversos filtros estatísticos e gerar novos jogos da Lotofácil. Navega para uma tela de visualização dos jogos gerados (`JogosGeradosScreen.kt`).
-- **Tela de Jogos Gerados (`JogosGeradosScreen.kt`):** (Acessada a partir da Geração de Jogos) Exibe os jogos que foram gerados com base nos filtros selecionados.
-- **Tela de Favoritos (`FavoritosScreen.kt`):** Armazena e exibe os jogos salvos pelo usuário.
-- **Tela de Resultados (`ResultadosScreen.kt`):** Mostra os resultados de concursos anteriores da Lotofácil.
-- **Tela de Configurações (`SettingsScreen.kt`):** Permite personalizar o comportamento do aplicativo, como tema e notificações, e acessar informações sobre o app.
-
-Cada tela possui um cabeçalho (TopAppBar) consistente com título e ações contextuais, seguindo o padrão de design Material 3.
-
-## Fluxo de Navegação
-
-O aplicativo inicia diretamente na Tela Principal (Home).
-A partir da Tela Principal, o usuário pode navegar para as telas de Geração de Jogos, Favoritos, Resultados ou Configurações.
+- **Tela Principal (Home):** Interface central do app, com acesso rápido às principais funções.
+- **Tela de Geração de Jogos (`GeradorScreen.kt`):** Permite configurar filtros, selecionar dezenas fixas/excluídas e gerar jogos. Inclui seleção manual do último resultado sorteado (grade de 1 a 25).
+- **Tela de Jogos Gerados:** Exibe os jogos gerados com base nos filtros.
+- **Tela de Favoritos:** Lista e gerencia jogos favoritos.
+- **Tela de Resultados:** Exibe resultados salvos pelo usuário (totalmente offline).
+- **Tela de Configurações:** Permite escolher tema, acessar informações do app, etc.
 
 ## Funcionalidades Principais
 
-* **Geração Inteligente de Jogos:** Cria jogos com números selecionados com base em filtros estatísticos avançados e configuráveis.
-* **Filtros Estatísticos Precisos:** 
-  * **Pares e Ímpares:** Controle da distribuição entre números pares e ímpares.
-  * **Soma Total:** Filtragem pela soma total dos números do jogo.
-  * **Números Primos:** Controle da quantidade de números primos.
-  * **Números de Fibonacci:** Controle da presença de números da sequência.
-  * **Miolo e Moldura:** Balanceamento entre números do miolo e da borda.
-  * **Múltiplos de 3:** Controle da quantidade de múltiplos.
-* **100% Offline:** Funciona sem necessidade de conexão com a internet.
-* **Armazenamento Local:** Salva jogos usando Room Database.
-* **Conferência Inteligente:** Verifica jogos com resultados oficiais.
-* **Design Moderno:** Interface usando Material3 e Compose.
+- **Geração Inteligente de Jogos:** Criação de jogos com filtros estatísticos avançados.
+- **Seleção Manual do Último Resultado:** O usuário informa as 15 dezenas sorteadas do último concurso, sem necessidade de internet.
+- **Filtros Estatísticos:**
+  - Pares/Ímpares
+  - Soma Total
+  - Números Primos
+  - Números de Fibonacci
+  - Miolo/Moldura
+  - Múltiplos de 3
+- **100% Offline:** Nenhuma dependência de conexão.
+- **Armazenamento Local:** Room Database para jogos e resultados.
+- **Conferência de Jogos:** Verificação dos jogos gerados com base nos resultados informados.
+- **Transições Animadas:** Navegação suave entre telas com animações de slide.
+- **Design Moderno:** Material 3, Compose, responsivo e acessível.
 
 ## Arquitetura e Tecnologias
 
-O projeto utiliza a arquitetura MVVM (Model-View-ViewModel) com as seguintes tecnologias:
-
-### Camada de Apresentação
-- **Jetpack Compose:** UI declarativa moderna
-- **Material3:** Design system atual do Android
-- **Navigation Component:** Navegação entre telas
-- **ViewBinding:** Para views XML legadas
-- **ViewModel:** Gerenciamento de estado da UI
-
-### Camada de Dados
-- **Room:** Persistência local com SQLite
-- **DataStore:** Preferências do usuário
-- **Kotlin Serialization:** Serialização de dados
-- **Repository Pattern:** Abstração de fontes de dados
-
-### Ferramentas e Bibliotecas
-- **Kotlin Coroutines:** Programação assíncrona
-- **Flow:** Streams de dados reativos
-- **KSP:** Processamento de anotações
-- **ViewBinding:** Binding de views XML
-- **JUnit & Espresso:** Testes unitários e de UI
+- **MVVM:** Separação clara entre UI, lógica e dados.
+- **Room:** Persistência local de jogos e resultados.
+- **DataStore:** Preferências do usuário (tema, filtros, etc).
+- **Compose + Material 3:** UI declarativa e moderna.
+- **Accompanist Navigation Animation:** Transições animadas entre telas.
+- **Coroutines + Flow/StateFlow:** Operações assíncronas e reatividade.
+- **Repository Pattern:** Abstração de acesso a dados.
 
 ## Estrutura do Projeto
 
@@ -116,21 +99,13 @@ CebolaoLotofacilGenerator/
 │   │   │   │   │   └── repository/
 │   │   │   │   ├── ui/
 │   │   │   │   │   ├── screens/
-│   │   │   │   │   │   ├── HomeScreen.kt       # Tela principal
-│   │   │   │   │   │   ├── GeradorScreen.kt    # Tela de geração de jogos e configuração de filtros
-│   │   │   │   │   │   ├── JogosGeradosScreen.kt # Tela de exibição de jogos gerados
-│   │   │   │   │   │   ├── FavoritosScreen.kt  # Tela de favoritos
-│   │   │   │   │   │   ├── ResultadosScreen.kt # Tela de resultados
-│   │   │   │   │   │   └── SettingsScreen.kt   # Tela de configurações
 │   │   │   │   │   ├── components/
 │   │   │   │   │   └── theme/
 │   │   │   │   ├── viewmodel/
-│   │   │   │   ├── MainActivity.kt             # Ponto de entrada do app
-│   │   │   │   ├── AppNavigation.kt            # Lógica de navegação principal
-│   │   │   │   └── Navigation.kt               # Definição de rotas (sealed class Screen)
-│   │   │   └── res/
-│   │   ├── test/
-│   │   └── androidTest/
+│   │   │   │   ├── MainActivity.kt
+│   │   │   │   ├── AppNavigation.kt
+│   │   │   │   └── Navigation.kt
+│   │   └── res/
 │   ├── build.gradle.kts
 │   └── proguard-rules.pro
 ├── build.gradle.kts
@@ -158,21 +133,35 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 
 ## Solução de Problemas
 
-- **Tela preta com apenas texto:** As telas foram atualizadas para mostrar interfaces completas com Material Design, cabeçalhos, cartões e botões.
-- **Erros de compilação relacionados ao Compose:** Verifique se está usando as versões corretas das bibliotecas conforme especificado no build.gradle.kts.
-- **Problemas de navegação:** Certifique-se de que o arquivo `Navigation.kt` está definindo corretamente as rotas e que o `NavHost` em `AppNavigation.kt` está configurado adequadamente.
+- **Erro ao deletar arquivos de build:** Feche o Android Studio, emuladores e qualquer Explorer na pasta do projeto. Delete manualmente a pasta `build` e tente novamente.
+- **Erros de dependência:** Certifique-se de que o repositório `google()` está presente em todos os blocos de repositórios do Gradle.
+- **Problemas de navegação ou animação:** Verifique se a dependência do Accompanist está corretamente declarada e sincronizada.
+- **Tela preta ou UI incompleta:** Confirme se está usando as versões corretas das bibliotecas e se o tema Compose está aplicado corretamente.
 
-## Próximos Passos
+## Roadmap / Pendências
 
-- Implementação da funcionalidade de conferência de jogos salvos/gerados com resultados oficiais (se ainda não integrada em Resultados/Favoritos).
-- Verificação e refinamento do fluxo de navegação entre `GeradorScreen` e `JogosGeradosScreen`, especialmente a lógica de quando navegar após a geração.
-- Completar a implementação dos campos detalhados para todos os filtros na `GeradorScreen.kt` (Primos, Fibonacci, Miolo/Moldura, Múltiplos de 3).
-- Adicionar UI na `GeradorScreen.kt` para configurar quantidade de jogos, quantidade de números (se aplicável), e seleção visual de dezenas fixas/excluídas.
-- Implementar a exibição de mensagens de erro/sucesso e status de carregamento na `GeradorScreen.kt` usando `geradorViewModel.mensagem` e `geradorViewModel.operacaoStatus`.
-- Decidir sobre a necessidade de uma tela "Sobre" dedicada ou se a informação atual na `HomeScreen` e o diálogo na `SettingsScreen` são suficientes (parece que o diálogo é uma boa solução).
-- Melhorias na interface de usuário e experiência geral, incluindo o design do botão "Gerar Jogos" para ser mais informativo.
-- Investigar e resolver o problema do ícone do aplicativo não aparecer corretamente no dispositivo.
-- Implementar a tela de Favoritos (`FavoritosScreen.kt`) para listar, salvar e remover jogos favoritos.
+- [x] Seleção manual do último resultado (grade de 1 a 25, persistência local)
+- [x] Transições animadas entre telas (Accompanist Navigation Animation)
+- [x] Filtros estatísticos completos na geração de jogos
+- [x] Persistência 100% offline (Room)
+- [x] UI moderna e responsiva (Material 3)
+- [ ] Conferência inteligente de jogos (UI/UX aprimorada)
+- [ ] Feedback ao usuário com Snackbar e mensagens contextuais
+- [ ] Botão "Gerar Jogos" dinâmico/informativo
+- [ ] Implementação completa da tela de Favoritos
+- [ ] Mais opções de temas/cores na SettingsScreen
+- [ ] Melhorias de acessibilidade e internacionalização
+- [ ] Refino visual dos filtros e hierarquia da UI
+- [ ] Documentação de API interna e exemplos de uso
+
+## Dependências Principais
+
+- [Jetpack Compose](https://developer.android.com/jetpack/compose)
+- [Room](https://developer.android.com/jetpack/androidx/releases/room)
+- [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
+- [Accompanist Navigation Animation](https://google.github.io/accompanist/navigation-animation/)
+- [Material 3](https://m3.material.io/)
+- [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
 
 ## Licença
 

@@ -4,6 +4,7 @@ package com.example.cebolaolotofacilgenerator.ui.screens
 // OperacaoStatus
 // import androidx.compose.foundation.layout.wrapContentHeight // Não é mais necessário com
 // LazyVerticalGrid
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -41,13 +43,15 @@ import androidx.navigation.NavController
 import com.example.cebolaolotofacilgenerator.Screen // Import para Screen
 import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus // Garantir que este é o
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import kotlinx.coroutines.FlowPreview
 
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class) // Adicionar OptIn aqui e FlowPreview
 @Composable
 fun GeradorScreen(
         navController: NavController,
-        dezenasFixasArg: String? // Recebe as dezenas como String da navegação
+        dezenasFixasArg: String?, // Recebe as dezenas como String da navegação
+        viewModel: MainViewModel // Novo parâmetro para acessar o último resultado
 ) {
         val geradorViewModel: GeradorViewModel = viewModel()
 
@@ -83,6 +87,21 @@ fun GeradorScreen(
         // Coletar estados das dezenas fixas e excluídas
         val numerosFixos by geradorViewModel.numerosFixosState.collectAsState()
         val numerosExcluidos by geradorViewModel.numerosExcluidosState.collectAsState()
+
+        // Novo: Observar o último resultado
+        val ultimoResultado by viewModel.ultimoResultado.collectAsState()
+
+        // Estado local para dezenas selecionadas do último resultado
+        val (dezenasSelecionadas, setDezenasSelecionadas) =
+                androidx.compose.runtime.remember {
+                        androidx.compose.runtime.mutableStateOf(mutableSetOf<Int>())
+                }
+        val (concurso, setConcurso) =
+                androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+        val (data, setData) =
+                androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+
+        val context = androidx.compose.ui.platform.LocalContext.current
 
         LaunchedEffect(dezenasFixasArg) {
                 val dezenas = dezenasFixasArg?.split(",")?.mapNotNull { it.toIntOrNull() }
@@ -146,63 +165,113 @@ fun GeradorScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                         Text(
-                                "Configurações de Geração",
-                                style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.padding(vertical = 16.dp)
+                                "Último Resultado (manual)",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(vertical = 12.dp)
                         )
-                        // Removido: Text("Dezenas fixas recebidas: ${dezenasFixasArg ?:
-                        // "Nenhuma"}")
-
                         OutlinedTextField(
-                                value = quantidadeJogosInput,
-                                onValueChange = { geradorViewModel.setQuantidadeJogosInput(it) },
-                                label = { Text("Quantidade de Jogos a Gerar") },
+                                value = concurso,
+                                onValueChange = setConcurso,
+                                label = { Text("Concurso") },
                                 keyboardOptions =
                                         KeyboardOptions(keyboardType = KeyboardType.Number),
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                                 singleLine = true
                         )
-
                         OutlinedTextField(
-                                value = quantidadeNumerosInput,
-                                onValueChange = { geradorViewModel.setQuantidadeNumerosInput(it) },
-                                label = { Text("Números por Jogo (15-20)") },
-                                keyboardOptions =
-                                        KeyboardOptions(keyboardType = KeyboardType.Number),
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                                value = data,
+                                onValueChange = setData,
+                                label = { Text("Data (opcional)") },
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                                 singleLine = true
                         )
-
-                        // Seletores de Dezenas Fixas e Excluídas
-                        SeletorDezenasGrid(
-                                titulo = "Dezenas Fixas",
-                                dezenasSelecionadas = numerosFixos,
-                                dezenasDesabilitadas = numerosExcluidos,
-                                onDezenaClick = { dezena ->
-                                        geradorViewModel.toggleNumeroFixo(dezena)
-                                }
+                        Text(
+                                "Selecione as dezenas sorteadas:",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(bottom = 8.dp)
                         )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        SeletorDezenasGrid(
-                                titulo = "Dezenas Excluídas",
-                                dezenasSelecionadas = numerosExcluidos,
-                                dezenasDesabilitadas = numerosFixos,
-                                onDezenaClick = { dezena ->
-                                        geradorViewModel.toggleNumeroExcluido(dezena)
+                        LazyVerticalGrid(
+                                columns = GridCells.Fixed(5),
+                                contentPadding = PaddingValues(0.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.height(240.dp).fillMaxWidth()
+                        ) {
+                                items((1..25).toList()) { dezena ->
+                                        val isSelected = dezenasSelecionadas.contains(dezena)
+                                        OutlinedButton(
+                                                onClick = {
+                                                        val novaSelecao =
+                                                                dezenasSelecionadas.toMutableSet()
+                                                        if (isSelected) novaSelecao.remove(dezena)
+                                                        else novaSelecao.add(dezena)
+                                                        setDezenasSelecionadas(novaSelecao)
+                                                },
+                                                shape = CircleShape,
+                                                colors =
+                                                        if (isSelected)
+                                                                ButtonDefaults.outlinedButtonColors(
+                                                                        containerColor =
+                                                                                MaterialTheme
+                                                                                        .colorScheme
+                                                                                        .primary,
+                                                                        contentColor =
+                                                                                MaterialTheme
+                                                                                        .colorScheme
+                                                                                        .onPrimary
+                                                                )
+                                                        else ButtonDefaults.outlinedButtonColors(),
+                                                border =
+                                                        if (isSelected)
+                                                                BorderStroke(
+                                                                        2.dp,
+                                                                        MaterialTheme.colorScheme
+                                                                                .primary
+                                                                )
+                                                        else
+                                                                BorderStroke(
+                                                                        1.dp,
+                                                                        MaterialTheme.colorScheme
+                                                                                .outline
+                                                                ),
+                                                modifier = Modifier.aspectRatio(1f)
+                                        ) {
+                                                Text(
+                                                        text = dezena.toString().padStart(2, '0'),
+                                                        textAlign = TextAlign.Center
+                                                )
+                                        }
                                 }
-                        )
-
-                        // TODO: Adicionar UI para quantidade de jogos, quantidade de números
-                        // (se for configurável), seleção de dezenas fixas/excluídas visualmente.
-                        // (Parcialmente resolvido acima)
-
-                        Spacer(modifier = Modifier.height(16.dp))
+                        }
+                        Button(
+                                onClick = {
+                                        if (dezenasSelecionadas.size == 15) {
+                                                viewModel.salvarUltimoResultado(
+                                                        dezenasSelecionadas.toList()
+                                                )
+                                                Toast.makeText(
+                                                                context,
+                                                                "Último resultado salvo!",
+                                                                Toast.LENGTH_SHORT
+                                                        )
+                                                        .show()
+                                        } else {
+                                                Toast.makeText(
+                                                                context,
+                                                                "Selecione 15 dezenas.",
+                                                                Toast.LENGTH_SHORT
+                                                        )
+                                                        .show()
+                                        }
+                                },
+                                enabled = dezenasSelecionadas.size == 15,
+                                modifier = Modifier.padding(vertical = 12.dp).fillMaxWidth()
+                        ) { Text("Salvar Último Resultado") }
+                        Divider(modifier = Modifier.padding(vertical = 16.dp))
                         Text(
                                 "Filtros Estatísticos:",
                                 style = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.padding(bottom = 8.dp).align(Alignment.Start)
+                                modifier = Modifier.align(Alignment.Start).padding(bottom = 8.dp)
                         )
 
                         // Conteúdo dos filtros (anteriormente em FiltrosScreen)

@@ -108,6 +108,14 @@ class MainViewModel(
         }
         _dezenasSelecionadasUltimoResultado.value = atuais
     }
+
+    // Função para salvar o último resultado manualmente informado pelo usuário (apenas dezenas)
+    fun salvarUltimoResultado(dezenas: List<Int>) {
+        viewModelScope.launch {
+            val resultado = Resultado(numeros = dezenas.sorted())
+            resultadoRepository.inserirResultado(resultado)
+        }
+    }
 }
 
 /* Removida MainViewModelFactory duplicada מכאן

@@ -6,19 +6,19 @@ import java.util.Date
 
 @Entity(tableName = "resultados")
 data class Resultado(
-    @PrimaryKey val concurso: Long,
-    val dataSorteio: Date,
-    val numeros: List<Int>,
-    val premiacao15Acertos: Double,
-    val ganhadores15: Int,
-    val premiacao14Acertos: Double,
-    val ganhadores14: Int,
-    val premiacao13Acertos: Double,
-    val ganhadores13: Int,
-    val premiacao12Acertos: Double,
-    val ganhadores12: Int,
-    val premiacao11Acertos: Double,
-    val ganhadores11: Int
+        @PrimaryKey(autoGenerate = true) val id: Long = 0L,
+        val dataSorteio: Date? = null,
+        val numeros: List<Int>,
+        val premiacao15Acertos: Double = 0.0,
+        val ganhadores15: Int = 0,
+        val premiacao14Acertos: Double = 0.0,
+        val ganhadores14: Int = 0,
+        val premiacao13Acertos: Double = 0.0,
+        val ganhadores13: Int = 0,
+        val premiacao12Acertos: Double = 0.0,
+        val ganhadores12: Int = 0,
+        val premiacao11Acertos: Double = 0.0,
+        val ganhadores11: Int = 0
 ) {
     fun getNumerosFormatados(): String {
         return numeros.joinToString(" - ")

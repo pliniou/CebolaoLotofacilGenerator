@@ -127,4 +127,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
+
+    // Accompanist Navigation Animation
+    implementation(libs.accompanist.navigation.animation)
 }
