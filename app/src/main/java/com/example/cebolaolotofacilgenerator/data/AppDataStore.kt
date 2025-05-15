@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.cebolaolotofacilgenerator.ui.viewmodel.ConfiguracoesViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -26,8 +26,7 @@ class AppDataStore(private val context: Context) {
 
     val temaAplicativo: Flow<Int> =
             context.dataStore.data.map { preferences ->
-                preferences[TEMA_APLICATIVO_ORDINAL]
-                        ?: ConfiguracoesViewModel.TemaAplicativo.SISTEMA.ordinal
+                preferences[TEMA_APLICATIVO_ORDINAL] ?: MainViewModel.TemaAplicativo.SISTEMA.ordinal
             }
 
     suspend fun salvarTemaAplicativo(ordinal: Int) {

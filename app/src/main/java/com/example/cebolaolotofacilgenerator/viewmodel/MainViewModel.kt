@@ -7,6 +7,7 @@ import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.data.model.Resultado
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
 import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
