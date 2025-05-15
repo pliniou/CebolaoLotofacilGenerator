@@ -2,6 +2,7 @@ package com.example.cebolaolotofacilgenerator
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,6 +11,7 @@ import androidx.navigation.navArgument
 import com.example.cebolaolotofacilgenerator.ui.screens.FavoritosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.GeradorScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.HomeScreen
+import com.example.cebolaolotofacilgenerator.ui.screens.JogosGeradosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.ResultadosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.SettingsScreen
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
@@ -51,6 +53,9 @@ fun AppNavigation(
         ) {
             val dezenasFixasArg = it.arguments?.getString("dezenasFixas")
             GeradorScreen(navController = navController, dezenasFixasArg = dezenasFixasArg)
+        }
+        composable(Screen.JogosGerados.route) {
+            JogosGeradosScreen(navController = navController, geradorViewModel = viewModel())
         }
     }
 }

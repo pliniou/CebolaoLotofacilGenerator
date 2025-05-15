@@ -2,6 +2,7 @@ package com.example.cebolaolotofacilgenerator
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -25,4 +26,5 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
                         return "gerador?dezenasFixas=$dezenasArg"
                 }
         }
+        object JogosGerados : Screen("jogos_gerados", "Jogos Gerados", Icons.Filled.Checklist)
 }

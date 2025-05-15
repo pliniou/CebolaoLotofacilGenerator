@@ -26,10 +26,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.navOptions
+import com.example.cebolaolotofacilgenerator.Screen
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.model.common.OperacaoStatus
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
@@ -47,15 +48,17 @@ fun JogosGeradosScreen(navController: NavHostController, geradorViewModel: Gerad
                         title = { Text("Jogos Gerados") },
                         colors =
                                 TopAppBarDefaults.topAppBarColors(
-                                        containerColor = Color(0xFF1976D2),
-                                        titleContentColor = Color.White
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                                        navigationIconContentColor =
+                                                MaterialTheme.colorScheme.onPrimary
                                 ),
                         navigationIcon = {
                             IconButton(onClick = { navController.navigateUp() }) {
                                 Icon(
                                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                         contentDescription = "Voltar",
-                                        tint = Color.White
+                                        tint = MaterialTheme.colorScheme.onPrimary
                                 )
                             }
                         }
@@ -85,9 +88,14 @@ fun JogosGeradosScreen(navController: NavHostController, geradorViewModel: Gerad
                                     textAlign = TextAlign.Center
                             )
                             Button(
-                                    onClick = { navController.navigate("principal") },
+                                    onClick = {
+                                        navController.navigate(
+                                                Screen.Gerador.route,
+                                                navOptions { popUpTo(Screen.Home.route) }
+                                        )
+                                    },
                                     modifier = Modifier.padding(top = 16.dp).fillMaxWidth(0.7f)
-                            ) { Text(text = "Gerar Jogos") }
+                            ) { Text(text = "Gerar Mais Jogos") }
                         }
                     }
                 } else {
@@ -109,7 +117,10 @@ fun JogosGeradosScreen(navController: NavHostController, geradorViewModel: Gerad
 @Composable
 fun JogoItem(jogo: Jogo) {
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-        Text(text = "Jogo ${jogo.id.toString()}", style = MaterialTheme.typography.titleMedium)
+        Text(
+                text = "Jogo ${jogo.id?.toString() ?: "N/A"}",
+                style = MaterialTheme.typography.titleMedium
+        )
         Text(
                 text = jogo.numeros.joinToString(" - "),
                 style = MaterialTheme.typography.bodyMedium,
@@ -119,7 +130,7 @@ fun JogoItem(jogo: Jogo) {
             Text(
                     text = "⭐ Favorito",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFFFFC107),
+                    color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.padding(top = 4.dp)
             )
         }

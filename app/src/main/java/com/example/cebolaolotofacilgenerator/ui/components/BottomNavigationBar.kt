@@ -12,7 +12,7 @@ import com.example.cebolaolotofacilgenerator.Screen
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(Screen.Home, Screen.Favoritos, Screen.Resultados, Screen.Settings)
+    val items = listOf(Screen.Home, Screen.Favoritos, Screen.Settings)
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route

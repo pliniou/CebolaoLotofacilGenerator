@@ -49,25 +49,19 @@ Aplicativo Android para geração e gerenciamento de jogos da Lotofácil, desenv
 
 O aplicativo possui uma navegação moderna baseada em Jetpack Compose Navigation, com as seguintes telas:
 
-- **Tela de Onboarding:** Exibida na primeira execução do aplicativo, com informações introdutórias e instruções de uso.
-- **Tela Principal (Home):** Interface central com cartões para as principais funcionalidades:
-  - Geração de novos jogos
-  - Acesso aos jogos favoritos
-  - Consulta de resultados anteriores
-  - Dicas para jogar na Lotofácil
-- **Tela de Favoritos:** Armazena os jogos salvos pelo usuário.
-- **Tela de Resultados:** Mostra os resultados de concursos anteriores da Lotofácil.
-- **Tela de Configurações:** Permite personalizar o comportamento do aplicativo.
+- **Tela Principal (Home):** Interface central do aplicativo e ponto de entrada principal. Apresenta cartões para as principais funcionalidades (geração de jogos, favoritos, resultados) e também integra informações sobre o aplicativo e como usá-lo.
+- **Tela de Geração de Jogos (`GeradorScreen.kt`):** Permite ao usuário definir dezenas fixas (opcional), configurar diversos filtros estatísticos e gerar novos jogos da Lotofácil. Navega para uma tela de visualização dos jogos gerados (`JogosGeradosScreen.kt`).
+- **Tela de Jogos Gerados (`JogosGeradosScreen.kt`):** (Acessada a partir da Geração de Jogos) Exibe os jogos que foram gerados com base nos filtros selecionados.
+- **Tela de Favoritos (`FavoritosScreen.kt`):** Armazena e exibe os jogos salvos pelo usuário.
+- **Tela de Resultados (`ResultadosScreen.kt`):** Mostra os resultados de concursos anteriores da Lotofácil.
+- **Tela de Configurações (`SettingsScreen.kt`):** Permite personalizar o comportamento do aplicativo, como tema e notificações, e acessar informações sobre o app.
 
 Cada tela possui um cabeçalho (TopAppBar) consistente com título e ações contextuais, seguindo o padrão de design Material 3.
 
 ## Fluxo de Navegação
 
-O aplicativo inicia com uma verificação se é a primeira execução:
-- Se for a primeira execução, exibe a tela de Onboarding
-- Caso contrário, vai diretamente para a Tela Principal
-
-A partir da Tela Principal, o usuário pode navegar para qualquer uma das outras telas através dos cartões ou do ícone de configurações.
+O aplicativo inicia diretamente na Tela Principal (Home).
+A partir da Tela Principal, o usuário pode navegar para as telas de Geração de Jogos, Favoritos, Resultados ou Configurações.
 
 ## Funcionalidades Principais
 
@@ -123,16 +117,17 @@ CebolaoLotofacilGenerator/
 │   │   │   │   ├── ui/
 │   │   │   │   │   ├── screens/
 │   │   │   │   │   │   ├── HomeScreen.kt       # Tela principal
+│   │   │   │   │   │   ├── GeradorScreen.kt    # Tela de geração de jogos e configuração de filtros
+│   │   │   │   │   │   ├── JogosGeradosScreen.kt # Tela de exibição de jogos gerados
 │   │   │   │   │   │   ├── FavoritosScreen.kt  # Tela de favoritos
 │   │   │   │   │   │   ├── ResultadosScreen.kt # Tela de resultados
-│   │   │   │   │   │   ├── SettingsScreen.kt   # Tela de configurações
-│   │   │   │   │   │   └── OnboardingScreen.kt # Tela de boas-vindas
+│   │   │   │   │   │   └── SettingsScreen.kt   # Tela de configurações
 │   │   │   │   │   ├── components/
 │   │   │   │   │   └── theme/
 │   │   │   │   ├── viewmodel/
 │   │   │   │   ├── MainActivity.kt             # Ponto de entrada do app
-│   │   │   │   ├── AppNavigation.kt            # Navegação entre telas
-│   │   │   │   └── Routes.kt                   # Definição de rotas
+│   │   │   │   ├── AppNavigation.kt            # Lógica de navegação principal
+│   │   │   │   └── Navigation.kt               # Definição de rotas (sealed class Screen)
 │   │   │   └── res/
 │   │   ├── test/
 │   │   └── androidTest/
@@ -165,14 +160,19 @@ O projeto usa Gradle com Kotlin DSL (`.kts`). Para compilar:
 
 - **Tela preta com apenas texto:** As telas foram atualizadas para mostrar interfaces completas com Material Design, cabeçalhos, cartões e botões.
 - **Erros de compilação relacionados ao Compose:** Verifique se está usando as versões corretas das bibliotecas conforme especificado no build.gradle.kts.
-- **Problemas de navegação:** Certifique-se de que o arquivo Routes.kt está definindo corretamente as rotas e que o NavHost está configurado adequadamente.
+- **Problemas de navegação:** Certifique-se de que o arquivo `Navigation.kt` está definindo corretamente as rotas e que o `NavHost` em `AppNavigation.kt` está configurado adequadamente.
 
 ## Próximos Passos
 
-- Implementação da geração de jogos aleatórios
-- Sistema de armazenamento e visualização de jogos favoritos
-- Funcionalidade de conferência de resultados
-- Melhorias na interface de usuário e experiência
+- Implementação da funcionalidade de conferência de jogos salvos/gerados com resultados oficiais (se ainda não integrada em Resultados/Favoritos).
+- Verificação e refinamento do fluxo de navegação entre `GeradorScreen` e `JogosGeradosScreen`, especialmente a lógica de quando navegar após a geração.
+- Completar a implementação dos campos detalhados para todos os filtros na `GeradorScreen.kt` (Primos, Fibonacci, Miolo/Moldura, Múltiplos de 3).
+- Adicionar UI na `GeradorScreen.kt` para configurar quantidade de jogos, quantidade de números (se aplicável), e seleção visual de dezenas fixas/excluídas.
+- Implementar a exibição de mensagens de erro/sucesso e status de carregamento na `GeradorScreen.kt` usando `geradorViewModel.mensagem` e `geradorViewModel.operacaoStatus`.
+- Decidir sobre a necessidade de uma tela "Sobre" dedicada ou se a informação atual na `HomeScreen` e o diálogo na `SettingsScreen` são suficientes (parece que o diálogo é uma boa solução).
+- Melhorias na interface de usuário e experiência geral, incluindo o design do botão "Gerar Jogos" para ser mais informativo.
+- Investigar e resolver o problema do ícone do aplicativo não aparecer corretamente no dispositivo.
+- Implementar a tela de Favoritos (`FavoritosScreen.kt`) para listar, salvar e remover jogos favoritos.
 
 ## Licença
 

@@ -10,8 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
+import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
 import com.example.cebolaolotofacilgenerator.databinding.FragmentPrincipalBinding
-import com.example.cebolaolotofacilgenerator.model.common.OperacaoStatus
 import com.example.cebolaolotofacilgenerator.ui.adapters.JogosAdapter
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.JogoViewModel
@@ -41,7 +41,11 @@ class PrincipalFragment : Fragment() {
         setupRecyclerView()
         setupObservers()
         setupListeners()
-        geradorViewModel.operacaoStatus.value?.let { atualizarUIComBaseNoStatus(it) }
+        geradorViewModel.operacaoStatus.value?.let {
+            atualizarUIComBaseNoStatus(
+                    it as com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
+            )
+        }
         geradorViewModel.jogosGerados.value?.let { atualizarVisibilidadeListaVazia(it.isEmpty()) }
     }
 
@@ -75,54 +79,60 @@ class PrincipalFragment : Fragment() {
             }
         }
 
-        geradorViewModel.operacaoStatus.observe(viewLifecycleOwner) { status: OperacaoStatus? ->
+        geradorViewModel.operacaoStatus.observe(viewLifecycleOwner) {
+                status: com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus? ->
             status?.let { atualizarUIComBaseNoStatus(it) }
         }
 
         geradorViewModel.mensagem.observe(viewLifecycleOwner) { mensagem: String? ->
             mensagem?.let {
-                if (geradorViewModel.operacaoStatus.value == OperacaoStatus.ERRO) {
+                if (geradorViewModel.operacaoStatus.value ==
+                                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO
+                ) {
                     Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
                     geradorViewModel.limparMensagemUnica()
                 }
             }
         }
 
-        jogoViewModel.operacaoStatus.observe(viewLifecycleOwner) { status: OperacaoStatus? ->
+        jogoViewModel.operacaoStatus.observe(viewLifecycleOwner) {
+                status: com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus? ->
             when (status) {
-                OperacaoStatus.SUCESSO -> {
+                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.SUCESSO -> {
                     jogoViewModel.resetarStatus()
                 }
-                OperacaoStatus.ERRO -> {
+                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO -> {
                     Toast.makeText(requireContext(), "Erro ao salvar jogos.", Toast.LENGTH_SHORT)
                             .show()
                     jogoViewModel.resetarStatus()
                 }
-                else -> {
-                    /* Não faz nada para CARREGANDO ou OCIOSO neste observer específico */
+                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.CARREGANDO,
+                com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.OCIOSO,
+                null -> {
+                    /* Não faz nada para CARREGANDO, OCIOSO ou null neste observer específico */
                 }
             }
         }
     }
 
-    private fun atualizarUIComBaseNoStatus(status: OperacaoStatus) {
+    private fun atualizarUIComBaseNoStatus(
+            status: com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
+    ) {
         when (status) {
-            OperacaoStatus.CARREGANDO -> {
+            com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.CARREGANDO -> {
                 binding.progressGerador.visibility = View.VISIBLE
                 binding.btnGerarJogos.isEnabled = false
             }
-            OperacaoStatus.SUCESSO, OperacaoStatus.OCIOSO -> {
+            com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.SUCESSO,
+            com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.OCIOSO -> {
                 binding.progressGerador.visibility = View.GONE
                 binding.btnGerarJogos.isEnabled = true
             }
-            OperacaoStatus.ERRO -> {
+            com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus.ERRO -> {
                 binding.progressGerador.visibility = View.GONE
                 binding.btnGerarJogos.isEnabled = true
             }
-            else -> {
-                binding.progressGerador.visibility = View.GONE
-                binding.btnGerarJogos.isEnabled = true
-            }
+        // else não é necessário se o when for exaustivo com um tipo não anulável
         }
     }
 
