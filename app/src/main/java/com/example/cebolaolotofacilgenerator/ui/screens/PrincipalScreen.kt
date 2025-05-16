@@ -32,6 +32,7 @@ import com.example.cebolaolotofacilgenerator.viewmodel.JogoViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModelFactory
+import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -53,13 +54,23 @@ fun PrincipalScreen(
     val context = LocalContext.current
     val application = LocalContext.current.applicationContext as Application
 
-    // Obter FiltrosViewModel primeiro, pois é dependência do GeradorViewModel
-    val filtrosViewModel: FiltrosViewModel = viewModel()
-    // Instanciar GeradorViewModel usando a Factory
-    val geradorViewModel: GeradorViewModel = viewModel(
-        factory = GeradorViewModelFactory(application, filtrosViewModel, null /* TODO: Fornecer JogoRepository se GeradorViewModel precisar dele ativamente */)
+    // 1. Criar ResultadoRepository
+    val resultadoRepository = remember { ResultadoRepository(AppDatabase.getDatabase(application).resultadoDao()) }
+
+    // 2. Criar FiltrosViewModelFactory e 3. Instanciar filtrosViewModel
+    val filtrosViewModel: FiltrosViewModel = viewModel(
+        factory = FiltrosViewModelFactory(application, resultadoRepository)
     )
-    val jogoViewModel: JogoViewModel = viewModel() // Pode continuar assim se não houver dependências complexas
+
+    // 4. Criar JogoRepository (já estava lá, mas movido para clareza de ordem)
+    val jogoRepository = remember { JogoRepository(AppDatabase.getDatabase(application).jogoDao()) }
+    
+    // 5. Criar GeradorViewModelFactory e 6. Instanciar geradorViewModel
+    val geradorViewModel: GeradorViewModel = viewModel(
+        factory = GeradorViewModelFactory(application, filtrosViewModel, jogoRepository)
+    )
+    
+    val jogoViewModel: JogoViewModel = viewModel() 
 
     val jogosGerados by geradorViewModel.jogosGerados.observeAsState(emptyList())
     val operacaoStatusGerador by geradorViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
@@ -104,7 +115,7 @@ fun PrincipalScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(Screen.Gerador.route) }) {
+            FloatingActionButton(onClick = { navController.navigate(Screen.Gerador.createRoute()) }) {
                 Icon(Icons.Filled.AddCircle, contentDescription = stringResource(id = R.string.gerar_jogos))
             }
         }
@@ -130,7 +141,7 @@ fun PrincipalScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(text = stringResource(id = R.string.jogos_salvos_contagem, jogosGerados?.size ?: 0))
                     ultimoResultado?.let { resultado ->
-                        Text(text = stringResource(id = R.string.ultimo_resultado_concurso, resultado.id))
+                        Text(text = stringResource(id = R.string.resultado_concurso, resultado.id))
                     } ?: Text(text = stringResource(id = R.string.nenhum_resultado_salvo))
                 }
             }
@@ -138,22 +149,22 @@ fun PrincipalScreen(
             PrincipalScreenButton(
                 text = stringResource(id = R.string.gerador_de_jogos),
                 icon = Icons.Filled.AddCircle,
-                onClick = { navController.navigate(Screen.Gerador.route) }
+                onClick = { navController.navigate(Screen.Gerador.createRoute()) }
             )
             PrincipalScreenButton(
-                text = stringResource(id = R.string.conferir_resultados),
+                text = stringResource(id = R.string.conferir_jogos),
                 icon = Icons.Filled.CheckCircle,
                 onClick = { navController.navigate(Screen.Conferencia.route) }
             )
             PrincipalScreenButton(
                 text = stringResource(id = R.string.gerenciar_jogos_salvos),
                 icon = Icons.Filled.List,
-                onClick = { navController.navigate(Screen.GerenciamentoJogos.route) }
+                onClick = { navController.navigate(Screen.JogosGerados.route) }
             )
             PrincipalScreenButton(
                 text = stringResource(id = R.string.configuracoes_app),
                 icon = Icons.Filled.Settings,
-                onClick = { navController.navigate(Screen.Configuracoes.route) }
+                onClick = { navController.navigate(Screen.Settings.route) }
             )
         }
     }

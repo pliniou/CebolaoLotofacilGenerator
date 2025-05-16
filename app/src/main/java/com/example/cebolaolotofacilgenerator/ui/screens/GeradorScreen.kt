@@ -26,30 +26,33 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.* // Explicitamente importar ExperimentalMaterial3Api
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp // Adicionado import para dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.cebolaolotofacilgenerator.Screen // Import para Screen
-import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus // Garantir que este é o
+import com.example.cebolaolotofacilgenerator.R
+import com.example.cebolaolotofacilgenerator.Screen
+import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
+import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
+import com.example.cebolaolotofacilgenerator.ui.components.BotaoGerarJogos
+import com.example.cebolaolotofacilgenerator.ui.components.SnackbarManager
+import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import kotlinx.coroutines.FlowPreview
-import com.example.cebolaolotofacilgenerator.ui.components.BotaoGerarJogos
-import com.example.cebolaolotofacilgenerator.ui.components.SnackbarManager
-import com.example.cebolaolotofacilgenerator.R // Adicionar import R
-import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros // Import para ConfiguracaoFiltros
 
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class) // Adicionar OptIn aqui e FlowPreview
 @Composable
@@ -59,70 +62,36 @@ fun GeradorScreen(
         mainViewModel: MainViewModel // Alterado nome do parâmetro para mainViewModel
 ) {
         val geradorViewModel: GeradorViewModel = mainViewModel.geradorViewModel
-        // Seta a referência do MainViewModel no GeradorViewModel
+        val filtrosViewModel: FiltrosViewModel = mainViewModel.filtrosViewModel // Acesso ao FiltrosViewModel
+
         LaunchedEffect(key1 = mainViewModel) {
             geradorViewModel.setMainViewModelRef(mainViewModel)
         }
 
-        // Coletar todos os estados dos filtros
-        val filtroParesImparesAtivado by geradorViewModel.filtroParesImparesAtivado.collectAsState()
-        val minParesInput by geradorViewModel.minParesInput.collectAsState()
-        val maxParesInput by geradorViewModel.maxParesInput.collectAsState()
-        val filtroSomaTotalAtivado by geradorViewModel.filtroSomaTotalAtivado.collectAsState()
-        val minSomaInput by geradorViewModel.minSomaInput.collectAsState()
-        val maxSomaInput by geradorViewModel.maxSomaInput.collectAsState()
-        val filtroPrimosAtivado by geradorViewModel.filtroPrimosAtivado.collectAsState()
-        val filtroFibonacciAtivado by geradorViewModel.filtroFibonacciAtivado.collectAsState()
-        val filtroMioloMolduraAtivado by geradorViewModel.filtroMioloMolduraAtivado.collectAsState()
-        val filtroMultiplosDeTresAtivado by
-                geradorViewModel.filtroMultiplosDeTresAtivado.collectAsState()
-        // Novo filtro de Repetição de Dezenas
-        val filtroRepeticaoDezenasAtivado by geradorViewModel.filtroRepeticaoDezenasAtivado.collectAsState()
-
-        // Novos StateFlows para inputs dos filtros restantes
-        val minPrimosInput by geradorViewModel.minPrimosInput.collectAsState()
-        val maxPrimosInput by geradorViewModel.maxPrimosInput.collectAsState()
-        val minFibonacciInput by geradorViewModel.minFibonacciInput.collectAsState()
-        val maxFibonacciInput by geradorViewModel.maxFibonacciInput.collectAsState()
-        val minMioloInput by geradorViewModel.minMioloInput.collectAsState()
-        val maxMioloInput by geradorViewModel.maxMioloInput.collectAsState()
-        val minMultiplosDeTresInput by geradorViewModel.minMultiplosDeTresInput.collectAsState()
-        val maxMultiplosDeTresInput by geradorViewModel.maxMultiplosDeTresInput.collectAsState()
-        // Inputs para o novo filtro de Repetição de Dezenas
-        val minRepeticaoInput by geradorViewModel.minRepeticaoInput.collectAsState()
-        val maxRepeticaoInput by geradorViewModel.maxRepeticaoInput.collectAsState()
+        // Coletar o estado de configuracaoFiltros do FiltrosViewModel
+        val configFiltrosGlobais by filtrosViewModel.configuracaoFiltros.observeAsState(ConfiguracaoFiltros())
 
         // Observar o status da operação e os jogos gerados (se necessário aqui)
         val operacaoStatus by geradorViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
-        val mensagem by geradorViewModel.mensagem.observeAsState("")
+        // val mensagem by geradorViewModel.mensagem.observeAsState("") // Mensagem agora é via SnackbarManager ou MainViewModel
 
         // Coletar estados das dezenas fixas para o BotaoGerarJogos
         val dezenasFixasParaGeracao by geradorViewModel.numerosFixosState.collectAsState()
 
-        // Estado para a seleção manual do último resultado (funcionalidade separada)
-        val (dezenasSelecionadasUltimoResultado, setDezenasSelecionadasUltimoResultado) =
-            androidx.compose.runtime.remember {
-                androidx.compose.runtime.mutableStateOf(mutableSetOf<Int>())
-            }
-        val (concurso, setConcurso) =
-            androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
-        val (data, setData) =
-                androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
-
         // Observar configurações de filtro para passar para BotaoGerarJogos
-        val configFiltros by mainViewModel.filtrosViewModel.configuracaoFiltros.observeAsState(ConfiguracaoFiltros())
-        val quantidadeJogos = configFiltros.quantidadeJogos
-        val quantidadeNumeros = configFiltros.quantidadeNumerosPorJogo
+        // val configFiltros by mainViewModel.filtrosViewModel.configuracaoFiltros.observeAsState(ConfiguracaoFiltros()) // Substituído por configFiltrosGlobais
+        val quantidadeJogos = configFiltrosGlobais.quantidadeJogos
+        val quantidadeNumeros = configFiltrosGlobais.quantidadeNumerosPorJogo
 
         // Determinar se algum filtro estatístico está ativo
-        val filtrosEstatisticosAtivos = remember(configFiltros) {
-            configFiltros.filtroParesImpares ||
-            configFiltros.filtroSomaTotal ||
-            configFiltros.filtroPrimos ||
-            configFiltros.filtroFibonacci ||
-            configFiltros.filtroMioloMoldura ||
-            configFiltros.filtroMultiplosDeTres ||
-            configFiltros.filtroRepeticaoConcursoAnterior
+        val filtrosEstatisticosAtivos = remember(configFiltrosGlobais) {
+            configFiltrosGlobais.filtroParesImpares ||
+            configFiltrosGlobais.filtroSomaTotal ||
+            configFiltrosGlobais.filtroPrimos ||
+            configFiltrosGlobais.filtroFibonacci ||
+            configFiltrosGlobais.filtroMioloMoldura ||
+            configFiltrosGlobais.filtroMultiplosDeTres ||
+            configFiltrosGlobais.filtroRepeticaoConcursoAnterior
         }
 
         LaunchedEffect(dezenasFixasArg) {
@@ -207,119 +176,38 @@ fun GeradorScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                         Text(
-                                "Último Resultado (manual)",
-                                style = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.padding(vertical = 12.dp)
-                        )
-                        OutlinedTextField(
-                                value = concurso,
-                                onValueChange = setConcurso,
-                                label = { Text("Concurso") },
-                                keyboardOptions =
-                                        KeyboardOptions(keyboardType = KeyboardType.Number),
-                                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                                singleLine = true
-                        )
-                        OutlinedTextField(
-                                value = data,
-                                onValueChange = setData,
-                                label = { Text("Data (opcional)") },
-                                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                                singleLine = true
-                        )
-                        Text(
-                                "Selecione as dezenas sorteadas:",
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        LazyVerticalGrid(
-                                columns = GridCells.Fixed(5),
-                                contentPadding = PaddingValues(0.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.height(240.dp).fillMaxWidth()
-                        ) {
-                                items((1..25).toList()) { dezena ->
-                                        // Usar dezenasSelecionadasUltimoResultado para a grade manual
-                                        val isSelected = dezenasSelecionadasUltimoResultado.contains(dezena)
-                                        OutlinedButton(
-                                                onClick = {
-                                                        val novaSelecao =
-                                                                dezenasSelecionadasUltimoResultado.toMutableSet()
-                                                        if (isSelected) novaSelecao.remove(dezena)
-                                                        else novaSelecao.add(dezena)
-                                                        // Usar setDezenasSelecionadasUltimoResultado
-                                                        setDezenasSelecionadasUltimoResultado(novaSelecao)
-                                                },
-                                                shape = CircleShape,
-                                                colors =
-                                                        if (isSelected)
-                                                                ButtonDefaults.outlinedButtonColors(
-                                                                        containerColor =
-                                                                                MaterialTheme
-                                                                                        .colorScheme
-                                                                                        .primary,
-                                                                        contentColor =
-                                                                                MaterialTheme
-                                                                                        .colorScheme
-                                                                                        .onPrimary
-                                                                )
-                                                        else ButtonDefaults.outlinedButtonColors(),
-                                                border =
-                                                        if (isSelected)
-                                                                BorderStroke(
-                                                                        2.dp,
-                                                                        MaterialTheme.colorScheme
-                                                                                .primary
-                                                                )
-                                                        else
-                                                                BorderStroke(
-                                                                        1.dp,
-                                                                        MaterialTheme.colorScheme
-                                                                                .outline
-                                                                ),
-                                                modifier = Modifier.aspectRatio(1f)
-                                        ) {
-                                                Text(
-                                                        text = dezena.toString().padStart(2, '0'),
-                                                        textAlign = TextAlign.Center
-                                                )
-                                        }
-                                }
-                        }
-                        Button(
-                                onClick = {
-                                    // Usar dezenasSelecionadasUltimoResultado para salvar
-                                    if (dezenasSelecionadasUltimoResultado.size == 15) {
-                                        mainViewModel.salvarUltimoResultado(
-                                            dezenasSelecionadasUltimoResultado.toList()
-                                        )
-                                        mainViewModel.showSnackbar("Último resultado salvo com ${dezenasSelecionadasUltimoResultado.size} dezenas!")
-                                    } else {
-                                        mainViewModel.showSnackbar("Selecione exatamente 15 dezenas para o resultado.")
-                                    }
-                                },
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                                // Usar dezenasSelecionadasUltimoResultado para habilitar
-                                enabled = dezenasSelecionadasUltimoResultado.size == 15
-                        ) { Text("Salvar Último Resultado") }
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
-                        Text(
                                 "Filtros Estatísticos:",
                                 style = MaterialTheme.typography.titleLarge,
-                                modifier = Modifier.align(Alignment.Start).padding(bottom = 12.dp)
+                                modifier = Modifier.padding(vertical = 12.dp)
                         )
 
                         // Conteúdo dos filtros refatorado
                         FiltroCardMinMax(
                             titulo = stringResource(R.string.filtro_pares_impares_titulo),
                             subtitulo = stringResource(R.string.filtro_pares_impares_subtitulo),
-                            checado = filtroParesImparesAtivado,
-                            onCheckedChange = geradorViewModel::setFiltroParesImparesAtivado,
-                            minInput = minParesInput,
-                            onMinInputChange = geradorViewModel::setMinParesInput,
-                            maxInput = maxParesInput,
-                            onMaxInputChange = geradorViewModel::setMaxParesInput,
+                            checado = configFiltrosGlobais.filtroParesImpares,
+                            onCheckedChange = { ativado ->
+                                geradorViewModel.atualizarFiltroParesImpares(ativado, configFiltrosGlobais.minImpares, configFiltrosGlobais.maxImpares)
+                            },
+                            minInput = configFiltrosGlobais.minImpares.toString(),
+                            onMinInputChange = { novoMinStr ->
+                                val novoMin = novoMinStr.toIntOrNull()
+                                if (novoMin != null) {
+                                    geradorViewModel.atualizarFiltroParesImpares(configFiltrosGlobais.filtroParesImpares, novoMin, configFiltrosGlobais.maxImpares)
+                                } else if (novoMinStr.isEmpty()) {
+                                     // Tratar input vazio, talvez resetar ou usar valor padrão do ConfiguracaoFiltros
+                                     geradorViewModel.atualizarFiltroParesImpares(configFiltrosGlobais.filtroParesImpares, ConfiguracaoFiltros().minImpares, configFiltrosGlobais.maxImpares)
+                                }
+                            },
+                            maxInput = configFiltrosGlobais.maxImpares.toString(),
+                            onMaxInputChange = { novoMaxStr ->
+                                val novoMax = novoMaxStr.toIntOrNull()
+                                if (novoMax != null) {
+                                    geradorViewModel.atualizarFiltroParesImpares(configFiltrosGlobais.filtroParesImpares, configFiltrosGlobais.minImpares, novoMax)
+                                } else if (novoMaxStr.isEmpty()) {
+                                     geradorViewModel.atualizarFiltroParesImpares(configFiltrosGlobais.filtroParesImpares, configFiltrosGlobais.minImpares, ConfiguracaoFiltros().maxImpares)
+                                }
+                            },
                             labelMin = stringResource(R.string.filtro_min_impares_label),
                             labelMax = stringResource(R.string.filtro_max_impares_label)
                         )
@@ -327,12 +215,27 @@ fun GeradorScreen(
                         FiltroCardMinMax(
                             titulo = stringResource(R.string.filtro_soma_total_titulo),
                             subtitulo = stringResource(R.string.filtro_soma_total_subtitulo),
-                            checado = filtroSomaTotalAtivado,
-                            onCheckedChange = geradorViewModel::setFiltroSomaTotalAtivado,
-                            minInput = minSomaInput,
-                            onMinInputChange = geradorViewModel::setMinSomaInput,
-                            maxInput = maxSomaInput,
-                            onMaxInputChange = geradorViewModel::setMaxSomaInput,
+                            checado = configFiltrosGlobais.filtroSomaTotal,
+                            onCheckedChange = { ativado ->
+                                geradorViewModel.atualizarFiltroSomaTotal(ativado, configFiltrosGlobais.minSoma, configFiltrosGlobais.maxSoma)
+                            },
+                            minInput = configFiltrosGlobais.minSoma.toString(),
+                            onMinInputChange = { novoMinStr ->
+                                val novoMin = novoMinStr.toIntOrNull()
+                                // Permitir input vazio para resetar para o default do ConfiguracaoFiltros
+                                val minToSet = if (novoMinStr.isEmpty()) ConfiguracaoFiltros().minSoma else novoMin
+                                if (minToSet != null) {
+                                   geradorViewModel.atualizarFiltroSomaTotal(configFiltrosGlobais.filtroSomaTotal, minToSet, configFiltrosGlobais.maxSoma)
+                                }
+                            },
+                            maxInput = configFiltrosGlobais.maxSoma.toString(),
+                            onMaxInputChange = { novoMaxStr ->
+                                val novoMax = novoMaxStr.toIntOrNull()
+                                val maxToSet = if (novoMaxStr.isEmpty()) ConfiguracaoFiltros().maxSoma else novoMax
+                                if (maxToSet != null) {
+                                    geradorViewModel.atualizarFiltroSomaTotal(configFiltrosGlobais.filtroSomaTotal, configFiltrosGlobais.minSoma, maxToSet)
+                                }
+                            },
                             labelMin = stringResource(R.string.filtro_soma_min_label),
                             labelMax = stringResource(R.string.filtro_soma_max_label)
                         )
@@ -340,12 +243,26 @@ fun GeradorScreen(
                         FiltroCardMinMax(
                             titulo = stringResource(R.string.filtro_primos_titulo),
                             subtitulo = stringResource(R.string.filtro_primos_subtitulo),
-                            checado = filtroPrimosAtivado,
-                            onCheckedChange = geradorViewModel::setFiltroPrimosAtivado,
-                            minInput = minPrimosInput,
-                            onMinInputChange = geradorViewModel::setMinPrimosInput,
-                            maxInput = maxPrimosInput,
-                            onMaxInputChange = geradorViewModel::setMaxPrimosInput,
+                            checado = configFiltrosGlobais.filtroPrimos,
+                            onCheckedChange = { ativado ->
+                                geradorViewModel.atualizarFiltroPrimos(ativado, configFiltrosGlobais.minPrimos, configFiltrosGlobais.maxPrimos)
+                            },
+                            minInput = configFiltrosGlobais.minPrimos.toString(),
+                            onMinInputChange = { novoMinStr ->
+                                val novoMin = novoMinStr.toIntOrNull()
+                                val minToSet = if (novoMinStr.isEmpty()) ConfiguracaoFiltros().minPrimos else novoMin
+                                if (minToSet != null) {
+                                    geradorViewModel.atualizarFiltroPrimos(configFiltrosGlobais.filtroPrimos, minToSet, configFiltrosGlobais.maxPrimos)
+                                }
+                            },
+                            maxInput = configFiltrosGlobais.maxPrimos.toString(),
+                            onMaxInputChange = { novoMaxStr ->
+                                val novoMax = novoMaxStr.toIntOrNull()
+                                val maxToSet = if (novoMaxStr.isEmpty()) ConfiguracaoFiltros().maxPrimos else novoMax
+                                if (maxToSet != null) {
+                                   geradorViewModel.atualizarFiltroPrimos(configFiltrosGlobais.filtroPrimos, configFiltrosGlobais.minPrimos, maxToSet)
+                                }
+                            },
                             labelMin = stringResource(R.string.filtro_min_primos_label),
                             labelMax = stringResource(R.string.filtro_max_primos_label)
                         )
@@ -353,12 +270,26 @@ fun GeradorScreen(
                         FiltroCardMinMax(
                             titulo = stringResource(R.string.filtro_fibonacci_titulo),
                             subtitulo = stringResource(R.string.filtro_fibonacci_subtitulo),
-                            checado = filtroFibonacciAtivado,
-                            onCheckedChange = geradorViewModel::setFiltroFibonacciAtivado,
-                            minInput = minFibonacciInput,
-                            onMinInputChange = geradorViewModel::setMinFibonacciInput,
-                            maxInput = maxFibonacciInput,
-                            onMaxInputChange = geradorViewModel::setMaxFibonacciInput,
+                            checado = configFiltrosGlobais.filtroFibonacci,
+                            onCheckedChange = { ativado ->
+                                geradorViewModel.atualizarFiltroFibonacci(ativado, configFiltrosGlobais.minFibonacci, configFiltrosGlobais.maxFibonacci)
+                            },
+                            minInput = configFiltrosGlobais.minFibonacci.toString(),
+                            onMinInputChange = { novoMinStr ->
+                                val novoMin = novoMinStr.toIntOrNull()
+                                val minToSet = if (novoMinStr.isEmpty()) ConfiguracaoFiltros().minFibonacci else novoMin
+                                if (minToSet != null) {
+                                   geradorViewModel.atualizarFiltroFibonacci(configFiltrosGlobais.filtroFibonacci, minToSet, configFiltrosGlobais.maxFibonacci)
+                                }
+                            },
+                            maxInput = configFiltrosGlobais.maxFibonacci.toString(),
+                            onMaxInputChange = { novoMaxStr ->
+                                val novoMax = novoMaxStr.toIntOrNull()
+                                val maxToSet = if (novoMaxStr.isEmpty()) ConfiguracaoFiltros().maxFibonacci else novoMax
+                                if (maxToSet != null) {
+                                    geradorViewModel.atualizarFiltroFibonacci(configFiltrosGlobais.filtroFibonacci, configFiltrosGlobais.minFibonacci, maxToSet)
+                                }
+                            },
                             labelMin = stringResource(R.string.filtro_min_fibonacci_label),
                             labelMax = stringResource(R.string.filtro_max_fibonacci_label)
                         )
@@ -366,12 +297,26 @@ fun GeradorScreen(
                         FiltroCardMinMax(
                             titulo = stringResource(R.string.filtro_miolo_moldura_titulo),
                             subtitulo = stringResource(R.string.filtro_miolo_moldura_subtitulo),
-                            checado = filtroMioloMolduraAtivado,
-                            onCheckedChange = geradorViewModel::setFiltroMioloMolduraAtivado,
-                            minInput = minMioloInput,
-                            onMinInputChange = geradorViewModel::setMinMioloInput,
-                            maxInput = maxMioloInput,
-                            onMaxInputChange = geradorViewModel::setMaxMioloInput,
+                            checado = configFiltrosGlobais.filtroMioloMoldura,
+                            onCheckedChange = { ativado ->
+                                geradorViewModel.atualizarFiltroMioloMoldura(ativado, configFiltrosGlobais.minMiolo, configFiltrosGlobais.maxMiolo)
+                            },
+                            minInput = configFiltrosGlobais.minMiolo.toString(),
+                            onMinInputChange = { novoMinStr ->
+                                val novoMin = novoMinStr.toIntOrNull()
+                                val minToSet = if (novoMinStr.isEmpty()) ConfiguracaoFiltros().minMiolo else novoMin
+                                if (minToSet != null) {
+                                    geradorViewModel.atualizarFiltroMioloMoldura(configFiltrosGlobais.filtroMioloMoldura, minToSet, configFiltrosGlobais.maxMiolo)
+                                }
+                            },
+                            maxInput = configFiltrosGlobais.maxMiolo.toString(),
+                            onMaxInputChange = { novoMaxStr ->
+                                val novoMax = novoMaxStr.toIntOrNull()
+                                val maxToSet = if (novoMaxStr.isEmpty()) ConfiguracaoFiltros().maxMiolo else novoMax
+                                if (maxToSet != null) {
+                                    geradorViewModel.atualizarFiltroMioloMoldura(configFiltrosGlobais.filtroMioloMoldura, configFiltrosGlobais.minMiolo, maxToSet)
+                                }
+                            },
                             labelMin = stringResource(R.string.filtro_min_miolo_label),
                             labelMax = stringResource(R.string.filtro_max_miolo_label)
                         )
@@ -379,26 +324,53 @@ fun GeradorScreen(
                         FiltroCardMinMax(
                             titulo = stringResource(R.string.filtro_multiplos_de_tres_titulo),
                             subtitulo = stringResource(R.string.filtro_multiplos_de_tres_subtitulo),
-                            checado = filtroMultiplosDeTresAtivado,
-                            onCheckedChange = geradorViewModel::setFiltroMultiplosDeTresAtivado,
-                            minInput = minMultiplosDeTresInput,
-                            onMinInputChange = geradorViewModel::setMinMultiplosDeTresInput,
-                            maxInput = maxMultiplosDeTresInput,
-                            onMaxInputChange = geradorViewModel::setMaxMultiplosDeTresInput,
+                            checado = configFiltrosGlobais.filtroMultiplosDeTres,
+                            onCheckedChange = { ativado ->
+                                geradorViewModel.atualizarFiltroMultiplosDeTres(ativado, configFiltrosGlobais.minMultiplos, configFiltrosGlobais.maxMultiplos)
+                            },
+                            minInput = configFiltrosGlobais.minMultiplos.toString(),
+                            onMinInputChange = { novoMinStr ->
+                                val novoMin = novoMinStr.toIntOrNull()
+                                val minToSet = if (novoMinStr.isEmpty()) ConfiguracaoFiltros().minMultiplos else novoMin
+                                if (minToSet != null) {
+                                    geradorViewModel.atualizarFiltroMultiplosDeTres(configFiltrosGlobais.filtroMultiplosDeTres, minToSet, configFiltrosGlobais.maxMultiplos)
+                                }
+                            },
+                            maxInput = configFiltrosGlobais.maxMultiplos.toString(),
+                            onMaxInputChange = { novoMaxStr ->
+                                val novoMax = novoMaxStr.toIntOrNull()
+                                val maxToSet = if (novoMaxStr.isEmpty()) ConfiguracaoFiltros().maxMultiplos else novoMax
+                                if (maxToSet != null) {
+                                    geradorViewModel.atualizarFiltroMultiplosDeTres(configFiltrosGlobais.filtroMultiplosDeTres, configFiltrosGlobais.minMultiplos, maxToSet)
+                                }
+                            },
                             labelMin = stringResource(R.string.filtro_min_multiplos_de_tres_label),
                             labelMax = stringResource(R.string.filtro_max_multiplos_de_tres_label)
                         )
 
-                        // Novo Filtro: Repetição de Dezenas do Concurso Anterior
                         FiltroCardMinMax(
                             titulo = stringResource(R.string.filtro_repeticao_dezenas_titulo),
                             subtitulo = stringResource(R.string.filtro_repeticao_dezenas_subtitulo),
-                            checado = filtroRepeticaoDezenasAtivado,
-                            onCheckedChange = geradorViewModel::setFiltroRepeticaoDezenasAtivado,
-                            minInput = minRepeticaoInput,
-                            onMinInputChange = geradorViewModel::setMinRepeticaoInput,
-                            maxInput = maxRepeticaoInput,
-                            onMaxInputChange = geradorViewModel::setMaxRepeticaoInput,
+                            checado = configFiltrosGlobais.filtroRepeticaoConcursoAnterior,
+                            onCheckedChange = { ativado ->
+                                geradorViewModel.atualizarFiltroRepeticaoDezenas(ativado, configFiltrosGlobais.minRepeticaoConcursoAnterior, configFiltrosGlobais.maxRepeticaoConcursoAnterior)
+                            },
+                            minInput = configFiltrosGlobais.minRepeticaoConcursoAnterior.toString(),
+                            onMinInputChange = { novoMinStr ->
+                                val novoMin = novoMinStr.toIntOrNull()
+                                val minToSet = if (novoMinStr.isEmpty()) ConfiguracaoFiltros().minRepeticaoConcursoAnterior else novoMin
+                                if (minToSet != null) {
+                                    geradorViewModel.atualizarFiltroRepeticaoDezenas(configFiltrosGlobais.filtroRepeticaoConcursoAnterior, minToSet, configFiltrosGlobais.maxRepeticaoConcursoAnterior)
+                                }
+                            },
+                            maxInput = configFiltrosGlobais.maxRepeticaoConcursoAnterior.toString(),
+                            onMaxInputChange = { novoMaxStr ->
+                                val novoMax = novoMaxStr.toIntOrNull()
+                                val maxToSet = if (novoMaxStr.isEmpty()) ConfiguracaoFiltros().maxRepeticaoConcursoAnterior else novoMax
+                                if (maxToSet != null) {
+                                   geradorViewModel.atualizarFiltroRepeticaoDezenas(configFiltrosGlobais.filtroRepeticaoConcursoAnterior, configFiltrosGlobais.minRepeticaoConcursoAnterior, maxToSet)
+                                }
+                            },
                             labelMin = stringResource(R.string.filtro_min_repeticao_label),
                             labelMax = stringResource(R.string.filtro_max_repeticao_label)
                         )
@@ -409,17 +381,6 @@ fun GeradorScreen(
                         if (operacaoStatus == OperacaoStatus.CARREGANDO) {
                                 CircularProgressIndicator(
                                         modifier = Modifier.padding(vertical = 16.dp)
-                                )
-                        }
-
-                        mensagem?.let { msg ->
-                                Text(
-                                        text = msg,
-                                        color =
-                                                if (operacaoStatus == OperacaoStatus.ERRO)
-                                                        MaterialTheme.colorScheme.error
-                                                else MaterialTheme.colorScheme.onSurface,
-                                        modifier = Modifier.padding(vertical = 8.dp)
                                 )
                         }
 

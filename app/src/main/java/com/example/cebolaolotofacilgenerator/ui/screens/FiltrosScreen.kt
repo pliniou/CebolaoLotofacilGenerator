@@ -16,7 +16,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cebolaolotofacilgenerator.R
@@ -30,25 +29,23 @@ import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModelFactory
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import java.util.Locale
 
-// Adicionar esta data class
 data class FiltroConfigItem(
     val tituloRes: Int,
     val isChecked: Boolean,
-    val valorLabelFormatRes: Int, // Ou String se for o caso, dependendo do uso
+    val valorLabelFormatRes: Int,
     val onUpdate: (Boolean, Int, Int) -> Unit,
-    val onUpdateSimples: ((Boolean) -> Unit)? = null // Para filtros que só têm on/off
+    val onUpdateSimples: ((Boolean) -> Unit)? = null
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltrosScreen(
     mainViewModel: MainViewModel,
-    navController: NavController // Mantido para consistência, pode ser usado no futuro
+    navController: NavController
 ) {
     val context = LocalContext.current
     val application = context.applicationContext as Application
 
-    // Obter ResultadoRepository para a factory do FiltrosViewModel
     val resultadoDao = AppDatabase.getDatabase(application).resultadoDao()
     val resultadoRepository = ResultadoRepository(resultadoDao)
 
@@ -72,7 +69,7 @@ fun FiltrosScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.titulo_tela_filtros)) } // Usar string mais descritiva
+                title = { Text(stringResource(R.string.titulo_tela_filtros)) }
             )
         }
     ) { paddingValues ->
@@ -109,7 +106,7 @@ fun FiltrosBasicosCard(config: ConfiguracaoFiltros, viewModel: FiltrosViewModel)
                 value = config.quantidadeJogos.toString(),
                 onValueChange = {
                     val novoValor = it.toIntOrNull() ?: 1
-                    viewModel.atualizarFiltro(config.copy(quantidadeJogos = novoValor.coerceIn(1, 100))) // Coerce para evitar valores absurdos
+                    viewModel.atualizarFiltro(config.copy(quantidadeJogos = novoValor.coerceIn(1, 100)))
                 },
                 label = { Text(stringResource(R.string.quantidade_de_jogos_label)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -121,15 +118,14 @@ fun FiltrosBasicosCard(config: ConfiguracaoFiltros, viewModel: FiltrosViewModel)
                 value = config.quantidadeNumerosPorJogo.toString(),
                 onValueChange = {
                     val novoValor = it.toIntOrNull() ?: 15
-                    if (novoValor in 15..20) { // Validar faixa permitida para Lotofácil
+                    if (novoValor in 15..20) {
                         viewModel.atualizarFiltro(config.copy(quantidadeNumerosPorJogo = novoValor))
                     }
                 },
                 label = { Text(stringResource(R.string.quantidade_de_numeros_label)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                // enabled = false // A Lotofácil padrão é 15, mas pode ser configurável para futuras modalidades.
+                singleLine = true
             )
         }
     }
@@ -149,12 +145,12 @@ fun NumerosEspeciaisCard(config: ConfiguracaoFiltros, viewModel: FiltrosViewMode
                 value = config.numerosFixos.joinToString(","),
                 onValueChange = {
                     val numeros = it.split(Regex("[^\\d]+")).filter { s -> s.isNotBlank() }.mapNotNull { s -> s.toIntOrNull()?.coerceIn(1,25) }.distinct().sorted()
-                    if (numeros.size <= 10) { // Limite de exemplo para números fixos
+                    if (numeros.size <= 10) {
                        viewModel.atualizarFiltro(config.copy(numerosFixos = numeros))
                     }
                  },
                 label = { Text(stringResource(R.string.numeros_fixos_label)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii), // Aceita vírgulas
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(stringResource(R.string.numeros_fixos_placeholder)) },
                 singleLine = true
@@ -164,12 +160,12 @@ fun NumerosEspeciaisCard(config: ConfiguracaoFiltros, viewModel: FiltrosViewMode
                 value = config.numerosExcluidos.joinToString(","),
                 onValueChange = {
                     val numeros = it.split(Regex("[^\\d]+")).filter { s -> s.isNotBlank() }.mapNotNull { s -> s.toIntOrNull()?.coerceIn(1,25) }.distinct().sorted()
-                     if (numeros.size <= 10) { // Limite de exemplo para números excluídos
+                     if (numeros.size <= 10) {
                         viewModel.atualizarFiltro(config.copy(numerosExcluidos = numeros))
                      }
                 },
                 label = { Text(stringResource(R.string.numeros_excluidos_label)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii), // Aceita vírgulas
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(stringResource(R.string.numeros_excluidos_placeholder)) },
                 singleLine = true
@@ -181,63 +177,60 @@ fun NumerosEspeciaisCard(config: ConfiguracaoFiltros, viewModel: FiltrosViewMode
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltrosEstatisticosSection(
-    config: ConfiguracaoFiltros, 
-    viewModel: FiltrosViewModel, 
+    config: ConfiguracaoFiltros,
+    viewModel: FiltrosViewModel,
     temUltimoResultado: Boolean
 ) {
     Text(stringResource(R.string.filtros_estatisticos_titulo), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(vertical = 8.dp))
 
-    // Usar a nova data class aqui
     val filtroItems = listOf(
-        FiltroConfigItem(R.string.filtro_pares_impares_titulo, config.filtroParesImpares, R.string.valor_filtro_pares_impares, 
+        FiltroConfigItem(R.string.filtro_pares_impares_titulo, config.filtroParesImpares, R.string.valor_filtro_pares_impares,
             onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroParesImpares = ativo, minImpares = min, maxImpares = max)) }),
         FiltroConfigItem(R.string.filtro_soma_total_titulo, config.filtroSomaTotal, R.string.valor_filtro_soma_total,
             onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroSomaTotal = ativo, minSoma = min, maxSoma = max)) }),
         FiltroConfigItem(R.string.filtro_primos_titulo, config.filtroPrimos, R.string.valor_filtro_primos,
-            onUpdate = { ativo, min, max -> viewModel.setFiltrarPrimos(ativo, min, max) }), // Assumindo que setFiltrarPrimos tem essa assinatura
+            onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroPrimos = ativo, minPrimos = min, maxPrimos = max)) }),
         FiltroConfigItem(R.string.filtro_fibonacci_titulo, config.filtroFibonacci, R.string.valor_filtro_fibonacci,
-            onUpdate = { ativo, min, max -> viewModel.setFiltrarFibonacci(ativo, min, max) }), // Assumindo que setFiltrarFibonacci tem essa assinatura
+            onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroFibonacci = ativo, minFibonacci = min, maxFibonacci = max)) }),
         FiltroConfigItem(R.string.filtro_miolo_moldura_titulo, config.filtroMioloMoldura, R.string.valor_filtro_miolo_moldura,
             onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroMioloMoldura = ativo, minMiolo = min, maxMiolo = max)) }),
-        FiltroConfigItem(R.string.filtro_multiplos_de_tres_titulo, config.filtroMultiplosDeTres, R.string.valor_filtro_multiplos_de_tres, // R.string.valor_filtro_multiplos_de_tres estava faltando no log
+        FiltroConfigItem(R.string.filtro_multiplos_de_tres_titulo, config.filtroMultiplosDeTres, R.string.valor_filtro_multiplos_tres,
             onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroMultiplosDeTres = ativo, minMultiplos = min, maxMultiplos = max)) }),
         FiltroConfigItem(R.string.filtro_repeticao_anterior_titulo, config.filtroRepeticaoConcursoAnterior, R.string.valor_filtro_repeticao_anterior,
-            onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroRepeticaoConcursoAnterior = ativo, minRepeticaoConcursoAnterior = min, maxRepeticaoConcursoAnterior = max)) }
-        )
+            onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroRepeticaoConcursoAnterior = ativo, minRepeticaoConcursoAnterior = min, maxRepeticaoConcursoAnterior = max)) })
     )
 
     val ranges = listOf(
-        config.minImpares to config.maxImpares,  // Pares/Ímpares (slider de ímpares)
-        config.minSoma to config.maxSoma,          // Soma Total
-        config.minPrimos to config.maxPrimos,      // Primos
-        config.minFibonacci to config.maxFibonacci, // Fibonacci
-        config.minMiolo to config.maxMiolo,        // Miolo/Moldura (slider de miolo)
-        config.minMultiplos to config.maxMultiplos, // Múltiplos de 3
+        config.minImpares to config.maxImpares,
+        config.minSoma to config.maxSoma,
+        config.minPrimos to config.maxPrimos,
+        config.minFibonacci to config.maxFibonacci,
+        config.minMiolo to config.maxMiolo,
+        config.minMultiplos to config.maxMultiplos,
         config.minRepeticaoConcursoAnterior to config.maxRepeticaoConcursoAnterior
     )
 
     val sliderBounds = listOf(
-        0f to 15f,    // Pares/Ímpares (Ímpares)
-        120f to 270f, // Soma Total (valores típicos, podem ser ajustados)
-        0f to 9f,     // Primos (Lotofácil tem 9 primos de 1 a 25)
-        0f to 7f,     // Fibonacci (Lotofácil tem 7 de Fibonacci de 1 a 25)
-        0f to 9f,     // Miolo (Lotofácil tem 9 no miolo)
-        0f to 8f,     // Múltiplos de 3 (Lotofácil tem 8 múltiplos de 3)
-        0f to 15f     // Repetição do Anterior
+        0f to 15f,
+        120f to 270f,
+        0f to 9f,
+        0f to 7f,
+        0f to 9f,
+        0f to 8f,
+        0f to 15f
     )
 
-    filtroItems.forEachIndexed { index, filtroItem -> // Alterado aqui
+    filtroItems.forEachIndexed { index, filtroItem ->
         val (currentMin, currentMax) = ranges[index]
         val (sliderFrom, sliderTo) = sliderBounds[index]
 
-        // Seção específica para o filtro de repetição
-        if (filtroItem.tituloRes == R.string.filtro_repeticao_anterior_titulo) { // Usar filtroItem.tituloRes
+        if (filtroItem.tituloRes == R.string.filtro_repeticao_anterior_titulo) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = config.dezenasConcursoAnterior.joinToString(","),
                     onValueChange = {
                         val numeros = it.split(Regex("[^\\d]+")).filter { s -> s.isNotBlank() }.mapNotNull { s -> s.toIntOrNull()?.coerceIn(1,25) }.distinct().sorted()
-                        if (numeros.size <= 15) { // Permitir até 15 dezenas
+                        if (numeros.size <= 15) {
                             viewModel.atualizarFiltro(config.copy(dezenasConcursoAnterior = numeros))
                         }
                     },
@@ -246,41 +239,33 @@ fun FiltrosEstatisticosSection(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
                     singleLine = true,
-                    enabled = filtroItem.isChecked // Usar filtroItem.isChecked
+                    enabled = filtroItem.isChecked
                 )
                 Button(
                     onClick = { viewModel.carregarDezenasDoUltimoResultadoSalvo() },
-                    enabled = filtroItem.isChecked && temUltimoResultado, // Usar filtroItem.isChecked
+                    enabled = filtroItem.isChecked && temUltimoResultado,
                     modifier = Modifier.align(Alignment.End).padding(bottom = 8.dp)
                 ) {
-                    Text(stringResource(R.string.carregar_dezenas_salvas_botao)) // Adicionar esta string
+                    Text(stringResource(R.string.carregar_dezenas_salvas_botao))
                 }
             }
         }
 
         FiltroEstatisticoItem(
-            titulo = stringResource(filtroItem.tituloRes), // Usar filtroItem.tituloRes
-            isChecked = filtroItem.isChecked, // Usar filtroItem.isChecked
+            titulo = stringResource(filtroItem.tituloRes),
+            isChecked = filtroItem.isChecked,
             rangeMin = currentMin,
             rangeMax = currentMax,
-            valorLabelFormat = stringResource(filtroItem.valorLabelFormatRes), // Usar filtroItem.valorLabelFormatRes
+            valorLabelFormat = stringResource(filtroItem.valorLabelFormatRes),
             sliderFrom = sliderFrom,
             sliderTo = sliderTo,
             onCheckedChange = { novoEstado ->
-                 // Para atualizar apenas o estado 'checked', precisaríamos de uma forma de chamar o onUpdate
-                 // apenas com o novo 'ativo', mantendo min/max.
-                 // Ou o onUpdate precisa ser mais flexível, ou precisamos de um onCheckedChange dedicado.
-                 // Por ora, vamos assumir que o FiltroEstatisticoItem chama o onUpdate completo.
-                 // Se o FiltroEstatisticoItem só mudar o 'isChecked', a lambda onUpdate do FiltroConfigItem
-                 // seria chamada com (novoEstado, currentMin, currentMax)
-                 // Isso requer que FiltroEstatisticoItem passe todos os 3 para a lambda onUpdate.
-                 // Se FiltroEstatisticoItem tiver sliders, ele chamará onUpdate com os novos min/max.
-                 filtroItem.onUpdate(novoEstado, currentMin, currentMax) // Exemplo, pode precisar de ajuste
+                filtroItem.onUpdate(novoEstado, currentMin, currentMax)
             },
             onRangeChange = { novoMin, novoMax ->
-                filtroItem.onUpdate(filtroItem.isChecked, novoMin.toInt(), novoMax.toInt()) // Convertido para Int
+                filtroItem.onUpdate(filtroItem.isChecked, novoMin.toInt(), novoMax.toInt())
             },
-            enabled = if (filtroItem.tituloRes == R.string.filtro_repeticao_anterior_titulo) temUltimoResultado else true // Habilita o filtro de repetição apenas se houver último resultado
+            enabled = if (filtroItem.tituloRes == R.string.filtro_repeticao_anterior_titulo) temUltimoResultado else true
         )
         Divider(modifier = Modifier.padding(vertical = 8.dp))
     }
@@ -310,8 +295,13 @@ fun FiltroEstatisticoItem(
             Switch(checked = isChecked, onCheckedChange = onCheckedChange)
         }
         Text(
-            text = if (isChecked) String.format(Locale.getDefault(), valorLabelFormat, rangeMin, rangeMax)
-                     else stringResource(id = R.string.na_aplicado),
+            text = if (isChecked) {
+                valorLabelFormat
+                    .replace("%1\$d", rangeMin.toString())
+                    .replace("%2\$d", rangeMax.toString())
+            } else {
+                stringResource(id = R.string.na_aplicado)
+            },
             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium
@@ -320,7 +310,7 @@ fun FiltroEstatisticoItem(
             value = rangeMin.toFloat()..rangeMax.toFloat(),
             onValueChange = { newRange -> onRangeChange(newRange.start, newRange.endInclusive) },
             valueRange = sliderFrom..sliderTo,
-            steps = ((sliderTo - sliderFrom) / 1).toInt().coerceAtLeast(0) -1 , // steps deve ser não negativo
+            steps = ((sliderTo - sliderFrom) / 1).toInt().coerceAtLeast(0) - 1,
             enabled = enabled,
             modifier = Modifier.fillMaxWidth()
         )
@@ -348,9 +338,12 @@ fun AcoesFiltrosButtons(viewModel: FiltrosViewModel) {
 @Preview(showBackground = true, name = "Filtros Screen Completa")
 @Composable
 fun DefaultPreviewFiltrosScreen() {
-    val mockMainViewModel = MainViewModel(Application(), AppDatabase.getDatabase(LocalContext.current.applicationContext as Application).jogoDao().let { com.example.cebolaolotofacilgenerator.data.repository.JogoRepository(it) }, AppDatabase.getDatabase(LocalContext.current.applicationContext as Application).resultadoDao().let { ResultadoRepository(it) }, com.example.cebolaolotofacilgenerator.data.AppDataStore(LocalContext.current.applicationContext as Application)) // Necessita Application para DataStore
-    val mockFiltrosViewModel = FiltrosViewModel(LocalContext.current.applicationContext as Application, AppDatabase.getDatabase(LocalContext.current.applicationContext as Application).resultadoDao().let { ResultadoRepository(it) })
-    // Popular mockFiltrosViewModel com dados se necessário para o preview
+    val mockMainViewModel = MainViewModel(
+        Application(),
+        AppDatabase.getDatabase(LocalContext.current.applicationContext as Application).jogoDao().let { JogoRepository(it) },
+        AppDatabase.getDatabase(LocalContext.current.applicationContext as Application).resultadoDao().let { ResultadoRepository(it) },
+        AppDataStore(LocalContext.current.applicationContext as Application)
+    )
     FiltrosScreen(mainViewModel = mockMainViewModel, navController = NavController(LocalContext.current))
 }
 
@@ -362,11 +355,11 @@ fun PreviewFiltroEstatisticoItem() {
         isChecked = true,
         rangeMin = 5,
         rangeMax = 10,
-        valorLabelFormat = "Ímpares: %1$d-%2$d",
+        valorLabelFormat = "Ímpares: %1\$d-%2\$d",
         sliderFrom = 0f,
         sliderTo = 15f,
         onCheckedChange = {},
-        onRangeChange = { _,_ -> },
+        onRangeChange = { _, _ -> },
         enabled = true
     )
 } 

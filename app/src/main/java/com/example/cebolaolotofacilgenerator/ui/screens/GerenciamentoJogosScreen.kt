@@ -54,9 +54,7 @@ fun GerenciamentoJogosScreen(
 ) {
     val jogosViewModel = mainViewModel.jogosViewModel // Acessar via MainViewModel
 
-    val jogosSalvos by jogosViewModel.jogosSalvos.collectAsState(initial = emptyList())
     val operacaoStatus by jogosViewModel.operacaoStatus.observeAsState()
-    val snackbarMessage by jogosViewModel.snackbarMessage.collectAsState(initial = null)
 
     val context = LocalContext.current
     var tipoListaSelecionada by remember { mutableStateOf(TipoListaJogo.TODOS) }
@@ -193,7 +191,7 @@ fun GerenciamentoJogosScreen(
         val detalhesText = buildString {
             append(stringResource(R.string.numeros_jogados, jogoParaDetalhes.numeros.joinToString(" - ")))
             append("\n\n")
-            append(stringResource(R.string.data_geracao, dateFormat.format(jogoParaDetalhes.dataCriacao)))
+            append(stringResource(R.string.jogo_data_criacao, dateFormat.format(jogoParaDetalhes.dataCriacao)))
             append("\n\n")
             append(stringResource(R.string.caracteristicas_jogo))
             append("\n")
@@ -320,15 +318,24 @@ fun PreviewGerenciamentoJogosScreenEmpty() {
 @Preview(showBackground = true, name = "Gerenciamento Jogos Screen - Com Jogos")
 @Composable
 fun PreviewGerenciamentoJogosScreenWithData() {
-    val mockMainViewModel = MainViewModel(Application())
-    // Mock JogosViewModel com dados
-    val mockJogosViewModel = JogosViewModel(Application()) // Para preview, idealmente injetar um mock com LiveData populado
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+    val db = AppDatabase.getDatabase(application)
+    val jogoRepository = JogoRepository(db.jogoDao())
+    val resultadoRepository = ResultadoRepository(db.resultadoDao())
+    val appDataStore = AppDataStore(application)
 
-    // Exemplo de como popular LiveData para preview (requer acesso ao LiveData no ViewModel)
-    // LifecycleOwner é necessário para observar LiveData, complicado em previews. 
-    // Uma forma mais simples é ter ViewModels que aceitem dados iniciais para preview.
+    val mockMainViewModel = MainViewModel(
+        application = application,
+        jogoRepository = jogoRepository,
+        resultadoRepository = resultadoRepository,
+        appDataStore = appDataStore
+    )
+    // O JogosViewModel é parte do mockMainViewModel. Se precisar de dados específicos
+    // para o preview, o ideal seria uma forma de popular o mockMainViewModel.jogosViewModel.
+    // Ex: viewModelScope.launch { mockMainViewModel.jogosViewModel.todosJogos.value = listOfJocosMock } (isso não funciona em preview)
 
-    GerenciamentoJogosScreen(mainViewModel = mockMainViewModel, navController = NavHostController())
+    GerenciamentoJogosScreen(mainViewModel = mockMainViewModel, navController = NavHostController(context))
 }
 
 @Preview(showBackground = true, name = "JogoGerenciamentoItem")

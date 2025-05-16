@@ -177,6 +177,8 @@
     <string name="erro_numeros_sobreposicao">Números em sobreposição: %1$s</string>
     <string name="erro_gerar_jogos_parametros_invalidos">Erro ao gerar jogos: parâmetros inválidos.</string>
     <string name="erro_desconhecido_geracao">Erro desconhecido durante a geração de jogos.</string>
+    <string name="erro_repositorio_indisponivel">Repositório de dados não está disponível. Não foi
+        possível salvar.</string>
 
     <!-- Strings para GerenciamentoJogosFragment -->
     <string name="mensagem_confirmar_exclusao_jogo">Excluir o jogo: %s?</string>
@@ -272,12 +274,13 @@
     <string name="filtro_max_miolo_label">Máx. Miolo</string>
 
     <string name="filtro_multiplos_de_tres_titulo">Múltiplos de 3</string>
-    <string name="filtro_multiplos_de_tres_subtitulo">Quantidade de múltiplos de 3</string>
+    <string name="filtro_multiplos_de_tres_subtitulo">Quantidade de dezenas múltiplas de 3</string>
     <string name="filtro_min_multiplos_de_tres_label">Mín. Múlt. 3</string>
     <string name="filtro_max_multiplos_de_tres_label">Máx. Múlt. 3</string>
 
-    <string name="filtro_repeticao_dezenas_titulo">Repetição do Anterior</string>
-    <string name="filtro_repeticao_dezenas_subtitulo">Dezenas repetidas do concurso anterior</string>
+    <string name="filtro_repeticao_dezenas_titulo">Repetição de Dezenas</string>
+    <string name="filtro_repeticao_dezenas_subtitulo">Repetição do concurso anterior. Necessita de
+        um resultado salvo.</string>
     <string name="filtro_min_repeticao_label">Mín. Repetidas</string>
     <string name="filtro_max_repeticao_label">Máx. Repetidas</string>
 
@@ -424,4 +427,19 @@
     <string name="numeros_fixos_subtitulo">Defina números que devem aparecer em todos os jogos</string>
     <string name="sequencias_maximas_subtitulo">Controle a quantidade máxima de números consecutivos</string>
 
+    <string name="quantidade_de_numeros_label">Quantidade de números por jogo</string>
+
+    <!-- Strings para PrincipalScreen -->
+    <string name="resumo_jogos_e_resultados">Resumo de Jogos e Resultados</string>
+    <string name="jogos_salvos_contagem">Jogos na sessão: %d</string> <!-- Ajustado para refletir
+    "jogosGerados" -->
+    <string name="nenhum_resultado_salvo">Nenhum resultado salvo no banco</string>
+    <!-- <string name="gerador_de_jogos">Gerador de Jogos</string> Removida esta duplicata -->
+    <!-- R.string.conferir_resultados já existe -->
+    <string name="gerenciar_jogos_salvos">Gerenciar Jogos Salvos</string>
+    <string name="configuracoes_app">Configurações do App</string>
+    <!-- Fim Strings para PrincipalScreen -->
+
+    <!-- Strings para FiltrosScreen (Conteúdo dos cards de filtros) -->
+    <!-- ... existing code ... -->
 </resources>
