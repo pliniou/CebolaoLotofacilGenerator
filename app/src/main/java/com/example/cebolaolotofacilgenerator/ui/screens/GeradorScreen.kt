@@ -443,12 +443,10 @@ fun GeradorScreen(
                         // Botões de Ação para Configuração de Filtros
                         AcoesConfiguracaoFiltrosButtons(
                             onSalvarClick = {
-                                filtrosViewModel.salvarConfiguracaoFiltrosAtual() // Método a ser implementado/verificado no ViewModel
-                                mainViewModel.showSnackbar("Configurações de filtro salvas!") // Exemplo de feedback
+                                geradorViewModel.salvarFiltrosConfigAtualTemp()
                             },
                             onResetarClick = {
-                                filtrosViewModel.resetarConfiguracaoFiltrosParaPadrao() // Método a ser implementado/verificado no ViewModel
-                                mainViewModel.showSnackbar("Configurações de filtro restauradas para o padrão!") // Exemplo de feedback
+                                geradorViewModel.resetarFiltrosPadraoTemp()
                             }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -960,10 +958,10 @@ fun AcoesConfiguracaoFiltrosButtons(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Button(onClick = onSalvarClick) {
-            Text(stringResource(R.string.salvar_filtros_botao)) // Reutilizar string de FiltrosScreen ou criar nova
+            Text(stringResource(R.string.salvar_filtros_botao))
         }
         Button(onClick = onResetarClick) {
-            Text(stringResource(R.string.resetar_filtros_botao)) // Reutilizar string de FiltrosScreen ou criar nova
+            Text(stringResource(R.string.resetar_filtros_botao))
         }
     }
 }
