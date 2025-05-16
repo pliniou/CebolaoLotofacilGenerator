@@ -85,29 +85,20 @@ fun ResultadoAnteriorItem(
 @Composable
 fun ResultadoAnteriorItemPreview() {
     val sampleResultado = Resultado(
-        id = 2500,
+        id = 2500L,
+        concurso = 2500L,
         dataSorteio = Date(),
-        numeros = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
-        acumulado = false,
-        valorAcumulado = 0.0,
-        ganhadores15Acertos = 1,
-        cidadeUF15Acertos = "São Paulo/SP",
-        rateio15Acertos = 1500000.0,
-        ganhadores14Acertos = 100,
-        rateio14Acertos = 1500.0,
-        ganhadores13Acertos = 1000,
-        rateio13Acertos = 30.0,
-        ganhadores12Acertos = 10000,
-        rateio12Acertos = 12.0,
-        ganhadores11Acertos = 100000,
-        rateio11Acertos = 6.0,
-        arrecadacaoTotal = 30000000.0,
-        estimativaPremio = 1700000.0,
-        acumuladoValorEspecial = 0.0,
-        dataProxConcurso = Date(),
-        valorEstimadoProxConcurso = 2000000.0,
-        concursoEspecial = false,
-        nomeConcursoEspecial = ""
+        dezenas = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
+        ganhadores15 = 1,
+        premiacao15Acertos = 1500000.0,
+        ganhadores14 = 100,
+        premiacao14Acertos = 1500.0,
+        ganhadores13 = 1000,
+        premiacao13Acertos = 30.0,
+        ganhadores12 = 10000,
+        premiacao12Acertos = 12.0,
+        ganhadores11 = 100000,
+        premiacao11Acertos = 6.0
     )
     ResultadoAnteriorItem(
         resultado = sampleResultado,

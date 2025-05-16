@@ -114,7 +114,7 @@ fun ResultadosScreen(mainViewModel: MainViewModel, navController: NavController)
                                                         mainViewModel.dezenasSelecionadasUltimoResultado
                                                                 .value.toList()
                                                 navController.navigate(
-                                                        Screen.Gerador.createRoute(
+                                                        Screen.Filtros.createRoute(
                                                                 dezenasParaGerador
                                                         )
                                                 )

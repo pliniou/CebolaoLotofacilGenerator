@@ -5,8 +5,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -15,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,17 +30,25 @@ import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.JogoViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
-import com.example.cebolaolotofacilgenerator.ui.viewmodel.FiltrosViewModel
+import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.GeradorViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.navigation.NavController
+import com.example.cebolaolotofacilgenerator.Screen
+import com.example.cebolaolotofacilgenerator.ui.theme.CebolaoLotofacilGeneratorTheme
+import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
+import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
+import com.example.cebolaolotofacilgenerator.data.AppDataStore
+import androidx.compose.ui.graphics.vector.ImageVector
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrincipalScreen(
-    mainViewModel: MainViewModel,
-    onNavigateToFiltros: () -> Unit
+    navController: NavController,
+    mainViewModel: MainViewModel
 ) {
     val context = LocalContext.current
     val application = LocalContext.current.applicationContext as Application
@@ -53,6 +66,9 @@ fun PrincipalScreen(
     val mensagemGerador by geradorViewModel.mensagem.observeAsState()
 
     val operacaoStatusJogo by jogoViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
+
+    // Coletar o valor de ultimoResultado
+    val ultimoResultado by mainViewModel.ultimoResultado.collectAsState()
 
     LaunchedEffect(mensagemGerador) {
         mensagemGerador?.let {
@@ -80,114 +96,84 @@ fun PrincipalScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(id = R.string.app_name_short)) }, // Usando um título mais curto ou o nome do app
+                title = { Text(stringResource(id = R.string.app_name)) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { navController.navigate(Screen.Gerador.route) }) {
+                Icon(Icons.Filled.AddCircle, contentDescription = stringResource(id = R.string.gerar_jogos))
+            }
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
-                .fillMaxSize(),
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
+            Text(
+                text = stringResource(id = R.string.instrucao_gerador_jogos),
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = stringResource(R.string.gerador_de_jogos),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = stringResource(R.string.instrucao_gerador_jogos),
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                    Button(
-                        onClick = onNavigateToFiltros,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp)
-                    ) {
-                        Text(stringResource(R.string.configurar_filtros))
-                    }
-                    Button(
-                        onClick = { geradorViewModel.gerarJogos() },
-                        enabled = operacaoStatusGerador != OperacaoStatus.CARREGANDO,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp)
-                    ) {
-                        if (operacaoStatusGerador == OperacaoStatus.CARREGANDO) {
-                            Text(stringResource(R.string.gerando_jogos))
-                        } else {
-                            Text(stringResource(R.string.gerar_jogos))
-                        }
-                    }
+                    Text(text = stringResource(id = R.string.resumo_jogos_e_resultados), style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = stringResource(id = R.string.jogos_salvos_contagem, jogosGerados?.size ?: 0))
+                    ultimoResultado?.let { resultado ->
+                        Text(text = stringResource(id = R.string.ultimo_resultado_concurso, resultado.id))
+                    } ?: Text(text = stringResource(id = R.string.nenhum_resultado_salvo))
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            PrincipalScreenButton(
+                text = stringResource(id = R.string.gerador_de_jogos),
+                icon = Icons.Filled.AddCircle,
+                onClick = { navController.navigate(Screen.Gerador.route) }
+            )
+            PrincipalScreenButton(
+                text = stringResource(id = R.string.conferir_resultados),
+                icon = Icons.Filled.CheckCircle,
+                onClick = { navController.navigate(Screen.Conferencia.route) }
+            )
+            PrincipalScreenButton(
+                text = stringResource(id = R.string.gerenciar_jogos_salvos),
+                icon = Icons.Filled.List,
+                onClick = { navController.navigate(Screen.GerenciamentoJogos.route) }
+            )
+            PrincipalScreenButton(
+                text = stringResource(id = R.string.configuracoes_app),
+                icon = Icons.Filled.Settings,
+                onClick = { navController.navigate(Screen.Configuracoes.route) }
+            )
+        }
+    }
+}
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f), // Ocupa o espaço restante
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp).fillMaxHeight()) {
-                    Text(
-                        text = stringResource(R.string.jogos_gerados),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    if (operacaoStatusGerador == OperacaoStatus.CARREGANDO) {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                            CircularProgressIndicator()
-                        }
-                    } else if (jogosGerados.isNullOrEmpty()) {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                           Text(stringResource(R.string.nenhum_jogo_gerado_ainda))
-                        }
-                    } else {
-                        LazyColumn(modifier = Modifier.fillMaxHeight()) {
-                            items(jogosGerados) { jogo ->
-                                JogoItem(
-                                    jogo = jogo,
-                                    onFavoritoClick = { fav ->
-                                        jogoViewModel.marcarComoFavorito(jogo, fav)
-                                    },
-                                    onJogoClick = {
-                                        mainViewModel.showSnackbar(context.getString(R.string.jogo_clicado_feedback, jogo.numeros.joinToString()))
-                                    }
-                                )
-                                Divider()
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            Button(
-                onClick = {
-                    if (jogosGerados.isNullOrEmpty()) {
-                        mainViewModel.showSnackbar(context.getString(R.string.nenhum_jogo_para_salvar))
-                    } else {
-                        jogoViewModel.inserirJogos(jogosGerados)
-                        mainViewModel.showSnackbar(context.getString(R.string.jogos_salvos_com_sucesso))
-                    }
-                },
-                enabled = !jogosGerados.isNullOrEmpty() && operacaoStatusGerador != OperacaoStatus.CARREGANDO,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-            ) {
-                Text(stringResource(R.string.salvar_jogos))
-            }
+@Composable
+fun PrincipalScreenButton(text: String, icon: ImageVector, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(imageVector = icon, contentDescription = null)
+            Text(text)
         }
     }
 }
@@ -246,36 +232,44 @@ fun JogoItem(
     }
 }
 
-// Preview (necessário adaptar ou remover se causar problemas de build sem config completa)
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreviewPrincipalScreen() {
+    CebolaoLotofacilGeneratorTheme {
+        Text("Preview PrincipalScreen")
+    }
+}
+
 @Preview(showBackground = true, name = "Tela Principal - Vazia")
 @Composable
 fun PreviewPrincipalScreenEmpty() {
-    val mockMainViewModel = MainViewModel(Application()) // Necessita de Application context
-    PrincipalScreen(mainViewModel = mockMainViewModel, onNavigateToFiltros = {})
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+    // Instanciação completa para MainViewModel no Preview
+    val mockMainViewModel = MainViewModel(
+        application = application,
+        jogoRepository = JogoRepository(AppDatabase.getDatabase(application).jogoDao()),
+        resultadoRepository = ResultadoRepository(AppDatabase.getDatabase(application).resultadoDao()),
+        appDataStore = AppDataStore(application)
+    )
+    PrincipalScreen(navController = NavController(context), mainViewModel = mockMainViewModel)
 }
 
 @Preview(showBackground = true, name = "Tela Principal - Com Jogos")
 @Composable
 fun PreviewPrincipalScreenWithGames() {
-    // Mock ViewModels and data for preview
-    val geradorViewModel: GeradorViewModel = viewModel()
-    val jogoViewModel: JogoViewModel = viewModel()
-    val mainViewModel: MainViewModel = MainViewModel(Application()) // Necessita de Application context
-
-    // Mock data
-    val sampleJogos = listOf(
-        Jogo(id = 1, numeros = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), dataCriacao = Date(), favorito = true),
-        Jogo(id = 2, numeros = listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16), dataCriacao = Date(), favorito = false)
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+    val mockMainViewModel = MainViewModel(
+        application = application,
+        jogoRepository = JogoRepository(AppDatabase.getDatabase(application).jogoDao()),
+        resultadoRepository = ResultadoRepository(AppDatabase.getDatabase(application).resultadoDao()),
+        appDataStore = AppDataStore(application)
     )
-    // Populando o LiveData (isso é mais complexo para Preview, idealmente o ViewModel teria como setar dados para preview)
-    // Para simplificar, vamos assumir que o ViewModel pode ser instanciado com dados iniciais ou que usamos um mock mais elaborado.
-    // Por ora, o preview de jogos pode não mostrar os jogos diretamente devido à forma como LiveData é observado.
-
+    // GeradorViewModel e JogoViewModel são instanciados dentro de PrincipalScreen
     PrincipalScreen(
-        mainViewModel = mainViewModel,
-        geradorViewModel = geradorViewModel, // Idealmente, um mock com jogosGerados preenchido
-        jogoViewModel = jogoViewModel,
-        onNavigateToFiltros = {}
+        navController = NavController(context),
+        mainViewModel = mockMainViewModel
     )
 }
 
@@ -299,47 +293,21 @@ fun PreviewJogoItem() {
     JogoItem(jogo = jogo, onFavoritoClick = {}, onJogoClick = {})
 }
 
-// Adicionar string resources que estão faltando
-// No strings.xml:
-// <string name="app_name_short">Lotofácil Gen</string>
-// <string name="gerador_de_jogos">Gerador de Jogos</string>
-// <string name="instrucao_gerador_jogos">Configure os filtros e gere seus jogos da Lotofácil.</string>
-// <string name="configurar_filtros">Configurar Filtros</string>
-// <string name="nenhum_jogo_gerado_ainda">Nenhum jogo gerado ainda.</string>
-// <string name="jogo_clicado_feedback">Jogo clicado: %s</string>
-// <string name="caracteristicas_jogo_format">P: %1$d | I: %2$d | Soma: %3$d\nPrimos: %4$d | Fib: %5$d\nMiolo: %6$d | Moldura: %7$d\nMúlt. 3: %8$d</string>
-
-// Nota: O preview do MainViewModel requer um Application context, o que pode ser complicado
-// em previews do Compose. Pode ser necessário um mock mais simples ou diferente para o MainViewModel nos previews.
-// O uso de `viewModel()` nos previews também pode não funcionar como esperado fora de um NavHost real.
-// Considere usar instâncias mocadas diretamente para previews.
-// As strings marcadas acima precisam ser adicionadas ao seu arquivo strings.xml
-// Removi a referência à Application() no Preview, pois pode causar problemas.
-// Para os previews funcionarem corretamente, especialmente com ViewModels,
-// pode ser necessário fornecer instâncias mocadas ou usar Hilt para injeção de dependência
-// e configurar previews com Hilt.
-// Por simplicidade, o PreviewPrincipalScreenWithGames e PreviewPrincipalScreenEmpty podem não exibir
-// o estado dos ViewModels corretamente sem mais configurações de DI para previews.
-
-// Ajuste para Previews, removendo dependência direta de Application() para MainViewModel
-// e uso de `viewModel()` que pode não funcionar bem em previews isolados.
-// Para uma solução robusta de preview com ViewModels, considere usar uma factory ou Hilt.
-
 @Preview(showBackground = true, name = "Tela Principal - Vazia (Simples)")
 @Composable
 fun PreviewPrincipalScreenEmptySimple() {
-    MaterialTheme { // Adicionado MaterialTheme para estilos corretos
-        Column { Text("Preview Conteúdo Principal Vazio") } // Placeholder
+    MaterialTheme {
+        Column { Text("Preview Conteúdo Principal Vazio") }
     }
 }
 
 @Preview(showBackground = true, name = "Tela Principal - Com Jogos (Simples)")
 @Composable
 fun PreviewPrincipalScreenWithGamesSimple() {
-     MaterialTheme { // Adicionado MaterialTheme para estilos corretos
+    MaterialTheme {
         val sampleJogos = listOf(
-            Jogo(id = 1, numeros = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), dataCriacao = Date(), favorito = true),
-            Jogo(id = 2, numeros = listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16), dataCriacao = Date(), favorito = false)
+            Jogo.fromList(listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)),
+            Jogo.fromList(listOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16))
         )
         LazyColumn {
             items(sampleJogos) { jogo ->
@@ -349,49 +317,18 @@ fun PreviewPrincipalScreenWithGamesSimple() {
     }
 }
 
-// É necessário criar as strings no arquivo res/values/strings.xml:
-// <string name="app_name_short">Lotofácil Gen</string>
-// <string name="gerador_de_jogos">Gerador de Jogos</string>
-// <string name="instrucao_gerador_jogos">Configure os filtros e gere seus jogos da Lotofácil.</string>
-// <string name="nenhum_jogo_gerado_ainda">Nenhum jogo gerado ainda.</string>
-// <string name="jogo_clicado_feedback">Jogo clicado: %s</string>
-// <string name="caracteristicas_jogo_format">P: %1$d | I: %2$d | Soma: %3$d\nPrimos: %4$d | Fib: %5$d\nMiolo: %6$d | Moldura: %7$d\nMúlt. 3: %8$d</string>
-// A string "configurar_filtros" já existe, mas as outras podem precisar ser adicionadas ou verificadas.
-// As strings "gerando_jogos", "gerar_jogos", "jogos_gerados", "salvar_jogos", "marcar_como_favorito"
-// "nenhum_jogo_para_salvar", "jogos_salvos_com_sucesso", "erro_salvar_jogos" já devem existir.
-// Verifique se todas as strings referenciadas via `stringResource(R.string.nome_string)` estão presentes.
-
-import android.app.Application // Removido dos previews que não necessitam de ViewModel real
-
-// Tentativa de simplificar os previews para evitar problemas de compilação/runtime
-// devido a dependências de Context/Application nos ViewModels.
-
-// Para os Previews `PreviewPrincipalScreenEmpty` e `PreviewPrincipalScreenWithGames`,
-// seria melhor injetar ViewModels mocados que não dependam de `Application`
-// ou usar uma biblioteca de DI como Hilt que tem suporte para previews.
-// Por enquanto, os previews mais simples (`Simple`) são mais seguros.
-
-// O `Application()` como argumento para `MainViewModel` no Preview não é ideal.
-// Para previews funcionais com ViewModels, é comum criar versões mocadas
-// dos ViewModels ou usar ferramentas de DI que facilitem isso.
-
-// As dependências `GeradorViewModel = viewModel()` e `JogoViewModel = viewModel()`
-// em `PrincipalScreen` são para quando a tela é usada dentro de um escopo de navegação
-// onde os ViewModels são corretamente fornecidos. Para previews, isso pode não funcionar
-// isoladamente sem um NavHostController ou configuração de Hilt.
-
-// Recomenda-se testar os previews em um emulador/dispositivo para ver o comportamento real.
-
-// Adicionando Application ao construtor do MainViewModel apenas para o preview
-// Isto não é ideal para produção, mas pode fazer o preview funcionar.
-// Melhor seria ter um construtor sem argumentos ou um mock.
-class MockMainViewModel : MainViewModel(Application()) // Apenas para preview, se necessário
+// Corrigir MockMainViewModel para fornecer todas as dependências
+class MockMainViewModel(application: Application) : MainViewModel(
+    application = application,
+    jogoRepository = JogoRepository(AppDatabase.getDatabase(application).jogoDao()),
+    resultadoRepository = ResultadoRepository(AppDatabase.getDatabase(application).resultadoDao()),
+    appDataStore = AppDataStore(application)
+)
 
 @Preview(showBackground = true, name = "Tela Principal - Vazia (Com Mock VM)")
 @Composable
 fun PreviewPrincipalScreenEmptyWithMockVM() {
-    val mockMainViewModel = MockMainViewModel()
-    PrincipalScreen(mainViewModel = mockMainViewModel, onNavigateToFiltros = {})
-    // Para os outros ViewModels, precisaria de mocks similares ou usar `viewModel()`
-    // esperando que o ambiente de preview os forneça (o que pode não acontecer).
+    val application = LocalContext.current.applicationContext as Application
+    val mockMainViewModel = MockMainViewModel(application)
+    PrincipalScreen(navController = NavController(LocalContext.current), mainViewModel = mockMainViewModel)
 } 

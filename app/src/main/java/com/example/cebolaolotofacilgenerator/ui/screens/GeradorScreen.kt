@@ -49,6 +49,7 @@ import kotlinx.coroutines.FlowPreview
 import com.example.cebolaolotofacilgenerator.ui.components.BotaoGerarJogos
 import com.example.cebolaolotofacilgenerator.ui.components.SnackbarManager
 import com.example.cebolaolotofacilgenerator.R // Adicionar import R
+import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros // Import para ConfiguracaoFiltros
 
 @OptIn(ExperimentalMaterial3Api::class, FlowPreview::class) // Adicionar OptIn aqui e FlowPreview
 @Composable
@@ -95,15 +96,34 @@ fun GeradorScreen(
         val operacaoStatus by geradorViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
         val mensagem by geradorViewModel.mensagem.observeAsState("")
 
-        // Coletar estados das dezenas fixas e excluídas
-        val (dezenasSelecionadas, setDezenasSelecionadas) =
-                androidx.compose.runtime.remember {
-                        androidx.compose.runtime.mutableStateOf(mutableSetOf<Int>())
-                }
+        // Coletar estados das dezenas fixas para o BotaoGerarJogos
+        val dezenasFixasParaGeracao by geradorViewModel.numerosFixosState.collectAsState()
+
+        // Estado para a seleção manual do último resultado (funcionalidade separada)
+        val (dezenasSelecionadasUltimoResultado, setDezenasSelecionadasUltimoResultado) =
+            androidx.compose.runtime.remember {
+                androidx.compose.runtime.mutableStateOf(mutableSetOf<Int>())
+            }
         val (concurso, setConcurso) =
-                androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+            androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
         val (data, setData) =
                 androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+
+        // Observar configurações de filtro para passar para BotaoGerarJogos
+        val configFiltros by mainViewModel.filtrosViewModel.configuracaoFiltros.observeAsState(ConfiguracaoFiltros())
+        val quantidadeJogos = configFiltros.quantidadeJogos
+        val quantidadeNumeros = configFiltros.quantidadeNumerosPorJogo
+
+        // Determinar se algum filtro estatístico está ativo
+        val filtrosEstatisticosAtivos = remember(configFiltros) {
+            configFiltros.filtroParesImpares ||
+            configFiltros.filtroSomaTotal ||
+            configFiltros.filtroPrimos ||
+            configFiltros.filtroFibonacci ||
+            configFiltros.filtroMioloMoldura ||
+            configFiltros.filtroMultiplosDeTres ||
+            configFiltros.filtroRepeticaoConcursoAnterior
+        }
 
         LaunchedEffect(dezenasFixasArg) {
                 val dezenas = dezenasFixasArg?.split(",")?.mapNotNull { it.toIntOrNull() }
@@ -220,14 +240,16 @@ fun GeradorScreen(
                                 modifier = Modifier.height(240.dp).fillMaxWidth()
                         ) {
                                 items((1..25).toList()) { dezena ->
-                                        val isSelected = dezenasSelecionadas.contains(dezena)
+                                        // Usar dezenasSelecionadasUltimoResultado para a grade manual
+                                        val isSelected = dezenasSelecionadasUltimoResultado.contains(dezena)
                                         OutlinedButton(
                                                 onClick = {
                                                         val novaSelecao =
-                                                                dezenasSelecionadas.toMutableSet()
+                                                                dezenasSelecionadasUltimoResultado.toMutableSet()
                                                         if (isSelected) novaSelecao.remove(dezena)
                                                         else novaSelecao.add(dezena)
-                                                        setDezenasSelecionadas(novaSelecao)
+                                                        // Usar setDezenasSelecionadasUltimoResultado
+                                                        setDezenasSelecionadasUltimoResultado(novaSelecao)
                                                 },
                                                 shape = CircleShape,
                                                 colors =
@@ -267,17 +289,19 @@ fun GeradorScreen(
                         }
                         Button(
                                 onClick = {
-                                        if (dezenasSelecionadas.size == 15) {
-                                                mainViewModel.salvarUltimoResultado(
-                                                        dezenasSelecionadas.toList()
-                                                )
-                                                mainViewModel.showSnackbar("Último resultado salvo com ${dezenasSelecionadas.size} dezenas!")
-                                        } else {
-                                                mainViewModel.showSnackbar("Selecione exatamente 15 dezenas para o resultado.")
-                                        }
+                                    // Usar dezenasSelecionadasUltimoResultado para salvar
+                                    if (dezenasSelecionadasUltimoResultado.size == 15) {
+                                        mainViewModel.salvarUltimoResultado(
+                                            dezenasSelecionadasUltimoResultado.toList()
+                                        )
+                                        mainViewModel.showSnackbar("Último resultado salvo com ${dezenasSelecionadasUltimoResultado.size} dezenas!")
+                                    } else {
+                                        mainViewModel.showSnackbar("Selecione exatamente 15 dezenas para o resultado.")
+                                    }
                                 },
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                                enabled = dezenasSelecionadas.size == 15
+                                // Usar dezenasSelecionadasUltimoResultado para habilitar
+                                enabled = dezenasSelecionadasUltimoResultado.size == 15
                         ) { Text("Salvar Último Resultado") }
                         HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                         Text(
@@ -402,14 +426,11 @@ fun GeradorScreen(
                         // Botão dinâmico para geração de jogos
                         BotaoGerarJogos(
                             status = operacaoStatus,
-                            quantidadeJogos = geradorViewModel.quantidadeJogos,
-                            quantidadeNumeros = geradorViewModel.quantidadeNumeros,
-                            filtrosAtivos = filtroParesImparesAtivado || filtroSomaTotalAtivado || 
-                                filtroPrimosAtivado || filtroFibonacciAtivado || 
-                                filtroMioloMolduraAtivado || filtroMultiplosDeTresAtivado ||
-                                filtroRepeticaoDezenasAtivado,
-                            dezenasFixas = geradorViewModel.numerosFixosState.collectAsState().value,
-                            onGerarClick = { geradorViewModel.gerarJogos() }
+                            quantidadeJogos = quantidadeJogos,
+                            quantidadeNumeros = quantidadeNumeros,
+                            filtrosAtivos = filtrosEstatisticosAtivos,
+                            dezenasFixas = dezenasFixasParaGeracao, // Passar as dezenas fixas corretas para geração
+                            onGerarClick = { geradorViewModel.gerarJogosComConfiguracaoAtual() }
                         )
 
                         // TODO: Exibir mensagens de erro/sucesso do geradorViewModel.mensagem

@@ -14,6 +14,7 @@ import com.example.cebolaolotofacilgenerator.ui.screens.PrincipalScreen // Nova 
 import com.example.cebolaolotofacilgenerator.ui.screens.ResultadosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.SettingsScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.FiltrosScreen
+import com.example.cebolaolotofacilgenerator.ui.screens.GerenciamentoJogosScreen
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -57,7 +58,7 @@ fun AppNavigation(
             // FiltrosScreen(navController = navController, mainViewModel = mainViewModel) // Será implementada
             // Por enquanto, pode-se colocar um placeholder ou navegar de volta se for acessada diretamente
             // com.example.cebolaolotofacilgenerator.ui.screens.PlaceholderScreen(screenName = "Filtros Screen")
-            FiltrosScreen(mainViewModel = mainViewModel) // Navega para a FiltrosScreen implementada
+            FiltrosScreen(mainViewModel = mainViewModel, navController = navController) // Navega para a FiltrosScreen implementada
         }
 
         composable(
@@ -94,8 +95,8 @@ fun AppNavigation(
         // Pode ser uma tela acessada de outro local ou integrada/removida.
         composable(Screen.JogosGerados.route) {
             // com.example.cebolaolotofacilgenerator.ui.screens.PlaceholderScreen(screenName = "Jogos Gerados Screen")
-            GerenciamentoJogosScreen(mainViewModel = mainViewModel) // Usar a tela implementada
-            // JogosGeradosScreen(mainViewModel = mainViewModel, navController = navController) // Se for usada
+            GerenciamentoJogosScreen(mainViewModel = mainViewModel) // Removido navController pois não é esperado
+            // JogosGeradosScreen(mainViewModel = mainViewModel, navController = navController, /* precisa geradorViewModel */) // Se for usada
         }
     }
 }

@@ -1,1 +1,109 @@
-package com.example.cebolaolotofacilgenerator.ui.viewmodel\n\nimport android.app.Application\nimport androidx.lifecycle.AndroidViewModel\nimport androidx.lifecycle.viewModelScope\nimport androidx.datastore.preferences.core.edit\nimport androidx.datastore.preferences.core.emptyPreferences\nimport androidx.datastore.preferences.core.intPreferencesKey\nimport androidx.datastore.preferences.core.stringSetPreferencesKey\nimport androidx.datastore.preferences.preferencesDataStore\nimport kotlinx.coroutines.flow.MutableStateFlow\nimport kotlinx.coroutines.flow.StateFlow\nimport kotlinx.coroutines.flow.asStateFlow\nimport kotlinx.coroutines.flow.catch\nimport kotlinx.coroutines.flow.first\nimport kotlinx.coroutines.flow.map\nimport kotlinx.coroutines.launch\nimport java.io.IOException\n\n// Define o DataStore\nprivate val Application.dataStore by preferencesDataStore(name = \"filtros_prefs\")\n\nclass FiltrosViewModel(application: Application) : AndroidViewModel(application) {\n\n    private val dataStore = getApplication<Application>().dataStore\n\n    // Chaves para o DataStore\n    private object PreferencesKeys {\n        val NUMEROS_FIXOS = stringSetPreferencesKey(\"numeros_fixos\")\n        val NUMEROS_EXCLUIDOS = stringSetPreferencesKey(\"numeros_excluidos\")\n        val QTD_PARES = intPreferencesKey(\"qtd_pares\")\n        // Adicionar chaves para outros filtros aqui\n    }\n\n    // StateFlows para os filtros\n    private val _numerosFixos = MutableStateFlow<Set<Int>>(emptySet())\n    val numerosFixos: StateFlow<Set<Int>> = _numerosFixos.asStateFlow()\n\n    private val _numerosExcluidos = MutableStateFlow<Set<Int>>(emptySet())\n    val numerosExcluidos: StateFlow<Set<Int>> = _numerosExcluidos.asStateFlow()\n\n    private val _qtdPares = MutableStateFlow<Int?>(null)\n    val qtdPares: StateFlow<Int?> = _qtdPares.asStateFlow()\n\n    init {\n        carregarFiltros()\n    }\n\n    private fun carregarFiltros() {\n        viewModelScope.launch {\n            val preferences = dataStore.data\n                .catch { exception ->\n                    if (exception is IOException) {\n                        emit(emptyPreferences())\n                    } else {\n                        throw exception\n                    }\n                }.first() // Pega a primeira emissão (snapshot atual)\n\n            _numerosFixos.value = preferences[PreferencesKeys.NUMEROS_FIXOS]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()\n            _numerosExcluidos.value = preferences[PreferencesKeys.NUMEROS_EXCLUIDOS]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()\n            _qtdPares.value = preferences[PreferencesKeys.QTD_PARES]\n        }\n    }\n\n    fun salvarNumerosFixos(numeros: Set<Int>) {\n        viewModelScope.launch {\n            dataStore.edit {\ preferences ->\n                preferences[PreferencesKeys.NUMEROS_FIXOS] = numeros.map { it.toString() }.toSet()\n            }\n            _numerosFixos.value = numeros\n        }\n    }\n\n    fun salvarNumerosExcluidos(numeros: Set<Int>) {\n        viewModelScope.launch {\n            dataStore.edit {\ preferences ->\n                preferences[PreferencesKeys.NUMEROS_EXCLUIDOS] = numeros.map { it.toString() }.toSet()\n            }\n            _numerosExcluidos.value = numeros\n        }\n    }\n\n    fun salvarQtdPares(qtd: Int?) {\n        viewModelScope.launch {\n            dataStore.edit {\ preferences ->\n                if (qtd != null) {\n                    preferences[PreferencesKeys.QTD_PARES] = qtd\n                } else {\n                    preferences.remove(PreferencesKeys.QTD_PARES)\n                }\n            }\n            _qtdPares.value = qtd\n        }\n    }\n\n    fun resetarFiltros() {\n        viewModelScope.launch {\n            dataStore.edit {\ preferences ->\n                preferences.clear() // Limpa todas as preferências de filtros\n            }\n            // Reseta os StateFlows para os valores padrão\n            _numerosFixos.value = emptySet()\n            _numerosExcluidos.value = emptySet()\n            _qtdPares.value = null\n            // Resetar outros StateFlows aqui\n        }\n    }\n}\n 
+package com.example.cebolaolotofacilgenerator.ui.viewmodel
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import java.io.IOException
+
+// Define o DataStore
+private val Application.dataStore by preferencesDataStore(name = "filtros_prefs")
+
+class FiltrosViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val dataStore = getApplication<Application>().dataStore
+
+    // Chaves para o DataStore
+    private object PreferencesKeys {
+        val NUMEROS_FIXOS = stringSetPreferencesKey("numeros_fixos")
+        val NUMEROS_EXCLUIDOS = stringSetPreferencesKey("numeros_excluidos")
+        val QTD_PARES = intPreferencesKey("qtd_pares")
+        // Adicionar chaves para outros filtros aqui
+    }
+
+    // StateFlows para os filtros
+    private val _numerosFixos = MutableStateFlow<Set<Int>>(emptySet())
+    val numerosFixos: StateFlow<Set<Int>> = _numerosFixos.asStateFlow()
+
+    private val _numerosExcluidos = MutableStateFlow<Set<Int>>(emptySet())
+    val numerosExcluidos: StateFlow<Set<Int>> = _numerosExcluidos.asStateFlow()
+
+    private val _qtdPares = MutableStateFlow<Int?>(null)
+    val qtdPares: StateFlow<Int?> = _qtdPares.asStateFlow()
+
+    init {
+        carregarFiltros()
+    }
+
+    private fun carregarFiltros() {
+        viewModelScope.launch {
+            val preferences = dataStore.data
+                .catch { exception ->
+                    if (exception is IOException) {
+                        emit(emptyPreferences())
+                    } else {
+                        throw exception
+                    }
+                }.first() // Pega a primeira emissão (snapshot atual)
+
+            _numerosFixos.value = preferences[PreferencesKeys.NUMEROS_FIXOS]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
+            _numerosExcluidos.value = preferences[PreferencesKeys.NUMEROS_EXCLUIDOS]?.mapNotNull { it.toIntOrNull() }?.toSet() ?: emptySet()
+            _qtdPares.value = preferences[PreferencesKeys.QTD_PARES]
+        }
+    }
+
+    fun salvarNumerosFixos(numeros: Set<Int>) {
+        viewModelScope.launch {
+            dataStore.edit { preferences ->
+                preferences[PreferencesKeys.NUMEROS_FIXOS] = numeros.map { it.toString() }.toSet()
+            }
+            _numerosFixos.value = numeros
+        }
+    }
+
+    fun salvarNumerosExcluidos(numeros: Set<Int>) {
+        viewModelScope.launch {
+            dataStore.edit { preferences ->
+                preferences[PreferencesKeys.NUMEROS_EXCLUIDOS] = numeros.map { it.toString() }.toSet()
+            }
+            _numerosExcluidos.value = numeros
+        }
+    }
+
+    fun salvarQtdPares(qtd: Int?) {
+        viewModelScope.launch {
+            dataStore.edit { preferences ->
+                if (qtd != null) {
+                    preferences[PreferencesKeys.QTD_PARES] = qtd
+                } else {
+                    preferences.remove(PreferencesKeys.QTD_PARES)
+                }
+            }
+            _qtdPares.value = qtd
+        }
+    }
+
+    fun resetarFiltros() {
+        viewModelScope.launch {
+            dataStore.edit { preferences ->
+                preferences.clear() // Limpa todas as preferências de filtros
+            }
+            // Reseta os StateFlows para os valores padrão
+            _numerosFixos.value = emptySet()
+            _numerosExcluidos.value = emptySet()
+            _qtdPares.value = null
+            // Resetar outros StateFlows aqui
+        }
+    }
+} 

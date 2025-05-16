@@ -20,13 +20,24 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.cebolaolotofacilgenerator.R
-import com.example.cebolaolotofacilgenerator.data.AppDatabase
+import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
 import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
+import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.FiltrosViewModelFactory
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import java.util.Locale
+
+// Adicionar esta data class
+data class FiltroConfigItem(
+    val tituloRes: Int,
+    val isChecked: Boolean,
+    val valorLabelFormatRes: Int, // Ou String se for o caso, dependendo do uso
+    val onUpdate: (Boolean, Int, Int) -> Unit,
+    val onUpdateSimples: ((Boolean) -> Unit)? = null // Para filtros que só têm on/off
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -176,22 +187,23 @@ fun FiltrosEstatisticosSection(
 ) {
     Text(stringResource(R.string.filtros_estatisticos_titulo), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(vertical = 8.dp))
 
+    // Usar a nova data class aqui
     val filtroItems = listOf(
-        Triple(R.string.filtro_pares_impares_titulo, config.filtroParesImpares, R.string.valor_filtro_pares_impares) {
-                ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroParesImpares = ativo, minImpares = min, maxImpares = max)) },
-        Triple(R.string.filtro_soma_total_titulo, config.filtroSomaTotal, R.string.valor_filtro_soma_total) {
-                ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroSomaTotal = ativo, minSoma = min, maxSoma = max)) },
-        Triple(R.string.filtro_primos_titulo, config.filtroPrimos, R.string.valor_filtro_primos) {
-                ativo, min, max -> viewModel.setFiltrarPrimos(ativo, min, max) },
-        Triple(R.string.filtro_fibonacci_titulo, config.filtroFibonacci, R.string.valor_filtro_fibonacci) {
-                ativo, min, max -> viewModel.setFiltrarFibonacci(ativo, min, max) },
-        Triple(R.string.filtro_miolo_moldura_titulo, config.filtroMioloMoldura, R.string.valor_filtro_miolo_moldura) {
-                ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroMioloMoldura = ativo, minMiolo = min, maxMiolo = max)) },
-        Triple(R.string.filtro_multiplos_de_tres_titulo, config.filtroMultiplosDeTres, R.string.valor_filtro_multiplos_de_tres) {
-                ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroMultiplosDeTres = ativo, minMultiplos = min, maxMultiplos = max)) },
-        Triple(R.string.filtro_repeticao_anterior_titulo, config.filtroRepeticaoConcursoAnterior, R.string.valor_filtro_repeticao_anterior) {
-            ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroRepeticaoConcursoAnterior = ativo, minRepeticaoConcursoAnterior = min, maxRepeticaoConcursoAnterior = max))
-        }
+        FiltroConfigItem(R.string.filtro_pares_impares_titulo, config.filtroParesImpares, R.string.valor_filtro_pares_impares, 
+            onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroParesImpares = ativo, minImpares = min, maxImpares = max)) }),
+        FiltroConfigItem(R.string.filtro_soma_total_titulo, config.filtroSomaTotal, R.string.valor_filtro_soma_total,
+            onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroSomaTotal = ativo, minSoma = min, maxSoma = max)) }),
+        FiltroConfigItem(R.string.filtro_primos_titulo, config.filtroPrimos, R.string.valor_filtro_primos,
+            onUpdate = { ativo, min, max -> viewModel.setFiltrarPrimos(ativo, min, max) }), // Assumindo que setFiltrarPrimos tem essa assinatura
+        FiltroConfigItem(R.string.filtro_fibonacci_titulo, config.filtroFibonacci, R.string.valor_filtro_fibonacci,
+            onUpdate = { ativo, min, max -> viewModel.setFiltrarFibonacci(ativo, min, max) }), // Assumindo que setFiltrarFibonacci tem essa assinatura
+        FiltroConfigItem(R.string.filtro_miolo_moldura_titulo, config.filtroMioloMoldura, R.string.valor_filtro_miolo_moldura,
+            onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroMioloMoldura = ativo, minMiolo = min, maxMiolo = max)) }),
+        FiltroConfigItem(R.string.filtro_multiplos_de_tres_titulo, config.filtroMultiplosDeTres, R.string.valor_filtro_multiplos_de_tres, // R.string.valor_filtro_multiplos_de_tres estava faltando no log
+            onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroMultiplosDeTres = ativo, minMultiplos = min, maxMultiplos = max)) }),
+        FiltroConfigItem(R.string.filtro_repeticao_anterior_titulo, config.filtroRepeticaoConcursoAnterior, R.string.valor_filtro_repeticao_anterior,
+            onUpdate = { ativo, min, max -> viewModel.atualizarFiltro(config.copy(filtroRepeticaoConcursoAnterior = ativo, minRepeticaoConcursoAnterior = min, maxRepeticaoConcursoAnterior = max)) }
+        )
     )
 
     val ranges = listOf(
@@ -214,12 +226,12 @@ fun FiltrosEstatisticosSection(
         0f to 15f     // Repetição do Anterior
     )
 
-    filtroItems.forEachIndexed { index, (tituloRes, isChecked, valorLabelFormatRes, onUpdate) ->
+    filtroItems.forEachIndexed { index, filtroItem -> // Alterado aqui
         val (currentMin, currentMax) = ranges[index]
         val (sliderFrom, sliderTo) = sliderBounds[index]
 
         // Seção específica para o filtro de repetição
-        if (tituloRes == R.string.filtro_repeticao_anterior_titulo) {
+        if (filtroItem.tituloRes == R.string.filtro_repeticao_anterior_titulo) { // Usar filtroItem.tituloRes
             Column(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = config.dezenasConcursoAnterior.joinToString(","),
@@ -234,11 +246,11 @@ fun FiltrosEstatisticosSection(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
                     singleLine = true,
-                    enabled = isChecked // Habilitar/desabilitar o text field com o switch
+                    enabled = filtroItem.isChecked // Usar filtroItem.isChecked
                 )
                 Button(
                     onClick = { viewModel.carregarDezenasDoUltimoResultadoSalvo() },
-                    enabled = isChecked && temUltimoResultado, // Habilitado se o filtro estiver ativo E houver resultado salvo
+                    enabled = filtroItem.isChecked && temUltimoResultado, // Usar filtroItem.isChecked
                     modifier = Modifier.align(Alignment.End).padding(bottom = 8.dp)
                 ) {
                     Text(stringResource(R.string.carregar_dezenas_salvas_botao)) // Adicionar esta string
@@ -247,18 +259,30 @@ fun FiltrosEstatisticosSection(
         }
 
         FiltroEstatisticoItem(
-            titulo = stringResource(tituloRes),
-            isChecked = isChecked,
-            onCheckedChange = { ativo -> onUpdate(ativo, currentMin, currentMax) },
-            valorMin = currentMin,
-            valorMax = currentMax,
-            onRangeChange = { min, max -> onUpdate(isChecked, min.toInt(), max.toInt()) },
-            rangeSliderFrom = sliderFrom,
-            rangeSliderTo = sliderTo,
-            stepSize = 1,
-            valorLabelFormat = stringResource(valorLabelFormatRes)
+            titulo = stringResource(filtroItem.tituloRes), // Usar filtroItem.tituloRes
+            isChecked = filtroItem.isChecked, // Usar filtroItem.isChecked
+            rangeMin = currentMin,
+            rangeMax = currentMax,
+            valorLabelFormat = stringResource(filtroItem.valorLabelFormatRes), // Usar filtroItem.valorLabelFormatRes
+            sliderFrom = sliderFrom,
+            sliderTo = sliderTo,
+            onCheckedChange = { novoEstado ->
+                 // Para atualizar apenas o estado 'checked', precisaríamos de uma forma de chamar o onUpdate
+                 // apenas com o novo 'ativo', mantendo min/max.
+                 // Ou o onUpdate precisa ser mais flexível, ou precisamos de um onCheckedChange dedicado.
+                 // Por ora, vamos assumir que o FiltroEstatisticoItem chama o onUpdate completo.
+                 // Se o FiltroEstatisticoItem só mudar o 'isChecked', a lambda onUpdate do FiltroConfigItem
+                 // seria chamada com (novoEstado, currentMin, currentMax)
+                 // Isso requer que FiltroEstatisticoItem passe todos os 3 para a lambda onUpdate.
+                 // Se FiltroEstatisticoItem tiver sliders, ele chamará onUpdate com os novos min/max.
+                 filtroItem.onUpdate(novoEstado, currentMin, currentMax) // Exemplo, pode precisar de ajuste
+            },
+            onRangeChange = { novoMin, novoMax ->
+                filtroItem.onUpdate(filtroItem.isChecked, novoMin.toInt(), novoMax.toInt()) // Convertido para Int
+            },
+            enabled = if (filtroItem.tituloRes == R.string.filtro_repeticao_anterior_titulo) temUltimoResultado else true // Habilita o filtro de repetição apenas se houver último resultado
         )
-        Divider(modifier = Modifier.padding(vertical = 4.dp))
+        Divider(modifier = Modifier.padding(vertical = 8.dp))
     }
 }
 
@@ -267,14 +291,14 @@ fun FiltrosEstatisticosSection(
 fun FiltroEstatisticoItem(
     titulo: String,
     isChecked: Boolean,
+    rangeMin: Int,
+    rangeMax: Int,
+    valorLabelFormat: String,
+    sliderFrom: Float,
+    sliderTo: Float,
     onCheckedChange: (Boolean) -> Unit,
-    valorMin: Int,
-    valorMax: Int,
     onRangeChange: (Float, Float) -> Unit,
-    rangeSliderFrom: Float,
-    rangeSliderTo: Float,
-    stepSize: Int,
-    valorLabelFormat: String // Ex: "Ímpares: %1$d-%2$d"
+    enabled: Boolean
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
         Row(
@@ -286,18 +310,18 @@ fun FiltroEstatisticoItem(
             Switch(checked = isChecked, onCheckedChange = onCheckedChange)
         }
         Text(
-            text = if (isChecked) String.format(Locale.getDefault(), valorLabelFormat, valorMin, valorMax)
+            text = if (isChecked) String.format(Locale.getDefault(), valorLabelFormat, rangeMin, rangeMax)
                      else stringResource(id = R.string.na_aplicado),
             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium
         )
         RangeSlider(
-            value = valorMin.toFloat()..valorMax.toFloat(),
+            value = rangeMin.toFloat()..rangeMax.toFloat(),
             onValueChange = { newRange -> onRangeChange(newRange.start, newRange.endInclusive) },
-            valueRange = rangeSliderFrom..rangeSliderTo,
-            steps = ((rangeSliderTo - rangeSliderFrom) / stepSize).toInt().coerceAtLeast(0) -1 , // steps deve ser não negativo
-            enabled = isChecked,
+            valueRange = sliderFrom..sliderTo,
+            steps = ((sliderTo - sliderFrom) / 1).toInt().coerceAtLeast(0) -1 , // steps deve ser não negativo
+            enabled = enabled,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -336,13 +360,13 @@ fun PreviewFiltroEstatisticoItem() {
     FiltroEstatisticoItem(
         titulo = "Teste Pares/Ímpares",
         isChecked = true,
+        rangeMin = 5,
+        rangeMax = 10,
+        valorLabelFormat = "Ímpares: %1$d-%2$d",
+        sliderFrom = 0f,
+        sliderTo = 15f,
         onCheckedChange = {},
-        valorMin = 5,
-        valorMax = 10,
         onRangeChange = { _,_ -> },
-        rangeSliderFrom = 0f,
-        rangeSliderTo = 15f,
-        stepSize = 1,
-        valorLabelFormat = "Ímpares: %1$d-%2$d"
+        enabled = true
     )
 } 

@@ -167,7 +167,7 @@ fun JogosGeradosScreen(
                                 }) {
                                     Text(stringResource(R.string.salvar_todos_jogos))
                                 }
-                                OutlinedButton(onClick = { navController.navigate(Screen.Gerador.route) }) {
+                                OutlinedButton(onClick = { navController.navigate(Screen.Principal.route) }) {
                                     Text(stringResource(R.string.gerar_mais_jogos))
                                 }
                             }

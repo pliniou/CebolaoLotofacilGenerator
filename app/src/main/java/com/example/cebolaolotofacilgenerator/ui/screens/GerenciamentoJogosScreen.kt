@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
@@ -26,9 +28,17 @@ import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.viewmodel.JogosViewModel
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
+import com.example.cebolaolotofacilgenerator.ui.theme.CebolaoLotofacilGeneratorTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
+import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
+import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
+import com.example.cebolaolotofacilgenerator.data.AppDataStore
+import kotlinx.coroutines.flow.collectLatest
 
 enum class TipoListaJogo {
     TODOS,
@@ -40,9 +50,14 @@ enum class TipoListaJogo {
 @Composable
 fun GerenciamentoJogosScreen(
     mainViewModel: MainViewModel,
-    jogosViewModel: JogosViewModel = viewModel(),
-    // navController: NavController // Para navegação futura, se necessário
+    navController: NavHostController
 ) {
+    val jogosViewModel = mainViewModel.jogosViewModel // Acessar via MainViewModel
+
+    val jogosSalvos by jogosViewModel.jogosSalvos.collectAsState(initial = emptyList())
+    val operacaoStatus by jogosViewModel.operacaoStatus.observeAsState()
+    val snackbarMessage by jogosViewModel.snackbarMessage.collectAsState(initial = null)
+
     val context = LocalContext.current
     var tipoListaSelecionada by remember { mutableStateOf(TipoListaJogo.TODOS) }
 
@@ -60,6 +75,14 @@ fun GerenciamentoJogosScreen(
     var showDialogLimparTodos by remember { mutableStateOf(false) }
     var showDialogDetalhesJogo by remember { mutableStateOf<Jogo?>(null) }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        mainViewModel.snackbarMessage.collectLatest { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -70,7 +93,8 @@ fun GerenciamentoJogosScreen(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -151,9 +175,7 @@ fun GerenciamentoJogosScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        // TODO: Adicionar lógica para limpar apenas os jogos da aba selecionada ou todos mesmo?
-                        // Por enquanto, limpa todos como no Fragment original.
-                        jogosViewModel.limparTodosJogos() 
+                        jogosViewModel.limparTodosJogos()
                         mainViewModel.showSnackbar(context.getString(R.string.todos_jogos_excluidos))
                         showDialogLimparTodos = false
                     }
@@ -169,14 +191,22 @@ fun GerenciamentoJogosScreen(
         val jogoParaDetalhes = showDialogDetalhesJogo!!
         val dateFormat = remember { SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()) }
         val detalhesText = buildString {
-            append(stringResource(R.string.numeros_jogados, jogoParaDetalhes.numeros.joinToString(" - ")))\n            append("\n\n")
-            append(stringResource(R.string.data_geracao, dateFormat.format(jogoParaDetalhes.dataCriacao)))\n            append("\n\n")
-            append(stringResource(R.string.caracteristicas_jogo))\n            append("\n")
-            append(stringResource(R.string.pares_impares, jogoParaDetalhes.quantidadePares, jogoParaDetalhes.quantidadeImpares))\n            append("\n")
-            append(stringResource(R.string.soma_total, jogoParaDetalhes.soma))\n            append("\n")
-            append(stringResource(R.string.numeros_primos, jogoParaDetalhes.quantidadePrimos))\n            append("\n")
-            append(stringResource(R.string.numeros_fibonacci, jogoParaDetalhes.quantidadeFibonacci))\n            append("\n")
-            append(stringResource(R.string.miolo_moldura, jogoParaDetalhes.quantidadeMiolo, jogoParaDetalhes.quantidadeMoldura))\n            append("\n")
+            append(stringResource(R.string.numeros_jogados, jogoParaDetalhes.numeros.joinToString(" - ")))
+            append("\n\n")
+            append(stringResource(R.string.data_geracao, dateFormat.format(jogoParaDetalhes.dataCriacao)))
+            append("\n\n")
+            append(stringResource(R.string.caracteristicas_jogo))
+            append("\n")
+            append(stringResource(R.string.pares_impares, jogoParaDetalhes.quantidadePares, jogoParaDetalhes.quantidadeImpares))
+            append("\n")
+            append(stringResource(R.string.soma_total, jogoParaDetalhes.soma))
+            append("\n")
+            append(stringResource(R.string.numeros_primos, jogoParaDetalhes.quantidadePrimos))
+            append("\n")
+            append(stringResource(R.string.numeros_fibonacci, jogoParaDetalhes.quantidadeFibonacci))
+            append("\n")
+            append(stringResource(R.string.miolo_moldura, jogoParaDetalhes.quantidadeMiolo, jogoParaDetalhes.quantidadeMoldura))
+            append("\n")
             append(stringResource(R.string.multiplos_tres, jogoParaDetalhes.quantidadeMultiplosDeTres))
             if (jogoParaDetalhes.acertos != null) {
                 append("\n\n")
@@ -187,7 +217,7 @@ fun GerenciamentoJogosScreen(
         AlertDialog(
             onDismissRequest = { showDialogDetalhesJogo = null },
             title = { Text(stringResource(R.string.detalhes_do_jogo)) },
-            text = { ScrollableText(text = detalhesText) }, // Usar um Text rolável se o conteúdo for grande
+            text = { ScrollableText(text = detalhesText) },
             confirmButton = {
                 Button(onClick = { showDialogDetalhesJogo = null }) { Text(stringResource(R.string.fechar)) }
             }
@@ -197,7 +227,7 @@ fun GerenciamentoJogosScreen(
 
 @Composable
 fun ScrollableText(text: String, modifier: Modifier = Modifier) {
-    Box(modifier = modifier.heightIn(max = 200.dp)) { // Limita a altura máxima do diálogo
+    Box(modifier = modifier.heightIn(max = 200.dp)) {
         val scrollState = rememberScrollState()
         Text(
             text = text,
@@ -276,9 +306,15 @@ fun JogoGerenciamentoItem(
 @Preview(showBackground = true, name = "Gerenciamento Jogos Screen - Vazia")
 @Composable
 fun PreviewGerenciamentoJogosScreenEmpty() {
-    val mockMainViewModel = MainViewModel(Application())
-    val mockJogosViewModel = JogosViewModel(Application())
-    GerenciamentoJogosScreen(mainViewModel = mockMainViewModel, jogosViewModel = mockJogosViewModel)
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+    val mockMainViewModel = MainViewModel(
+        application = application,
+        jogoRepository = JogoRepository(AppDatabase.getDatabase(application).jogoDao()),
+        resultadoRepository = ResultadoRepository(AppDatabase.getDatabase(application).resultadoDao()),
+        appDataStore = AppDataStore(application)
+    )
+    GerenciamentoJogosScreen(mainViewModel = mockMainViewModel, navController = NavHostController(context))
 }
 
 @Preview(showBackground = true, name = "Gerenciamento Jogos Screen - Com Jogos")
@@ -292,7 +328,7 @@ fun PreviewGerenciamentoJogosScreenWithData() {
     // LifecycleOwner é necessário para observar LiveData, complicado em previews. 
     // Uma forma mais simples é ter ViewModels que aceitem dados iniciais para preview.
 
-    GerenciamentoJogosScreen(mainViewModel = mockMainViewModel, jogosViewModel = mockJogosViewModel)
+    GerenciamentoJogosScreen(mainViewModel = mockMainViewModel, navController = NavHostController())
 }
 
 @Preview(showBackground = true, name = "JogoGerenciamentoItem")
@@ -324,5 +360,8 @@ fun PreviewJogoGerenciamentoItem() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreviewGerenciamentoJogosScreen() {
-    GerenciamentoJogosScreen()
+    // GerenciamentoJogosScreen() // Comentado pois requer ViewModels
+    CebolaoLotofacilGeneratorTheme {
+        Text("Preview desabilitada: GerenciamentoJogosScreen requer ViewModels")
+    }
 } 

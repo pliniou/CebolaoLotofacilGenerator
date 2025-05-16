@@ -62,8 +62,8 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavController) {
                                 title = "Gerar Novos Jogos",
                                 description = "Crie novos jogos com base nas suas preferências",
                                 onClick = {
-                                        // Navega para GeradorScreen sem dezenas fixas
-                                        navController.navigate(Screen.Gerador.createRoute(null))
+                                        // Navega para a tela Principal que agora lida com a geração
+                                        navController.navigate(Screen.Principal.route)
                                 },
                                 icon = Icons.Default.Add
                         )

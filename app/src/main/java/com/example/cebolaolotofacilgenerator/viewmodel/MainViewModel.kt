@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-class MainViewModel(
+open class MainViewModel(
         application: Application,
         private val jogoRepository: JogoRepository,
         private val resultadoRepository: ResultadoRepository,
@@ -27,7 +27,9 @@ class MainViewModel(
     // ViewModels secundários para compartilhar entre as telas
     val jogosViewModel = JogosViewModel(jogoRepository)
     val resultadoViewModel = ResultadoViewModel(application)
-    val geradorViewModel = GeradorViewModel(application, jogoRepository)
+    // Instanciar FiltrosViewModel primeiro, pois é dependência do GeradorViewModel
+    val filtrosViewModel = FiltrosViewModel(application, resultadoRepository)
+    val geradorViewModel = GeradorViewModel(application, filtrosViewModel, jogoRepository)
 
     // LiveData para observar se o primeiro run foi completado
     // TODO: Verifique a dependência androidx.lifecycle:lifecycle-livedata-ktx para habilitar
