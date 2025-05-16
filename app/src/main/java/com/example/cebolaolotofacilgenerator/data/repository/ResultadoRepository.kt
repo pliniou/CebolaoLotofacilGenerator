@@ -3,12 +3,15 @@ package com.example.cebolaolotofacilgenerator.data.repository
 import androidx.lifecycle.LiveData
 import com.example.cebolaolotofacilgenerator.data.dao.ResultadoDao
 import com.example.cebolaolotofacilgenerator.data.model.Resultado
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Repositório para gerenciar operações relacionadas aos resultados oficiais da Lotofácil. Fornece
  * uma camada de abstração sobre o DAO.
  */
-class ResultadoRepository(private val resultadoDao: ResultadoDao) {
+@Singleton
+class ResultadoRepository @Inject constructor(private val resultadoDao: ResultadoDao) {
 
     // Observa todos os resultados
     val todosResultados: LiveData<List<Resultado>> = resultadoDao.observarTodos()

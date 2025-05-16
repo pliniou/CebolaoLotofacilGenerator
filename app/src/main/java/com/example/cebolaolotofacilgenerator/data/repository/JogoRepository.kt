@@ -3,12 +3,15 @@ package com.example.cebolaolotofacilgenerator.data.repository
 import androidx.lifecycle.LiveData
 import com.example.cebolaolotofacilgenerator.data.dao.JogoDao
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Repositório para gerenciar operações relacionadas aos jogos da Lotofácil. Fornece uma camada de
  * abstração sobre o DAO.
  */
-class JogoRepository(private val jogoDao: JogoDao) {
+@Singleton
+class JogoRepository @Inject constructor(private val jogoDao: JogoDao) {
 
     // Observa todos os jogos
     val todosJogos: LiveData<List<Jogo>> = jogoDao.observarTodos()

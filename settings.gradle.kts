@@ -14,11 +14,7 @@ dependencyResolutionManagement {
     }
     
     // Configuração para evitar avisos de mutação de dependências
-    versionCatalogs {
-        create("libs") {
-            from(files("gradle/libs.versions.toml"))
-        }
-    }
+    // Usando o catálogo de versões já definido pelo Gradle, não é necessário criar outro
 }
 
 rootProject.name = "CebolaoLotofacilGenerator"
