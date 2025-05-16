@@ -6,7 +6,9 @@ import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.data.model.Resultado
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
 import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Date // Importação para java.util.Date
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +20,8 @@ import kotlinx.coroutines.launch
  * Gerencia o estado do resultado selecionado para conferência, a lista de jogos conferidos,
  * o status da operação de conferência e as estatísticas de acertos.
  */
-class ConferenciaViewModel(
+@HiltViewModel
+class ConferenciaViewModel @Inject constructor(
         private val jogoRepository: JogoRepository,
         private val resultadoRepository: ResultadoRepository
 ) : ViewModel() {

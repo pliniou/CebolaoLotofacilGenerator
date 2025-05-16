@@ -5,10 +5,12 @@ import androidx.room.Room
 import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
 import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
 /** Classe de aplicação para inicialização de componentes essenciais. */
+@HiltAndroidApp
 class CebolaoApplication : Application() {
 
     // Escopo de coroutine para operações que devem sobreviver a mudanças de configuração

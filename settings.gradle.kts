@@ -12,6 +12,13 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+    
+    // Configuração para evitar avisos de mutação de dependências
+    versionCatalogs {
+        create("libs") {
+            from(files("gradle/libs.versions.toml"))
+        }
+    }
 }
 
 rootProject.name = "CebolaoLotofacilGenerator"

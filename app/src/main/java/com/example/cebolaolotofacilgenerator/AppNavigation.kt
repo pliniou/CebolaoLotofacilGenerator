@@ -17,6 +17,7 @@ import com.example.cebolaolotofacilgenerator.ui.screens.FiltrosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.GerenciamentoJogosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.GeradorScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.ConferenciaScreen
+import com.example.cebolaolotofacilgenerator.ui.screens.InstrucoesScreen
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -132,6 +133,19 @@ fun AppNavigation(
             ConferenciaScreen(
                 mainViewModel = mainViewModel
                 // conferenciaViewModel é obtido via viewModel() dentro da tela
+            )
+        }
+        
+        composable(
+            Screen.Instrucoes.route, // Rota para a tela de Instruções
+            enterTransition = { slideInHorizontally { it } },
+            exitTransition = { slideOutHorizontally { -it } },
+            popEnterTransition = { slideInHorizontally { -it } },
+            popExitTransition = { slideOutHorizontally { it } }
+        ) {
+            InstrucoesScreen(
+                navController = navController,
+                mainViewModel = mainViewModel
             )
         }
     }

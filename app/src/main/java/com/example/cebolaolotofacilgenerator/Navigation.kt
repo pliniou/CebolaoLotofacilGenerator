@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /** Rotas de navegação do aplicativo */
@@ -41,4 +42,5 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Resultados : Screen("resultados", "Resultados", Icons.AutoMirrored.Filled.List)
     object Settings : Screen("settings", "Ajustes", Icons.Filled.Settings)
     object JogosGerados : Screen("jogos_gerados", "Jogos Gerados", Icons.Filled.Checklist)
+    object Instrucoes : Screen("instrucoes", "Instruções", Icons.Filled.Info)
 }

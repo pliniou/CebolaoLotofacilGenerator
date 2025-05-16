@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
     id("kotlin-parcelize")
 }
 
@@ -73,12 +74,26 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    
+    // Configuração para evitar mudanças nas dependências após resolução
+    configurations.all {
+        resolutionStrategy {
+            // Estratégia para garantir que manipulações de dependência ocorram antes da resolução
+            eachDependency {
+                // Aqui você pode adicionar manipulações específicas se necessário
+            }
+        }
+    }
 }
 
 dependencies {
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     // AndroidX Core e AppCompat
     implementation(libs.androidx.core.ktx)

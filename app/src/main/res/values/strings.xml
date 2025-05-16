@@ -247,6 +247,11 @@
         Lotofácil com base em estatísticas e suas preferências!</string>
     <!-- Fim das strings para SettingsScreen -->
 
+    <!-- Novas strings para o seletor de tema em SettingsScreen -->
+    <string name="selecionar_tema_label">Tema do Aplicativo</string>
+    <string name="tema_atual_label">Tema Atual</string>
+    <!-- Fim das strings para SettingsScreen -->
+
     <!-- Strings para GeradorScreen Filtros -->
     <string name="filtro_pares_impares_titulo">Pares/Ímpares</string>
     <string name="filtro_pares_impares_subtitulo">Quantidade de dezenas pares e ímpares</string>
@@ -493,4 +498,38 @@
     <string name="contato_feedback_subtitulo">Envie suas sugestões ou relate problemas.</string>
     <string name="avaliar_app_titulo">Avaliar o Aplicativo</string>
     <string name="avaliar_app_subtitulo">Gostou do app? Deixe sua avaliação na loja!</string>
+
+    <!-- Strings para a tela de Instruções -->
+    <string name="instrucoes_titulo">Instruções de Uso</string>
+    <string name="instrucoes_secao_introducao_titulo">Introdução à Lotofácil</string>
+    <string name="instrucoes_secao_introducao_conteudo">A Lotofácil é um jogo de loteria onde você
+        escolhe entre 15 e 20 números dentre os 25 disponíveis. O sorteio oficial seleciona 15
+        números, e quanto mais acertos você tiver, maior é o prêmio.</string>
+
+    <string name="instrucoes_secao_filtros_titulo">Como Usar os Filtros</string>
+    <string name="instrucoes_secao_filtros_conteudo">Os filtros ajudam a criar jogos com
+        características específicas. Você pode controlar a quantidade de números pares/ímpares,
+        primos, Fibonacci e muito mais. Cada filtro aplica restrições que aumentam suas chances
+        estatísticas.</string>
+
+    <string name="instrucoes_secao_numeros_fixos_titulo">Números Fixos e Excluídos</string>
+    <string name="instrucoes_secao_numeros_fixos_conteudo">Use a seção \"Definição de Dezenas\" para
+        escolher números que devem obrigatoriamente estar em todos os jogos (fixos) ou que não devem
+        aparecer em nenhum jogo (excluídos).</string>
+
+    <string name="instrucoes_secao_gerar_jogos_titulo">Gerar Jogos</string>
+    <string name="instrucoes_secao_gerar_jogos_conteudo">Depois de configurar os filtros, clique em
+        \"Gerar Jogos\" para criar jogos que atendam aos critérios selecionados. Os jogos gerados
+        serão exibidos na mesma tela e podem ser salvos para uso posterior.</string>
+
+    <string name="instrucoes_secao_conferencia_titulo">Conferência de Resultados</string>
+    <string name="instrucoes_secao_conferencia_conteudo">Use a tela de Conferência para verificar
+        seus jogos após um sorteio. Você pode inserir os números sorteados manualmente ou salvar
+        resultados anteriores no aplicativo.</string>
+
+    <string name="instrucoes_secao_dicas_titulo">Dicas para Aumentar Chances</string>
+    <string name="instrucoes_secao_dicas_conteudo">• Equilibre números pares e ímpares (7-8 ímpares
+        é comum em sorteios)\n• Mantenha a soma total entre 180 e 220\n• Inclua alguns números
+        primos (4-6)\n• Evite muitas sequências consecutivas\n• Observe os padrões dos últimos
+        sorteios</string>
 </resources>

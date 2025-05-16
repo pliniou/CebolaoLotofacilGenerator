@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
@@ -23,10 +22,14 @@ import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -227,41 +230,22 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                InfoItem(
-                    icon = Icons.Filled.Info,
-                    title = stringResource(R.string.sobre_app_label),
-                    subtitle = stringResource(R.string.sobre_app_versao_subtitulo, stringResource(R.string.app_version_name), "Cebola Studios"),
-                    onClick = { showSobreDialog = true }
-                )
-                InfoItem(
-                    icon = Icons.Filled.Favorite,
-                    title = stringResource(R.string.agradecimentos_licencas_titulo),
-                    subtitle = stringResource(R.string.agradecimentos_licencas_subtitulo),
-                    onClick = {
-                        mainViewModel.showSnackbar("Agradecimentos/Licenças em breve!")
-                    }
-                )
-                InfoItem(
-                    icon = Icons.Filled.Email,
-                    title = stringResource(R.string.contato_feedback_titulo),
-                    subtitle = stringResource(R.string.contato_feedback_subtitulo),
-                    onClick = {
-                        mainViewModel.showSnackbar("Função de contato em breve!")
-                    }
-                )
-                InfoItem(
-                    icon = Icons.Filled.StarRate,
-                    title = stringResource(R.string.avaliar_app_titulo),
-                    subtitle = stringResource(R.string.avaliar_app_subtitulo),
-                    onClick = {
-                        mainViewModel.showSnackbar("Função de avaliar na loja em breve!")
-                    }
-                )
-            }
+
+            // Item para a tela de Instruções
+            SettingsItem(
+                title = stringResource(R.string.instrucoes_titulo),
+                subtitle = "Saiba como usar o aplicativo",
+                icon = Icons.Filled.Info,
+                onClick = { navController.navigate(Screen.Instrucoes.route) }
+            )
+
+            // Item para Sobre o App
+            SettingsItem(
+                title = stringResource(R.string.sobre_app_label),
+                subtitle = stringResource(R.string.sobre_app_versao_subtitulo, "1.0.0", "Cebolão"),
+                icon = Icons.Default.Info,
+                onClick = { showSobreDialog = true }
+            )
         }
     }
 }
@@ -272,46 +256,69 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
  * @param temaAtual O [TemaAplicativo] atualmente selecionado.
  * @param onThemeSelected Lambda chamada quando um novo tema é selecionado.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThemeSettingsGroup(temaAtual: TemaAplicativo, onThemeSelected: (TemaAplicativo) -> Unit) {
-    val temas = TemaAplicativo.values()
+fun ThemeSettingsGroup(
+    temaAtual: MainViewModel.TemaAplicativo,
+    onThemeSelected: (MainViewModel.TemaAplicativo) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val opcoesTema = MainViewModel.TemaAplicativo.values()
+
+    // Mapeamento para nomes exibíveis (idealmente de strings.xml)
+    @Composable
+    fun getNomeTema(tema: MainViewModel.TemaAplicativo): String {
+        return when (tema) {
+            MainViewModel.TemaAplicativo.CLARO -> stringResource(R.string.tema_claro)
+            MainViewModel.TemaAplicativo.ESCURO -> stringResource(R.string.tema_escuro)
+            MainViewModel.TemaAplicativo.SISTEMA -> stringResource(R.string.tema_sistema)
+            MainViewModel.TemaAplicativo.AZUL -> stringResource(R.string.tema_azul)
+            MainViewModel.TemaAplicativo.VERDE -> stringResource(R.string.tema_verde)
+            MainViewModel.TemaAplicativo.LARANJA -> stringResource(R.string.tema_laranja)
+            MainViewModel.TemaAplicativo.CIANO -> stringResource(R.string.tema_ciano)
+        }
+    }
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                stringResource(R.string.tema_app_titulo_grupo),
-                style = MaterialTheme.typography.titleSmall,
+                stringResource(R.string.selecionar_tema_label), // Ex: "Tema do Aplicativo"
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            temas.forEach { tema ->
-                Row(
-                    Modifier
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded },
+            ) {
+                OutlinedTextField(
+                    value = getNomeTema(temaAtual),
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text(stringResource(R.string.tema_atual_label)) }, // Ex: "Tema Atual"
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    },
+                    modifier = Modifier
+                        .menuAnchor() // Importante para o dropdown
                         .fillMaxWidth()
-                        .clickable { onThemeSelected(tema) }
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
                 ) {
-                    RadioButton(
-                        selected = (tema == temaAtual),
-                        onClick = { onThemeSelected(tema) }
-                    )
-                    Text(
-                        text =
-                        when (tema) {
-                            TemaAplicativo.CLARO -> stringResource(R.string.tema_claro)
-                            TemaAplicativo.ESCURO -> stringResource(R.string.tema_escuro)
-                            TemaAplicativo.SISTEMA -> stringResource(R.string.tema_sistema)
-                            TemaAplicativo.AZUL -> stringResource(R.string.tema_azul)
-                            TemaAplicativo.VERDE -> stringResource(R.string.tema_verde)
-                            TemaAplicativo.LARANJA -> stringResource(R.string.tema_laranja)
-                            TemaAplicativo.CIANO -> stringResource(R.string.tema_ciano)
-                        },
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
+                    opcoesTema.forEach { tema ->
+                        DropdownMenuItem(
+                            text = { Text(getNomeTema(tema)) },
+                            onClick = {
+                                onThemeSelected(tema)
+                                expanded = false
+                            }
+                        )
+                    }
                 }
             }
         }

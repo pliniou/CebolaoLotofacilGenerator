@@ -19,9 +19,11 @@ Aplicativo Android 100% offline para geração, conferência e gerenciamento de 
 - Room (persistência local)
 - DataStore (preferências)
 - ViewModel + StateFlow (arquitetura MVVM)
+- **Hilt (Injeção de Dependência)**
 - Navegação Compose com transições animadas (Accompanist)
 - Kotlin Coroutines 1.7.3
 - Material 3
+- **Proguard (Minificação e Ofuscação)**
 
 ## Estrutura do Projeto
 
@@ -65,30 +67,9 @@ O aplicativo utiliza navegação moderna baseada em Jetpack Compose Navigation, 
 - **Transições Animadas:** Navegação suave entre telas.
 - **Design Moderno:** Material 3, Compose.
 
-## Status e Próximos Passos
-
-Aqui listamos as funcionalidades implementadas, pendências e ideias para o futuro.
-
-### Implementado Recentemente / Revisado
-- [x] Seleção manual do último resultado (entrada de dados consolidada para `ConferenciaScreen`, `ResultadosScreen` foca em usar o último salvo para o gerador).
-- [x] Transições animadas entre telas (Accompanist Navigation Animation).
-- [x] Filtros estatísticos completos na geração de jogos (Interface de configuração e persistência em `FiltrosScreen` e `FiltrosViewModel`. `GeradorScreen` agora usa essa configuração central).
-- [x] Persistência 100% offline (Room para dados, DataStore para preferências/filtros).
-- [x] UI moderna e responsiva (Material 3).
-- [x] Feedback ao usuário com Snackbar e mensagens contextuais.
-- [x] Botão "Gerar Jogos" dinâmico/informativo.
-- [x] Implementação completa da tela de Favoritos (para Jogos).
-- [x] Mais opções de temas/cores na SettingsScreen.
-- [x] Refino visual dos filtros e hierarquia da UI.
-- [x] Tela de Jogos Gerados (`GerenciamentoJogosScreen`) com opções de salvar, gerar mais e favoritar.
-- [x] Filtro de Repetição do Concurso Anterior: Permite carregar dezenas do último resultado salvo.
-- [x] Atualização dos testes unitários (em progresso, conforme necessidade das refatorações).
-- [x] Conferência inteligente de jogos.
-- [x] Melhorias de acessibilidade e internacionalização (revisão contínua).
-- [x] Documentação de API interna (KDoc) (em progresso).
-- [x] Otimização de desempenho na geração de jogos com múltiplos filtros.
-
 ### Pendências e Melhorias Futuras
+- **Funcionalidade Principal:**
+    - [ ] **Corrigir a função 'Gerar Jogos' para funcionar corretamente e obedecer aos filtros selecionados.**
 - **Gestão Completa de Resultados Salvos:**
     - [ ] Expandir `ResultadosScreen.kt` para listar TODOS os resultados de concursos salvos (não apenas o último).
     - [ ] Implementar CRUD completo (Adicionar, Visualizar, Editar, Excluir) para os resultados de concursos salvos.
@@ -104,6 +85,12 @@ Aqui listamos as funcionalidades implementadas, pendências e ideias para o futu
 - **Migração para Compose:**
     - [ ] Finalizar a migração de quaisquer componentes legados que ainda utilizem ViewBinding/XML (se houver).
 - **Sugestões de Melhorias (do backlog original e novas):**
+    - [ ] **Melhorar Tela de Configurações:**
+        - [ ] Apresentar seleção de temas em uma lista suspensa.
+        - [ ] Avaliar e adicionar mais opções de configuração.
+        - [ ] Simplificar ou remover suporte a multilinguagem, focando em pt-BR.
+    - [ ] **Tela de Instruções:**
+        - [ ] Avaliar substituição/complementação da tela de "Resultados" por uma tela de "Instruções".
     - [ ] **Estatísticas Avançadas:** Exibir estatísticas sobre jogos gerados e resultados históricos.
     - [ ] **Compartilhamento Social:** Facilitar o compartilhamento de jogos.
     - [ ] **Modo Escuro Aprimorado:** Refinar a experiência do modo escuro.
@@ -118,6 +105,7 @@ Aqui listamos as funcionalidades implementadas, pendências e ideias para o futu
 - **MVVM:** Separação clara entre UI, lógica e dados.
 - **Room:** Persistência local de jogos e resultados.
 - **DataStore:** Preferências do usuário (tema, filtros, etc).
+- **Hilt:** Injeção de dependência.
 - **Compose + Material 3:** UI declarativa e moderna.
 - **Accompanist Navigation Animation:** Transições animadas entre telas.
 - **Coroutines + Flow/StateFlow:** Operações assíncronas e reatividade.
@@ -159,14 +147,6 @@ CebolaoLotofacilGenerator/
 ```
 *Nota: A estrutura acima é uma representação. Adapters e navigation podem estar dentro de `ui` ou em subpastas mais específicas.*
 
-## Solução de Problemas
-
-- **Erro ao deletar arquivos de build:** Feche o Android Studio, emuladores e qualquer Explorer na pasta do projeto. Delete manualmente a pasta `build` e tente novamente.
-- **Erros de dependência:** Certifique-se de que o repositório `google()` está presente em todos os blocos de repositórios do Gradle.
-- **Problemas de navegação ou animação:** Verifique se a dependência do Accompanist está corretamente declarada e sincronizada.
-- **Tela preta ou UI incompleta:** Confirme se está usando as versões corretas das bibliotecas e se o tema Compose está aplicado corretamente.
-- **Erros nos testes unitários:** Os testes precisam ser atualizados para refletir as mudanças na estrutura de dados e ViewModel.
-
 ## Dependências Principais
 
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
@@ -178,4 +158,4 @@ CebolaoLotofacilGenerator/
 
 ## Licença
 
-Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE (se existir) para detalhes.
+Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.

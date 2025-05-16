@@ -6,9 +6,12 @@ package com.example.cebolaolotofacilgenerator.ui.screens
 // LazyVerticalGrid
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,9 +20,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -46,6 +52,7 @@ import androidx.navigation.NavHostController
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.Screen
 import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
+import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
 import com.example.cebolaolotofacilgenerator.ui.components.BotaoGerarJogos
 import com.example.cebolaolotofacilgenerator.ui.components.SnackbarManager
@@ -130,7 +137,9 @@ fun GeradorScreen(
         LaunchedEffect(operacaoStatus) {
                 when (operacaoStatus) {
                         OperacaoStatus.SUCESSO -> {
-                                navController.navigate(Screen.JogosGerados.route)
+                                // Não navegar para JogosGerados mais
+                                // navController.navigate(Screen.JogosGerados.route)
+                                // Apenas resetar o status para permitir novas operações
                                 geradorViewModel.resetarStatusOperacao()
                         }
                         OperacaoStatus.ERRO -> {
@@ -465,6 +474,75 @@ fun GeradorScreen(
                             dezenasFixas = dezenasFixasParaGeracao, 
                             onGerarClick = { geradorViewModel.gerarJogosComConfiguracaoAtual() }
                         )
+                        
+                        // Lista de jogos gerados
+                        val jogosGerados by geradorViewModel.jogosGerados.observeAsState(emptyList())
+                        if (jogosGerados.isNotEmpty()) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                ) {
+                                    Text(
+                                        text = "Jogos Gerados (${jogosGerados.size})",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        modifier = Modifier.padding(bottom = 8.dp)
+                                    )
+                                    
+                                    // Lista limitada a 10 jogos para não sobrecarregar a UI
+                                    // Com opção de "Ver Todos" que navega para tela de jogos gerados
+                                    val jogosExibidos = jogosGerados.take(10)
+                                    LazyColumn(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(320.dp), // Altura fixa para não expandir demais
+                                        contentPadding = PaddingValues(vertical = 8.dp)
+                                    ) {
+                                        items(jogosExibidos) { jogo ->
+                                            JogoItem(jogo = jogo)
+                                        }
+                                    }
+                                    
+                                    if (jogosGerados.size > 10) {
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        TextButton(
+                                            onClick = { navController.navigate(Screen.JogosGerados.route) },
+                                            modifier = Modifier.align(Alignment.End)
+                                        ) {
+                                            Text("Ver todos os ${jogosGerados.size} jogos")
+                                        }
+                                    }
+                                    
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 8.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        OutlinedButton(
+                                            onClick = { geradorViewModel.limparJogosGerados() }
+                                        ) {
+                                            Text("Limpar")
+                                        }
+                                        
+                                        Button(
+                                            onClick = { 
+                                                geradorViewModel.salvarJogosGerados()
+                                                SnackbarManager.mostrarMensagem("Jogos salvos com sucesso!")
+                                            }
+                                        ) {
+                                            Text("Salvar Jogos")
+                                        }
+                                    }
+                                }
+                            }
+                        }
                 }
         }
 }
@@ -962,6 +1040,49 @@ fun AcoesConfiguracaoFiltrosButtons(
         }
         Button(onClick = onResetarClick) {
             Text(stringResource(R.string.resetar_filtros_botao))
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun JogoItem(jogo: Jogo) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                jogo.numeros.forEach { numero ->
+                    Box(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .size(28.dp)
+                            .aspectRatio(1f)
+                            .background(
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = numero.toString(),
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+            }
         }
     }
 }

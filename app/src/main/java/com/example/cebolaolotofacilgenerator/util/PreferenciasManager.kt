@@ -357,7 +357,29 @@ class PreferenciasManager(private val context: Context) {
      */
     suspend fun resetarConfiguracoes() {
         context.dataStore.edit { preferences ->
-            preferences.clear()
+            preferences[QUANTIDADE_NUMEROS] = 15 // Padrão
+            preferences[QUANTIDADE_JOGOS] = 10 // Padrão
+            preferences[TEMA_ESCURO] = false
+            
+            preferences[MIN_PARES] = -1 // Indicativo de não definido/padrão
+            preferences[MAX_PARES] = -1
+            preferences[MIN_PRIMOS] = -1
+            preferences[MAX_PRIMOS] = -1
+            preferences[MIN_FIBONACCI] = -1
+            preferences[MAX_FIBONACCI] = -1
+            preferences[MIN_MIOLO] = -1
+            preferences[MAX_MIOLO] = -1
+            preferences[MIN_MULTIPLOS_TRES] = -1
+            preferences[MAX_MULTIPLOS_TRES] = -1
+            preferences[MIN_SOMA] = -1
+            preferences[MAX_SOMA] = -1
+            
+            preferences[NUMEROS_FIXOS] = "" // Padrão lista vazia
+            preferences[NUMEROS_EXCLUIDOS] = "" // Padrão lista vazia
+            
+            preferences[SALVAR_FILTROS_AUTOMATICAMENTE] = false // Padrão
+
+            preferences[CONFIGURACAO_FILTROS_COMPLETA] = gson.toJson(null)
         }
     }
 
