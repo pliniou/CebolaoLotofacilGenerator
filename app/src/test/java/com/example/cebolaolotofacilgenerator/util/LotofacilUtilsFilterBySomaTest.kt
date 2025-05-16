@@ -46,7 +46,7 @@ class LotofacilUtilsFilterBySomaTest { // Renomear se a classe/função testada 
 
     // Função de exemplo para verificar a soma (adapte à sua implementação real)
     private fun verificarSoma(jogo: Jogo, minSoma: Int?, maxSoma: Int?): Boolean {
-        val soma = jogo.somaTotal
+        val soma = jogo.soma
         if (minSoma != null && soma < minSoma) return false
         if (maxSoma != null && soma > maxSoma) return false
         return true

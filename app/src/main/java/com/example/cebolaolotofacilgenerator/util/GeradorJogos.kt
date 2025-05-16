@@ -80,6 +80,8 @@ class GeradorJogos {
             val numerosDisponiveisBase = (1..TOTAL_NUMEROS_LOTOFACIL)
                 .filter { it !in config.numerosExcluidos }
                 .toList()
+            
+            val jogosUnicosComoSet = mutableSetOf<List<Int>>() // Para verificação rápida de duplicidade
 
             while (jogosGerados.size < config.quantidadeJogos && tentativas < tentativasMaximas) {
                 tentativas++
@@ -112,10 +114,9 @@ class GeradorJogos {
                         continue
                     }
 
-                    // Verifica se o jogo já foi gerado anteriormente
-                    if (jogosGerados.any { it.numeros == jogoComoLista }) {
-                        // Para evitar duplicidade exata, tentar gerar um novo se possível
-                        // Em cenários de filtros muito restritivos, isso pode limitar a quantidade de jogos únicos.
+                    // Verifica se o jogo já foi gerado anteriormente usando o Set
+                    if (!jogosUnicosComoSet.add(jogoComoLista)) {
+                        // Jogo duplicado, tentar gerar um novo se possível
                         continue
                     }
 

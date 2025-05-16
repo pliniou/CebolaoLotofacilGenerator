@@ -42,11 +42,26 @@ val AcertoNumeroColor = Color.Black // Exemplo, pode ser ajustado
 val AcertoNumeroBackgroundColor = Color.Yellow // Exemplo para destacar número acertado
 
 /**
+ * Retorna a descrição da faixa de premiação baseada no número de acertos.
+ */
+@Composable
+fun getDescricaoPremio(acertos: Int): String {
+    return when (acertos) {
+        15 -> stringResource(R.string.premio_15_acertos)
+        14 -> stringResource(R.string.premio_14_acertos)
+        13 -> stringResource(R.string.premio_13_acertos)
+        12 -> stringResource(R.string.premio_12_acertos)
+        11 -> stringResource(R.string.premio_11_acertos)
+        else -> stringResource(R.string.sem_premio)
+    }
+}
+
+/**
  * Exibe a lista de jogos que foram conferidos contra um resultado.
  *
  * @param jogosConferidos A lista de [ConferenciaViewModel.JogoConferido], cada um contendo o jogo e o número de acertos.
  * @param resultadoSorteado O [Resultado] contra o qual os jogos foram conferidos. Se nulo, exibe mensagem de "nenhum resultado selecionado".
- * @param mainViewModel O [MainViewModel] principal, usado para interações globais como marcar jogos como favoritos e exibir Snackbars.
+ * @param mainViewModel O [MainViewModel] principal, usado para interações globais como marcar jogos como favoritos e exibir Snackbars na interface do usuário.
  * @param modifier Modificador para aplicar a este composable.
  */
 @OptIn(ExperimentalLayoutApi::class)
@@ -128,6 +143,7 @@ fun JogoConferidoItemView(
         item.acertos >= 11 -> Acertos11Color
         else -> AcertosMenor11Color.copy(alpha = 0.7f) // Atenua a cor para menos de 11 acertos
     }
+    val descricaoPremio = getDescricaoPremio(acertos = item.acertos)
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -183,9 +199,13 @@ fun JogoConferidoItemView(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onPrimaryContainer // Ajustado para contraste
             )
-            // TODO: Implementar exibição de prêmio se a lógica estiver disponível
-            // val premio = VerificadorJogos.calcularPremio(item.acertos, resultadoCompleto)
-            // Text(text = stringResource(R.string.premio_label, premio.toString()), color = MaterialTheme.colorScheme.onPrimaryContainer)
+            Spacer(modifier = Modifier.height(4.dp)) // Espaço antes da descrição do prêmio
+            Text(
+                text = descricaoPremio,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium, // Um pouco de destaque para o prêmio
+                color = MaterialTheme.colorScheme.onPrimaryContainer // Ajustado para contraste
+            )
         }
     }
 } 

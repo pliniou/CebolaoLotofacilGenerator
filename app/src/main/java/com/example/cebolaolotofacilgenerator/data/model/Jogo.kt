@@ -4,7 +4,24 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
 
-/** Entidade que representa um jogo da Lotofácil. */
+/**
+ * Entidade que representa um jogo da Lotofácil, armazenado no banco de dados.
+ *
+ * @property id Identificador único do jogo (gerado automaticamente).
+ * @property numeros Lista das dezenas que compõem o jogo.
+ * @property dataCriacao Data em que o jogo foi gerado/criado.
+ * @property favorito Indica se o jogo foi marcado como favorito pelo usuário.
+ * @property acertos Número de acertos do jogo quando conferido com um resultado. Nulo se não conferido.
+ * @property concursoConferido ID do concurso ([Resultado.id]) com o qual este jogo foi conferido. Nulo se não conferido.
+ * @property quantidadePares Quantidade de números pares no jogo.
+ * @property quantidadeImpares Quantidade de números ímpares no jogo.
+ * @property quantidadePrimos Quantidade de números primos no jogo.
+ * @property quantidadeFibonacci Quantidade de números da sequência de Fibonacci no jogo.
+ * @property quantidadeMiolo Quantidade de números pertencentes ao "miolo" do volante (7 a 19).
+ * @property quantidadeMoldura Quantidade de números pertencentes à "moldura" do volante.
+ * @property quantidadeMultiplosDeTres Quantidade de números múltiplos de 3 no jogo.
+ * @property soma Soma de todas as dezenas do jogo.
+ */
 @Entity(tableName = "jogos")
 data class Jogo(
         @PrimaryKey(autoGenerate = true) val id: Long = 0,
@@ -34,14 +51,25 @@ data class Jogo(
         val quantidadeMultiplosDeTres: Int, // Renomeado para consistência
         val soma: Int // Renomeado para consistência (era somaTotal)
 ) {
-    // Removido: getNumerosComoLista() - Acesso direto a 'numeros'
-    // Removido ou adaptado: getNumerosFormatados()
+    /**
+     * Retorna as dezenas do jogo formatadas como uma string, separadas por " - ".
+     * Exemplo: "01 - 02 - 05 - ..."
+     *
+     * @return String formatada das dezenas do jogo.
+     */
     fun getNumerosFormatados(): String {
         return numeros.joinToString(" - ") // Adaptação simples
     }
 
     companion object {
-        // Método para criar um jogo a partir de uma lista de números
+        /**
+         * Cria uma nova instância de [Jogo] a partir de uma lista de dezenas.
+         * As características estatísticas (pares, ímpares, soma, etc.) são calculadas automaticamente.
+         * A lista de dezenas é ordenada antes da criação do jogo.
+         *
+         * @param numerosList A lista de dezenas para o novo jogo.
+         * @return Uma nova instância de [Jogo].
+         */
         fun fromList(numerosList: List<Int>): Jogo {
             val numerosOrdenados = numerosList.sorted() // Garante a ordem
 

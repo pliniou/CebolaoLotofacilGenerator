@@ -9,6 +9,7 @@ import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
 import java.util.Date // Importação para java.util.Date
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -22,27 +23,36 @@ class ConferenciaViewModel(
         private val resultadoRepository: ResultadoRepository
 ) : ViewModel() {
 
+    /** Enum que representa os possíveis estados da operação de conferência. */
     enum class StatusConferencia {
+        /** Estado inicial ou após uma operação ser concluída/resetada. */
         OCIOSO,
+        /** Indica que a conferência de jogos está em progresso. */
         CONFERINDO,
+        /** Indica que a conferência de jogos foi concluída com sucesso. */
         CONCLUIDO,
+        /** Indica que ocorreu um erro durante a conferência. */
         ERRO
     }
 
     // Estado para jogos conferidos
     private val _jogosConferidos = MutableStateFlow<List<JogoConferido>>(emptyList())
+    /** StateFlow que emite a lista atual de jogos conferidos. */
     val jogosConferidos: StateFlow<List<JogoConferido>> = _jogosConferidos
 
     // Estado do resultado atual/selecionado para conferência
     private val _resultadoAtual = MutableStateFlow<Resultado?>(null)
+    /** StateFlow que emite o resultado atualmente selecionado para a conferência. Nulo se nenhum selecionado. */
     val resultadoAtual: StateFlow<Resultado?> = _resultadoAtual
 
     // Estado para todos os resultados (para lista de seleção, por exemplo)
     private val _todosResultados = MutableStateFlow<List<Resultado>>(emptyList())
+    /** StateFlow que emite a lista de todos os resultados de concursos salvos. */
     val todosResultados: StateFlow<List<Resultado>> = _todosResultados
 
     // Estado do status da conferência
     private val _statusConferencia = MutableStateFlow(StatusConferencia.OCIOSO)
+    /** StateFlow que emite o status atual da operação de conferência. */
     val statusConferencia: StateFlow<StatusConferencia> = _statusConferencia.asStateFlow()
 
     // Estados para contagem de acertos

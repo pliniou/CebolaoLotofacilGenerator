@@ -345,7 +345,4 @@ fun PreviewFiltroEstatisticoItem() {
         stepSize = 1,
         valorLabelFormat = "Ímpares: %1$d-%2$d"
     )
-}
-
-// TODO: Adicionar strings para "Filtros Básicos", "Números Especiais", "Aplicar", "Salvar", "Resetar"
-// e verificar as strings dos filtros estatísticos como R.string.filtro_pares_impares_titulo 
+} 

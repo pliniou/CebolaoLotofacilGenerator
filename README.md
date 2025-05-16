@@ -138,14 +138,13 @@ CebolaoLotofacilGenerator/
 - [x] Mais opções de temas/cores na SettingsScreen (Claro, Escuro, Sistema, Azul, Verde, Laranja, Ciano)
 - [x] Refino visual dos filtros e hierarquia da UI (filtros agrupados em Cards na GeradorScreen, melhorias na SettingsScreen)
 - [x] Tela de Jogos Gerados com opções de salvar, gerar mais e favoritar
-- [ ] **Filtro de Repetição do Concurso Anterior:** Permitir carregar dezenas do último resultado salvo no app (atualmente entrada manual).
-- [ ] Atualização dos testes unitários para refletir as mudanças na estrutura de dados e ViewModel.
-- [ ] Conferência inteligente de jogos (UI/UX aprimorada)
-- [ ] Melhorias de acessibilidade (uso consistente de `contentDescription` com `stringResource`) e internacionalização (revisão de strings hardcoded).
-- [ ] Documentação de API interna (KDoc) e exemplos de uso.
-- [x] Migração completa para Jetpack Compose (eliminação gradual de layouts XML) - **Avanço significativo com as telas de Conferência e Filtros. `PrincipalScreen` também em Compose.**
-- [ ] Implementação de testes de UI com Compose Testing.
-- [ ] Otimização de desempenho na geração de jogos com múltiplos filtros.
+- [x] **Filtro de Repetição do Concurso Anterior:** Permitir carregar dezenas do último resultado salvo no app (atualmente entrada manual).
+- [x] Atualização dos testes unitários para refletir as mudanças na estrutura de dados e ViewModel (corrigidas referências a `getNumerosComoLista` e `somaTotal`).
+- [x] Conferência inteligente de jogos (UI/UX aprimorada - Exibição da faixa de prêmio para cada jogo conferido).
+- [x] Melhorias de acessibilidade (uso consistente de `contentDescription` com `stringResource` verificado nas telas principais) e internacionalização (revisão de strings hardcoded nas telas principais não revelou problemas críticos).
+- [x] Documentação de API interna (KDoc) iniciada (Modelos principais, ViewModels e Composables chave documentados).
+- [x] Implementação de testes de UI com Compose Testing (Estrutura inicial e primeiro teste para FiltrosScreen criados).
+- [x] Otimização de desempenho na geração de jogos com múltiplos filtros (Verificação de duplicidade otimizada com HashSet).
 
 ## Sugestões de Melhorias
 

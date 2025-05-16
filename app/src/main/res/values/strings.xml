@@ -261,8 +261,8 @@
     <string name="filtro_min_primos_label">Mín. Primos</string>
     <string name="filtro_max_primos_label">Máx. Primos</string>
 
-    <string name="filtro_fibonacci_titulo">Números de Fibonacci</string>
-    <string name="filtro_fibonacci_subtitulo">Quantidade de números de Fibonacci</string>
+    <string name="filtro_fibonacci_titulo">Nu00fameros de Fibonacci</string>
+    <string name="filtro_fibonacci_subtitulo">Quantidade de nu00fameros de Fibonacci</string>
     <string name="filtro_min_fibonacci_label">Mín. Fibonacci</string>
     <string name="filtro_max_fibonacci_label">Máx. Fibonacci</string>
 
@@ -327,10 +327,8 @@
     <string name="erro_salvar_jogos">Erro ao salvar jogos</string>
 
     <!-- Strings para FiltrosScreen (Compose) -->
-    <string name="filtros_basicos_titulo">Filtros Básicos</string>
-    <string name="numeros_especiais_titulo">Números Especiais</string>
-    <string name="quantidade_de_jogos_label">Quantidade de Jogos a Gerar</string>
-    <string name="quantidade_de_numeros_label">Dezenas por Jogo (15-20)</string>
+    <!-- <string name="numeros_especiais_titulo">Números Especiais</string> --> <!-- Removida por duplicidade e
+    conteúdo diferente da versão revisada -->
     <string name="numeros_fixos_label">Fixar Dezenas</string>
     <string name="numeros_fixos_placeholder">Ex: 1, 5, 10, 22 (separadas por vírgula/espaço)</string>
     <string name="numeros_excluidos_label">Excluir Dezenas</string>
@@ -348,25 +346,18 @@
     <!-- Strings para FiltrosScreen (revisadas e adicionadas) -->
     <string name="filtros_basicos_titulo">Filtros Básicos</string>
     <string name="quantidade_de_jogos_label">Quantidade de Jogos a Gerar</string>
-    <string name="quantidade_de_numeros_label">Dezenas por Jogo (15-20)</string>
     <string name="numeros_especiais_titulo">Definição de Números</string>
-    <string name="numeros_fixos_label">Fixar Dezenas</string>
-    <string name="numeros_fixos_placeholder">Ex: 1, 5, 10, 22 (separadas por vírgula/espaço)</string>
-    <string name="numeros_excluidos_label">Excluir Dezenas</string>
-    <string name="numeros_excluidos_placeholder">Ex: 7, 13, 18, 25 (separadas por vírgula/espaço)</string>
-    <string name="filtros_estatisticos_titulo">Filtros Estatísticos Avançados</string>
 
-    <string name="filtro_soma_total_titulo">Soma Total das Dezenas</string>
-    <string name="filtro_primos_titulo">Quantidade de Números Primos</string>
-    <string name="filtro_fibonacci_titulo">Quantidade de Números de Fibonacci</string>
-    <string name="filtro_miolo_moldura_titulo">Quantidade de Números do Miolo</string> <!-- O slider
+    <string name="filtro_soma_total_completo_titulo">Soma Total das Dezenas</string>
+    <string name="filtro_primos_completo_titulo">Quantidade de Nu00fameros Primos</string>
+    <string name="filtro_fibonacci_completo_titulo">Quantidade de Nu00fameros de Fibonacci</string>
+    <string name="filtro_miolo_completo_titulo">Quantidade de Nu00fameros do Miolo</string> <!-- O
+    slider
     controla o Miolo -->
-    <string name="filtro_multiplos_de_tres_titulo">Quantidade de Múltiplos de 3</string>
-    <!-- A string valor_filtro_multiplos_tres já existe e está correta para o formato %1$d-%2$d -->
+    <string name="filtro_multiplos_de_tres_completo_titulo">Quantidade de Mu00faltiplos de 3</string>
+    <!-- A string valor_filtro_multiplos_tres ju00e1 existe e estu00e1 correta para o formato
+    %1$d-%2$d -->
 
-    <string name="aplicar_filtros_botao">Aplicar</string>
-    <string name="salvar_filtros_botao">Salvar Config.</string>
-    <string name="resetar_filtros_botao">Resetar</string>
     <string name="filtros_aplicados_com_sucesso">Filtros aplicados com sucesso!</string>
     <!-- Fim das strings para FiltrosScreen -->
 
@@ -398,7 +389,39 @@
     <!-- Fim das strings para Filtro de Repetição -->
 
     <!-- Strings para Filtros Estatísticos (usadas na FiltrosScreen) -->
-    <string name="filtro_pares_impares_titulo">Pares/Ímpares</string> <!-- Já existia em
-    GeradorScreen Filtros, OK -->
+
+    <string name="label_info_estatisticas_basicas">Estatísticas básicas dos números selecionados</string>
+
+    <!-- Strings para a seção de seleção de números (GeradorScreen) -->
+    <string name="numeros_disponiveis_label">Dezenas Disponíveis (Escolha até 15)</string>
+    <string name="limpar_selecao_botao">Limpar Seleção</string>
+    <string name="toast_limite_dezenas_excluidas_atingido">Limite de dezenas excluídas atingido.</string>
+    <string name="toast_dezena_ja_excluida">Dezena já está na lista de excluídas.</string>
+    <string name="toast_dezena_fixa_nao_pode_excluir">Dezena fixa não pode ser excluída.</string>
+    <string name="numeros_selecionados_label">Dezenas Selecionadas (%d)</string>
+
+    <!-- Legendas para os ícones de ação da dezena -->
+    <string name="content_description_fixar_dezena">Fixar dezena</string>
+    <string name="content_description_excluir_dezena">Excluir dezena</string>
+    <string name="content_description_remover_fixacao_dezena">Remover fixação da dezena</string>
+    <string name="content_description_remover_exclusao_dezena">Remover exclusão da dezena</string>
+
+    <string name="dialog_max_dezenas_fixas_title">Limite Atingido</string>
+    <string name="dialog_max_dezenas_fixas_message">Você pode fixar no máximo %d dezenas.</string>
+    <string name="dialog_max_dezenas_excluidas_title">Limite Atingido</string>
+    <string name="dialog_max_dezenas_excluidas_message">Você pode excluir no máximo %d dezenas.</string>
+
+    <string name="selecao_tipo_jogo_label">Tipo de Jogo (Teimosinha)</string>
+
+    <string name="label_sequencias_maximas">Máximo de Números em Sequência</string>
+    <string name="label_numeros_por_linha_coluna">Números por Linha/Coluna</string>
+    <string name="label_num_linhas_vazias">Linhas Vazias (0-5)</string>
+    <string name="label_num_colunas_vazias">Colunas Vazias (0-5)</string>
+
+    <!-- Strings para a tela GeradorScreen (Filtros) -->
+    <string name="filtros_avancados_titulo">Filtros Avançados</string>
+    <string name="numeros_excluidos_subtitulo">Defina números que não devem aparecer nos jogos</string>
+    <string name="numeros_fixos_subtitulo">Defina números que devem aparecer em todos os jogos</string>
+    <string name="sequencias_maximas_subtitulo">Controle a quantidade máxima de números consecutivos</string>
 
 </resources>
