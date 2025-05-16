@@ -12,8 +12,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.StarRate
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -139,6 +146,82 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Nova Seção: Configurações de Filtros
+            Text(
+                stringResource(R.string.configuracoes_filtros_titulo_secao),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column {
+                    val salvarFiltrosAutomaticamente by mainViewModel.preferenciasViewModel.salvarFiltrosAutomaticamente.collectAsState()
+
+                    SwitchSettingItem(
+                        icon = Icons.Filled.Save,
+                        title = stringResource(R.string.salvar_filtros_automaticamente_titulo),
+                        subtitle = stringResource(R.string.salvar_filtros_automaticamente_subtitulo),
+                        checked = salvarFiltrosAutomaticamente,
+                        onCheckedChange = { newState ->
+                            mainViewModel.preferenciasViewModel.setSalvarFiltrosAutomaticamente(newState)
+                        }
+                    )
+                    ActionItem(
+                        icon = Icons.Filled.Tune,
+                        title = stringResource(R.string.restaurar_filtros_padrao_titulo),
+                        subtitle = stringResource(R.string.restaurar_filtros_padrao_subtitulo),
+                        onClick = {
+                            mainViewModel.showSnackbar(context.getString(R.string.filtros_restaurados_confirmacao))
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Nova Seção: Gerenciamento de Dados
+            Text(
+                stringResource(R.string.gerenciamento_dados_titulo_secao),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            var showConfirmationDialogLimparJogos by remember { mutableStateOf(false) }
+            if (showConfirmationDialogLimparJogos) {
+                AlertDialog(
+                    onDismissRequest = { showConfirmationDialogLimparJogos = false },
+                    title = { Text(stringResource(R.string.confirmar_limpar_jogos_titulo)) },
+                    text = { Text(stringResource(R.string.confirmar_limpar_jogos_mensagem)) },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                mainViewModel.showSnackbar(context.getString(R.string.todos_jogos_excluidos_confirmacao))
+                                showConfirmationDialogLimparJogos = false
+                            }
+                        ) { Text(stringResource(R.string.confirmar)) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showConfirmationDialogLimparJogos = false }) {
+                            Text(stringResource(R.string.cancelar))
+                        }
+                    }
+                )
+            }
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                ActionItem(
+                    icon = Icons.Filled.DeleteForever,
+                    title = stringResource(R.string.limpar_jogos_salvos_titulo),
+                    subtitle = stringResource(R.string.limpar_jogos_salvos_subtitulo),
+                    onClick = { showConfirmationDialogLimparJogos = true }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 stringResource(R.string.informacoes_titulo),
                 style = MaterialTheme.typography.titleMedium,
@@ -153,6 +236,30 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
                     title = stringResource(R.string.sobre_app_label),
                     subtitle = stringResource(R.string.sobre_app_versao_subtitulo, stringResource(R.string.app_version_name), "Cebola Studios"),
                     onClick = { showSobreDialog = true }
+                )
+                InfoItem(
+                    icon = Icons.Filled.Favorite,
+                    title = stringResource(R.string.agradecimentos_licencas_titulo),
+                    subtitle = stringResource(R.string.agradecimentos_licencas_subtitulo),
+                    onClick = {
+                        mainViewModel.showSnackbar("Agradecimentos/Licenças em breve!")
+                    }
+                )
+                InfoItem(
+                    icon = Icons.Filled.Email,
+                    title = stringResource(R.string.contato_feedback_titulo),
+                    subtitle = stringResource(R.string.contato_feedback_subtitulo),
+                    onClick = {
+                        mainViewModel.showSnackbar("Função de contato em breve!")
+                    }
+                )
+                InfoItem(
+                    icon = Icons.Filled.StarRate,
+                    title = stringResource(R.string.avaliar_app_titulo),
+                    subtitle = stringResource(R.string.avaliar_app_subtitulo),
+                    onClick = {
+                        mainViewModel.showSnackbar("Função de avaliar na loja em breve!")
+                    }
                 )
             }
         }
@@ -266,5 +373,52 @@ fun ActionItem(icon: ImageVector, title: String, subtitle: String, onClick: () -
             Text(title, style = MaterialTheme.typography.bodyLarge)
             Text(subtitle, style = MaterialTheme.typography.bodySmall)
         }
+    }
+}
+
+/**
+ * Item de configuração com um Switch.
+ *
+ * @param icon O [ImageVector] a ser exibido como ícone.
+ * @param title O título da configuração.
+ * @param subtitle O subtítulo descritivo da configuração.
+ * @param checked O estado atual do Switch.
+ * @param onCheckedChange Lambda chamada quando o estado do Switch muda.
+ */
+@Composable
+fun SwitchSettingItem(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCheckedChange(!checked) }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f)
+        ) {
+            Icon(
+                icon,
+                contentDescription = title,
+                modifier = Modifier.padding(end = 16.dp)
+            )
+            Column {
+                Text(title, style = MaterialTheme.typography.bodyLarge)
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            modifier = Modifier.padding(start = 16.dp)
+        )
     }
 }

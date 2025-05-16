@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
 import com.example.cebolaolotofacilgenerator.util.PreferenciasManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -41,6 +42,13 @@ class PreferenciasViewModel(application: Application) : AndroidViewModel(applica
                         scope = viewModelScope,
                         started = SharingStarted.WhileSubscribed(5000),
                         initialValue = emptyList()
+                )
+
+        val salvarFiltrosAutomaticamente: StateFlow<Boolean> =
+                preferenciasManager.salvarFiltrosAutomaticamente.stateIn(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed(5000),
+                        initialValue = false // Valor padrão inicial
                 )
 
         /** Salva a quantidade de números por jogo. */
@@ -92,4 +100,22 @@ class PreferenciasViewModel(application: Application) : AndroidViewModel(applica
         /** Reseta todas as configurações para os valores padrão. */
         fun resetarConfiguracoes() =
                 viewModelScope.launch { preferenciasManager.resetarConfiguracoes() }
+
+        /** Define se os filtros devem ser salvos automaticamente. */
+        fun setSalvarFiltrosAutomaticamente(salvar: Boolean) = viewModelScope.launch {
+            preferenciasManager.setSalvarFiltrosAutomaticamente(salvar)
+        }
+
+        /** Salva uma configuração de filtros completa. */
+        fun salvarConfiguracaoFiltros(config: ConfiguracaoFiltros) = viewModelScope.launch {
+            preferenciasManager.salvarConfiguracaoFiltros(config)
+        }
+
+        /** Carrega a configuração de filtros salva. */
+        fun carregarConfiguracaoFiltros(): StateFlow<ConfiguracaoFiltros?> = // Alterado para retornar StateFlow
+            preferenciasManager.configuracaoFiltros.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = null
+            )
 }

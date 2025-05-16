@@ -11,6 +11,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.outlined.HourglassEmpty
+import androidx.compose.material.icons.outlined.PlaylistAdd
+import androidx.compose.material.icons.outlined.SearchOff
+import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material.icons.filled.DeleteSweep
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -18,8 +30,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +54,13 @@ import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
 import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import kotlinx.coroutines.flow.collectLatest
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.cebolaolotofacilgenerator.Screen
+import androidx.compose.foundation.background
+import androidx.compose.material3.*
 
 enum class TipoListaJogo {
     TODOS,
@@ -118,26 +140,83 @@ fun GerenciamentoJogosScreen(
             }
 
             if (jogosParaExibir.isNullOrEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(stringResource(R.string.nenhum_jogo_encontrado), textAlign = TextAlign.Center)
+                val mensagem: String
+                val icone: ImageVector
+                var textoBotao: String? = null
+                var acaoBotao: (() -> Unit)? = null
+
+                when (tipoListaSelecionada) {
+                    TipoListaJogo.TODOS -> {
+                        mensagem = stringResource(R.string.empty_state_todos_jogos)
+                        icone = Icons.Outlined.PlaylistAdd
+                        textoBotao = stringResource(R.string.gerar_novos_jogos)
+                        acaoBotao = { navController.navigate(Screen.Gerador.createRoute()) }
+                    }
+                    TipoListaJogo.FAVORITOS -> {
+                        mensagem = stringResource(R.string.empty_state_favoritos)
+                        icone = Icons.Outlined.HourglassEmpty
+                    }
+                    TipoListaJogo.CONFERIDOS -> {
+                        mensagem = stringResource(R.string.empty_state_conferidos)
+                        icone = Icons.Outlined.SearchOff
+                    }
                 }
+
+                EmptyStatePlaceholder(
+                    mensagem = mensagem,
+                    icone = icone,
+                    textoBotao = textoBotao,
+                    onAcaoBotaoClick = acaoBotao
+                )
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(jogosParaExibir) { jogo ->
-                        JogoGerenciamentoItem(
-                            jogo = jogo,
-                            onFavoritoClick = { favorito -> jogosViewModel.marcarComoFavorito(jogo, favorito) },
-                            onExcluirClick = { showDialogExcluirJogo = jogo },
-                            onJogoClick = { showDialogDetalhesJogo = jogo }
+                    items(jogosParaExibir, key = { jogo -> jogo.id }) { jogo ->
+                        val dismissState = rememberSwipeToDismissBoxState(
+                            confirmValueChange = {
+                                if (it == SwipeToDismissBoxValue.EndToStart) {
+                                    showDialogExcluirJogo = jogo
+                                    return@rememberSwipeToDismissBoxState true
+                                }
+                                return@rememberSwipeToDismissBoxState false
+                            },
                         )
-                        Divider()
+
+                        SwipeToDismissBox(
+                            state = dismissState,
+                            enableDismissFromStartToEnd = false,
+                            enableDismissFromEndToStart = true,
+                            backgroundContent = {
+                                val color = when (dismissState.dismissDirection) {
+                                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.errorContainer
+                                    else -> Color.Transparent
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .background(color)
+                                        .padding(horizontal = 20.dp),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    Icon(
+                                        Icons.Filled.DeleteSweep,
+                                        contentDescription = stringResource(R.string.excluir_jogo),
+                                        tint = MaterialTheme.colorScheme.onErrorContainer
+                                    )
+                                }
+                            }
+                        ) {
+                            JogoGerenciamentoItem(
+                                jogo = jogo,
+                                onFavoritoClick = { favorito -> jogosViewModel.marcarComoFavorito(jogo, favorito) },
+                                onExcluirClick = { showDialogExcluirJogo = jogo },
+                                onJogoClick = { showDialogDetalhesJogo = jogo }
+                            )
+                        }
                     }
                 }
             }
@@ -244,6 +323,14 @@ fun JogoGerenciamentoItem(
 ) {
     val context = LocalContext.current
     val dateFormat = remember { SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()) }
+    val dezenasConferencia = jogo.dezenasSorteadasConferencia
+    val numerosAcertados = remember(jogo.numeros, dezenasConferencia) {
+        if (jogo.acertos != null && dezenasConferencia != null && dezenasConferencia.isNotEmpty()) {
+            jogo.numeros.filter { it in dezenasConferencia }.toSet()
+        } else {
+            emptySet()
+        }
+    }
 
     Card(
         modifier = Modifier
@@ -254,7 +341,21 @@ fun JogoGerenciamentoItem(
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = jogo.numeros.joinToString(" - "),
+                    buildAnnotatedString {
+                        jogo.numeros.forEachIndexed { index, numero ->
+                            val numeroStr = numero.toString().padStart(2, '0')
+                            if (numero in numerosAcertados) {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.primary)) {
+                                    append(numeroStr)
+                                }
+                            } else {
+                                append(numeroStr)
+                            }
+                            if (index < jogo.numeros.size - 1) {
+                                append(" - ")
+                            }
+                        }
+                    },
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.weight(1f)
                 )
@@ -370,5 +471,45 @@ fun DefaultPreviewGerenciamentoJogosScreen() {
     // GerenciamentoJogosScreen() // Comentado pois requer ViewModels
     CebolaoLotofacilGeneratorTheme {
         Text("Preview desabilitada: GerenciamentoJogosScreen requer ViewModels")
+    }
+}
+
+@Composable
+fun EmptyStatePlaceholder(
+    mensagem: String,
+    icone: ImageVector,
+    modifier: Modifier = Modifier,
+    textoBotao: String? = null,
+    onAcaoBotaoClick: (() -> Unit)? = null
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                imageVector = icone,
+                contentDescription = null,
+                modifier = Modifier.size(80.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+            )
+            Text(
+                text = mensagem,
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (textoBotao != null && onAcaoBotaoClick != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = onAcaoBotaoClick) {
+                    Text(textoBotao)
+                }
+            }
+        }
     }
 } 

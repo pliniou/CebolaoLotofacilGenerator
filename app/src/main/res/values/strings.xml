@@ -442,4 +442,55 @@
 
     <!-- Strings para FiltrosScreen (Conteúdo dos cards de filtros) -->
     <!-- ... existing code ... -->
+
+    <string name="title_notifications">Notifications</string>
+
+    <!-- Strings para GeradorViewModel e Filtros -->
+    <string name="configuracao_filtros_salva_sucesso">Configuração de filtros salva com sucesso!</string>
+    <string name="erro_salvar_configuracao_filtros_null">Erro ao salvar: configuração de filtros não
+        encontrada.</string>
+    <string name="configuracao_filtros_resetada_padrao">Configuração de filtros resetada para o
+        padrão e salva.</string>
+
+    <!-- Strings ausentes de GeradorScreen.kt -->
+    <string name="configuracoes_gerais_titulo">Configurações Gerais</string>
+    <string name="definicao_dezenas_titulo">Definição de Dezenas</string>
+    <string name="numeros_fixos_label_long">Números Fixos</string>
+    <string name="numeros_fixos_explicacao">Defina dezenas que devem aparecer em todos os jogos
+        gerados.</string>
+    <string name="numeros_excluidos_label_long">Números Excluídos</string>
+    <string name="numeros_excluidos_explicacao">Defina dezenas que não devem aparecer em nenhum jogo
+        gerado.</string>
+    <string name="repeticao_concurso_anterior_titulo">Repetição do Concurso Anterior</string>
+
+    <!-- Strings ausentes de GerenciamentoJogosScreen.kt -->
+    <string name="empty_state_todos_jogos">Nenhum jogo salvo encontrado. Gere e salve novos jogos!</string>
+    <string name="empty_state_favoritos">Você ainda não marcou nenhum jogo como favorito.</string>
+    <string name="empty_state_conferidos">Nenhum jogo conferido ainda. Confira seus jogos após um
+        sorteio!</string>
+
+    <!-- Strings ausentes de SettingsScreen.kt -->
+    <string name="configuracoes_filtros_titulo_secao">Configurações de Filtros</string>
+    <string name="salvar_filtros_automaticamente_titulo">Salvar Filtros Automaticamente</string>
+    <string name="salvar_filtros_automaticamente_subtitulo">Salva suas configurações de filtros ao
+        sair da tela de geração.</string>
+    <string name="restaurar_filtros_padrao_titulo">Restaurar Filtros Padrão</string>
+    <string name="restaurar_filtros_padrao_subtitulo">Redefine todas as configurações de filtros
+        para os valores originais.</string>
+    <string name="filtros_restaurados_confirmacao">Filtros restaurados para o padrão com sucesso!</string>
+    <string name="gerenciamento_dados_titulo_secao">Gerenciamento de Dados</string>
+    <string name="confirmar_limpar_jogos_titulo">Confirmar Limpeza</string>
+    <string name="confirmar_limpar_jogos_mensagem">Tem certeza que deseja excluir TODOS os jogos
+        salvos? Esta ação não pode ser desfeita.</string>
+    <string name="todos_jogos_excluidos_confirmacao">Todos os jogos salvos foram excluídos com
+        sucesso!</string>
+    <string name="limpar_jogos_salvos_titulo">Limpar Jogos Salvos</string>
+    <string name="limpar_jogos_salvos_subtitulo">Exclui todos os jogos que você salvou no
+        aplicativo.</string>
+    <string name="agradecimentos_licencas_titulo">Agradecimentos e Licenças</string>
+    <string name="agradecimentos_licencas_subtitulo">Informações sobre bibliotecas de terceiros.</string>
+    <string name="contato_feedback_titulo">Contato e Feedback</string>
+    <string name="contato_feedback_subtitulo">Envie suas sugestões ou relate problemas.</string>
+    <string name="avaliar_app_titulo">Avaliar o Aplicativo</string>
+    <string name="avaliar_app_subtitulo">Gostou do app? Deixe sua avaliação na loja!</string>
 </resources>

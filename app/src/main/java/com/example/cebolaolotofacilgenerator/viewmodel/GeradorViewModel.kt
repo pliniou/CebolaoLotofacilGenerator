@@ -595,4 +595,35 @@ class GeradorViewModel(
             }
         }
     }
+
+    /**
+     * Salva a configuração de filtros atual (obtida de [FiltrosViewModel]) nas preferências do usuário.
+     * Isso permite que os filtros sejam restaurados na próxima vez que o app for aberto,
+     * se a opção de salvar automaticamente estiver ativa.
+     */
+    fun salvarConfiguracaoFiltrosAtual() {
+        viewModelScope.launch {
+            val configAtual = filtrosViewModel.configuracaoFiltros.value
+            if (configAtual != null) {
+                preferenciasViewModel.salvarConfiguracaoFiltros(configAtual)
+                _mensagem.postValue(getApplication<Application>().getString(R.string.configuracao_filtros_salva_sucesso))
+            } else {
+                _mensagem.postValue(getApplication<Application>().getString(R.string.erro_salvar_configuracao_filtros_null))
+            }
+        }
+    }
+
+    /**
+     * Reseta a configuração de filtros para os valores padrão definidos em [ConfiguracaoFiltros]
+     * e salva essa configuração padrão nas preferências do usuário.
+     * Isso também limpa quaisquer filtros salvos anteriormente.
+     */
+    fun resetarConfiguracaoFiltrosParaPadrao() {
+        viewModelScope.launch {
+            val configPadrao = ConfiguracaoFiltros() // Cria uma nova instância com valores padrão
+            filtrosViewModel.atualizarFiltro(configPadrao) // Atualiza no FiltrosViewModel
+            preferenciasViewModel.salvarConfiguracaoFiltros(configPadrao) // Salva o padrão nas preferências
+            _mensagem.postValue(getApplication<Application>().getString(R.string.configuracao_filtros_resetada_padrao))
+        }
+    }
 }

@@ -39,6 +39,6 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object Conferencia : Screen("conferencia", "Conferência", Icons.Filled.Checklist)
     object Favoritos : Screen("favoritos", "Favoritos", Icons.Filled.Favorite)
     object Resultados : Screen("resultados", "Resultados", Icons.AutoMirrored.Filled.List)
-    object Settings : Screen("settings", "Configurações", Icons.Filled.Settings)
+    object Settings : Screen("settings", "Ajustes", Icons.Filled.Settings)
     object JogosGerados : Screen("jogos_gerados", "Jogos Gerados", Icons.Filled.Checklist)
 }

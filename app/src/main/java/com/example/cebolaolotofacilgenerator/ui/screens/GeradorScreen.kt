@@ -71,6 +71,9 @@ fun GeradorScreen(
         // Coletar o estado de configuracaoFiltros do FiltrosViewModel
         val configFiltrosGlobais by filtrosViewModel.configuracaoFiltros.observeAsState(ConfiguracaoFiltros())
 
+        // Observar se tem último resultado salvo para o botão de carregar dezenas
+        val temUltimoResultado by filtrosViewModel.temUltimoResultadoSalvo.collectAsState()
+
         // Observar o status da operação e os jogos gerados (se necessário aqui)
         val operacaoStatus by geradorViewModel.operacaoStatus.observeAsState(OperacaoStatus.OCIOSO)
         // val mensagem by geradorViewModel.mensagem.observeAsState("") // Mensagem agora é via SnackbarManager ou MainViewModel
@@ -175,6 +178,35 @@ fun GeradorScreen(
                                         .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                        // Novas seções de configuração
+                        ConfiguracoesGeraisCard(
+                            configFiltros = configFiltrosGlobais,
+                            onConfigChange = { novaConfig ->
+                                filtrosViewModel.atualizarFiltro(novaConfig)
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        DefinicaoDezenasCard(
+                            configFiltros = configFiltrosGlobais,
+                            onConfigChange = { novaConfig ->
+                                filtrosViewModel.atualizarFiltro(novaConfig)
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        RepeticaoConcursoAnteriorCard(
+                            configFiltros = configFiltrosGlobais,
+                            temUltimoResultado = temUltimoResultado,
+                            onConfigChange = { novaConfig ->
+                                filtrosViewModel.atualizarFiltro(novaConfig)
+                            },
+                            onCarregarDezenasClick = {
+                                filtrosViewModel.carregarDezenasDoUltimoResultadoSalvo()
+                            },
+                            geradorViewModel = geradorViewModel // Passando para o FiltroCardMinMax interno
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        // Fim das novas seções
+
                         Text(
                                 "Filtros Estatísticos:",
                                 style = MaterialTheme.typography.titleLarge,
@@ -195,7 +227,6 @@ fun GeradorScreen(
                                 if (novoMin != null) {
                                     geradorViewModel.atualizarFiltroParesImpares(configFiltrosGlobais.filtroParesImpares, novoMin, configFiltrosGlobais.maxImpares)
                                 } else if (novoMinStr.isEmpty()) {
-                                     // Tratar input vazio, talvez resetar ou usar valor padrão do ConfiguracaoFiltros
                                      geradorViewModel.atualizarFiltroParesImpares(configFiltrosGlobais.filtroParesImpares, ConfiguracaoFiltros().minImpares, configFiltrosGlobais.maxImpares)
                                 }
                             },
@@ -209,7 +240,17 @@ fun GeradorScreen(
                                 }
                             },
                             labelMin = stringResource(R.string.filtro_min_impares_label),
-                            labelMax = stringResource(R.string.filtro_max_impares_label)
+                            labelMax = stringResource(R.string.filtro_max_impares_label),
+                            rangeSliderValue = configFiltrosGlobais.minImpares.toFloat()..configFiltrosGlobais.maxImpares.toFloat(),
+                            onRangeSliderValueChange = { novaRange ->
+                                geradorViewModel.atualizarFiltroParesImpares(
+                                    configFiltrosGlobais.filtroParesImpares,
+                                    novaRange.start.toInt().coerceIn(0,15),
+                                    novaRange.endInclusive.toInt().coerceIn(0,15)
+                                )
+                            },
+                            valueRangeSlider = 0f..15f,
+                            stepsSlider = 14
                         )
 
                         FiltroCardMinMax(
@@ -222,7 +263,6 @@ fun GeradorScreen(
                             minInput = configFiltrosGlobais.minSoma.toString(),
                             onMinInputChange = { novoMinStr ->
                                 val novoMin = novoMinStr.toIntOrNull()
-                                // Permitir input vazio para resetar para o default do ConfiguracaoFiltros
                                 val minToSet = if (novoMinStr.isEmpty()) ConfiguracaoFiltros().minSoma else novoMin
                                 if (minToSet != null) {
                                    geradorViewModel.atualizarFiltroSomaTotal(configFiltrosGlobais.filtroSomaTotal, minToSet, configFiltrosGlobais.maxSoma)
@@ -237,7 +277,17 @@ fun GeradorScreen(
                                 }
                             },
                             labelMin = stringResource(R.string.filtro_soma_min_label),
-                            labelMax = stringResource(R.string.filtro_soma_max_label)
+                            labelMax = stringResource(R.string.filtro_soma_max_label),
+                            rangeSliderValue = configFiltrosGlobais.minSoma.toFloat()..configFiltrosGlobais.maxSoma.toFloat(),
+                            onRangeSliderValueChange = { novaRange ->
+                                geradorViewModel.atualizarFiltroSomaTotal(
+                                    configFiltrosGlobais.filtroSomaTotal,
+                                    novaRange.start.toInt(),
+                                    novaRange.endInclusive.toInt()
+                                )
+                            },
+                            valueRangeSlider = 120f..270f,
+                            stepsSlider = 149
                         )
 
                         FiltroCardMinMax(
@@ -264,7 +314,17 @@ fun GeradorScreen(
                                 }
                             },
                             labelMin = stringResource(R.string.filtro_min_primos_label),
-                            labelMax = stringResource(R.string.filtro_max_primos_label)
+                            labelMax = stringResource(R.string.filtro_max_primos_label),
+                            rangeSliderValue = configFiltrosGlobais.minPrimos.toFloat()..configFiltrosGlobais.maxPrimos.toFloat(),
+                            onRangeSliderValueChange = { novaRange ->
+                                geradorViewModel.atualizarFiltroPrimos(
+                                    configFiltrosGlobais.filtroPrimos,
+                                    novaRange.start.toInt(),
+                                    novaRange.endInclusive.toInt()
+                                )
+                            },
+                            valueRangeSlider = 0f..9f,
+                            stepsSlider = 8
                         )
 
                         FiltroCardMinMax(
@@ -291,7 +351,17 @@ fun GeradorScreen(
                                 }
                             },
                             labelMin = stringResource(R.string.filtro_min_fibonacci_label),
-                            labelMax = stringResource(R.string.filtro_max_fibonacci_label)
+                            labelMax = stringResource(R.string.filtro_max_fibonacci_label),
+                            rangeSliderValue = configFiltrosGlobais.minFibonacci.toFloat()..configFiltrosGlobais.maxFibonacci.toFloat(),
+                            onRangeSliderValueChange = { novaRange ->
+                                geradorViewModel.atualizarFiltroFibonacci(
+                                    configFiltrosGlobais.filtroFibonacci,
+                                    novaRange.start.toInt(),
+                                    novaRange.endInclusive.toInt()
+                                )
+                            },
+                            valueRangeSlider = 0f..7f,
+                            stepsSlider = 6
                         )
                         
                         FiltroCardMinMax(
@@ -318,7 +388,17 @@ fun GeradorScreen(
                                 }
                             },
                             labelMin = stringResource(R.string.filtro_min_miolo_label),
-                            labelMax = stringResource(R.string.filtro_max_miolo_label)
+                            labelMax = stringResource(R.string.filtro_max_miolo_label),
+                            rangeSliderValue = configFiltrosGlobais.minMiolo.toFloat()..configFiltrosGlobais.maxMiolo.toFloat(),
+                            onRangeSliderValueChange = { novaRange ->
+                                geradorViewModel.atualizarFiltroMioloMoldura(
+                                    configFiltrosGlobais.filtroMioloMoldura,
+                                    novaRange.start.toInt(),
+                                    novaRange.endInclusive.toInt()
+                                )
+                            },
+                            valueRangeSlider = 0f..9f,
+                            stepsSlider = 8
                         )
 
                         FiltroCardMinMax(
@@ -345,58 +425,48 @@ fun GeradorScreen(
                                 }
                             },
                             labelMin = stringResource(R.string.filtro_min_multiplos_de_tres_label),
-                            labelMax = stringResource(R.string.filtro_max_multiplos_de_tres_label)
-                        )
-
-                        FiltroCardMinMax(
-                            titulo = stringResource(R.string.filtro_repeticao_dezenas_titulo),
-                            subtitulo = stringResource(R.string.filtro_repeticao_dezenas_subtitulo),
-                            checado = configFiltrosGlobais.filtroRepeticaoConcursoAnterior,
-                            onCheckedChange = { ativado ->
-                                geradorViewModel.atualizarFiltroRepeticaoDezenas(ativado, configFiltrosGlobais.minRepeticaoConcursoAnterior, configFiltrosGlobais.maxRepeticaoConcursoAnterior)
+                            labelMax = stringResource(R.string.filtro_max_multiplos_de_tres_label),
+                            rangeSliderValue = configFiltrosGlobais.minMultiplos.toFloat()..configFiltrosGlobais.maxMultiplos.toFloat(),
+                            onRangeSliderValueChange = { novaRange ->
+                                geradorViewModel.atualizarFiltroMultiplosDeTres(
+                                    configFiltrosGlobais.filtroMultiplosDeTres,
+                                    novaRange.start.toInt(),
+                                    novaRange.endInclusive.toInt()
+                                )
                             },
-                            minInput = configFiltrosGlobais.minRepeticaoConcursoAnterior.toString(),
-                            onMinInputChange = { novoMinStr ->
-                                val novoMin = novoMinStr.toIntOrNull()
-                                val minToSet = if (novoMinStr.isEmpty()) ConfiguracaoFiltros().minRepeticaoConcursoAnterior else novoMin
-                                if (minToSet != null) {
-                                    geradorViewModel.atualizarFiltroRepeticaoDezenas(configFiltrosGlobais.filtroRepeticaoConcursoAnterior, minToSet, configFiltrosGlobais.maxRepeticaoConcursoAnterior)
-                                }
-                            },
-                            maxInput = configFiltrosGlobais.maxRepeticaoConcursoAnterior.toString(),
-                            onMaxInputChange = { novoMaxStr ->
-                                val novoMax = novoMaxStr.toIntOrNull()
-                                val maxToSet = if (novoMaxStr.isEmpty()) ConfiguracaoFiltros().maxRepeticaoConcursoAnterior else novoMax
-                                if (maxToSet != null) {
-                                   geradorViewModel.atualizarFiltroRepeticaoDezenas(configFiltrosGlobais.filtroRepeticaoConcursoAnterior, configFiltrosGlobais.minRepeticaoConcursoAnterior, maxToSet)
-                                }
-                            },
-                            labelMin = stringResource(R.string.filtro_min_repeticao_label),
-                            labelMax = stringResource(R.string.filtro_max_repeticao_label)
+                            valueRangeSlider = 0f..8f,
+                            stepsSlider = 7
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // TODO: Exibir status de carregamento do geradorViewModel.operacaoStatus
+                        // Botões de Ação para Configuração de Filtros
+                        AcoesConfiguracaoFiltrosButtons(
+                            onSalvarClick = {
+                                filtrosViewModel.salvarConfiguracaoFiltrosAtual() // Método a ser implementado/verificado no ViewModel
+                                mainViewModel.showSnackbar("Configurações de filtro salvas!") // Exemplo de feedback
+                            },
+                            onResetarClick = {
+                                filtrosViewModel.resetarConfiguracaoFiltrosParaPadrao() // Método a ser implementado/verificado no ViewModel
+                                mainViewModel.showSnackbar("Configurações de filtro restauradas para o padrão!") // Exemplo de feedback
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
                         if (operacaoStatus == OperacaoStatus.CARREGANDO) {
                                 CircularProgressIndicator(
                                         modifier = Modifier.padding(vertical = 16.dp)
                                 )
                         }
 
-                        // Botão dinâmico para geração de jogos
                         BotaoGerarJogos(
                             status = operacaoStatus,
                             quantidadeJogos = quantidadeJogos,
                             quantidadeNumeros = quantidadeNumeros,
                             filtrosAtivos = filtrosEstatisticosAtivos,
-                            dezenasFixas = dezenasFixasParaGeracao, // Passar as dezenas fixas corretas para geração
+                            dezenasFixas = dezenasFixasParaGeracao, 
                             onGerarClick = { geradorViewModel.gerarJogosComConfiguracaoAtual() }
                         )
-
-                        // TODO: Exibir mensagens de erro/sucesso do geradorViewModel.mensagem
-                        // TODO: Exibir status de carregamento do geradorViewModel.operacaoStatus
-                        // (parcialmente feito acima)
                 }
         }
 }
@@ -447,6 +517,10 @@ fun FiltroCardMinMax(
         onMaxInputChange: (String) -> Unit,
         labelMin: String,
         labelMax: String,
+        rangeSliderValue: ClosedFloatingPointRange<Float>,
+        onRangeSliderValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+        valueRangeSlider: ClosedFloatingPointRange<Float>,
+        stepsSlider: Int,
         modifier: Modifier = Modifier
 ) {
         Card(
@@ -487,6 +561,14 @@ fun FiltroCardMinMax(
                                                 singleLine = true
                                         )
                                 }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                RangeSlider(
+                                    value = rangeSliderValue,
+                                    onValueChange = onRangeSliderValueChange,
+                                    valueRange = valueRangeSlider,
+                                    steps = stepsSlider,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
                         }
                 }
         }
@@ -511,20 +593,20 @@ fun SeletorDezenasGrid(
                 )
                 Box(
                         modifier = Modifier.fillMaxWidth()
-                ) { // Para centralizar a grade se ela não preencher a largura
+                ) {
                         LazyVerticalGrid(
-                                columns = GridCells.Fixed(5), // 5 colunas
+                                columns = GridCells.Fixed(5),
                                 contentPadding =
                                         PaddingValues(
                                                 0.dp
-                                        ), // Sem padding interno da LazyVerticalGrid
+                                        ),
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 modifier =
                                         Modifier.align(Alignment.Center)
                                                 .height(
                                                         280.dp
-                                                ) // Centraliza a grade e define altura fixa
+                                                )
                                 ) {
                                 items(todasDezenas) { dezena ->
                                         val isSelected = dezena in dezenasSelecionadas
@@ -552,8 +634,7 @@ fun SeletorDezenasGrid(
                                                                                         .copy(
                                                                                                 alpha =
                                                                                                         0.12f
-                                                                                        ), // Cor
-                                                                                // desabilitada
+                                                                                        ),
                                                                                 contentColor =
                                                                                         MaterialTheme
                                                                                         .colorScheme
@@ -565,13 +646,13 @@ fun SeletorDezenasGrid(
                                                                 )
                                                         else ->
                                                                 ButtonDefaults
-                                                                        .outlinedButtonColors( // Padrão
+                                                                        .outlinedButtonColors(
                                                                                 containerColor =
-                                                                                        Color.Transparent, // Fundo transparente para OutlinedButton
+                                                                                        Color.Transparent,
                                                                                 contentColor =
                                                                                         MaterialTheme
                                                                                                 .colorScheme
-                                                                                                .primary // Cor do texto padrão
+                                                                                                .primary
                                                                         )
                                                 }
                                         val borderColor =
@@ -595,7 +676,7 @@ fun SeletorDezenasGrid(
                                                                         1.dp,
                                                                         MaterialTheme.colorScheme
                                                                                 .outline
-                                                                ) // Borda padrão
+                                                                )
                                                 }
 
                                         OutlinedButton(
@@ -603,22 +684,20 @@ fun SeletorDezenasGrid(
                                                 modifier =
                                                         Modifier.aspectRatio(
                                                                         1f
-                                                                ) // Para fazer os botões quadrados
+                                                                )
                                                                 .padding(
                                                                         2.dp
-                                                                ), // Padding mínimo entre botões
+                                                                ),
                                                 enabled = isEnabled,
                                                 shape =
                                                         MaterialTheme.shapes
-                                                                .small, // Bordas levemente
-                                                // arredondadas
+                                                                .small,
                                                 colors = buttonColors,
                                                 border = borderColor,
                                                 contentPadding =
                                                         PaddingValues(
                                                                 0.dp
-                                                        ) // Remove padding interno do botão para
-                                                // centralizar texto
+                                                        )
                                                 ) {
                                                 Text(
                                                         text =
@@ -626,14 +705,265 @@ fun SeletorDezenasGrid(
                                                                         .padStart(
                                                                                 2,
                                                                                 '0'
-                                                                        ), // Formata com dois
-                                                        // dígitos
+                                                                        ),
                                                         textAlign = TextAlign.Center
                                                 )
                                         }
                                 }
                         }
                 }
-                Spacer(modifier = Modifier.height(8.dp)) // Espaço após a grade
+                Spacer(modifier = Modifier.height(8.dp))
         }
+}
+
+// Novo Composable para Configurações Gerais
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ConfiguracoesGeraisCard(
+    configFiltros: ConfiguracaoFiltros,
+    onConfigChange: (ConfiguracaoFiltros) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = stringResource(R.string.configuracoes_gerais_titulo), // Adicionar string resource
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+            OutlinedTextField(
+                value = configFiltros.quantidadeJogos.toString(),
+                onValueChange = { novoValorStr ->
+                    val novoValor = novoValorStr.toIntOrNull() ?: 1
+                    onConfigChange(configFiltros.copy(quantidadeJogos = novoValor.coerceIn(1, 100)))
+                },
+                label = { Text(stringResource(R.string.quantidade_de_jogos_label)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = configFiltros.quantidadeNumerosPorJogo.toString(),
+                onValueChange = { novoValorStr ->
+                    val novoValor = novoValorStr.toIntOrNull() ?: 15
+                    if (novoValor in 15..20) { // Limite da Lotofácil
+                        onConfigChange(configFiltros.copy(quantidadeNumerosPorJogo = novoValor))
+                    }
+                },
+                label = { Text(stringResource(R.string.quantidade_de_numeros_label)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                // Informação adicional de que é fixo em 15 para Lotofácil, mas o app permite mais.
+                // supportingText = { Text(stringResource(R.string.info_qtd_numeros_lotofacil)) } // Adicionar string
+            )
+        }
+    }
+}
+
+// Novo Composable para Definição de Dezenas (Fixas e Excluídas)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DefinicaoDezenasCard(
+    configFiltros: ConfiguracaoFiltros,
+    onConfigChange: (ConfiguracaoFiltros) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = stringResource(R.string.definicao_dezenas_titulo), // Adicionar string resource
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            // Dezenas Fixas
+            Text(
+                text = stringResource(R.string.numeros_fixos_label_long), // Adicionar string: "Dezenas que DEVEM estar no jogo:"
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+            )
+            Text(
+                text = stringResource(R.string.numeros_fixos_explicacao), // Adicionar string: "Escolha até 10 dezenas."
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            SeletorDezenasGrid(
+                titulo = "", // O título já está acima
+                dezenasSelecionadas = configFiltros.numerosFixos,
+                dezenasDesabilitadas = configFiltros.numerosExcluidos, // Não pode fixar uma dezena já excluída
+                onDezenaClick = { dezenaClicada ->
+                    val fixosAtuais = configFiltros.numerosFixos.toMutableList()
+                    if (dezenaClicada in fixosAtuais) {
+                        fixosAtuais.remove(dezenaClicada)
+                    } else {
+                        if (fixosAtuais.size < 10) { // Limite de 10 dezenas fixas
+                           fixosAtuais.add(dezenaClicada)
+                        }
+                    }
+                    onConfigChange(configFiltros.copy(numerosFixos = fixosAtuais.sorted()))
+                }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Dezenas Excluídas
+            Text(
+                text = stringResource(R.string.numeros_excluidos_label_long), // Adicionar string: "Dezenas que NÃO DEVEM estar no jogo:"
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+            )
+            Text(
+                text = stringResource(R.string.numeros_excluidos_explicacao), // Adicionar string: "Escolha dezenas a serem evitadas."
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            SeletorDezenasGrid(
+                titulo = "", // O título já está acima
+                dezenasSelecionadas = configFiltros.numerosExcluidos,
+                dezenasDesabilitadas = configFiltros.numerosFixos, // Não pode excluir uma dezena já fixada
+                onDezenaClick = { dezenaClicada ->
+                    val excluidosAtuais = configFiltros.numerosExcluidos.toMutableList()
+                    if (dezenaClicada in excluidosAtuais) {
+                        excluidosAtuais.remove(dezenaClicada)
+                    } else {
+                         // Não há limite explícito para excluídos, mas não deve exceder um número razoável (ex: 10 também)
+                         // Para Lotofácil, se fixar muitas, excluir muitas pode levar a zero combinações.
+                         // O limite de 10 para fixos e 10 para excluídos, não sendo os mesmos, parece ok.
+                        if (excluidosAtuais.size < 10) { // Aplicando um limite similar aos fixos por segurança
+                            excluidosAtuais.add(dezenaClicada)
+                        }
+                    }
+                    onConfigChange(configFiltros.copy(numerosExcluidos = excluidosAtuais.sorted()))
+                }
+            )
+        }
+    }
+}
+
+// Novo Composable para Repetição do Concurso Anterior
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RepeticaoConcursoAnteriorCard(
+    configFiltros: ConfiguracaoFiltros,
+    temUltimoResultado: Boolean,
+    onConfigChange: (ConfiguracaoFiltros) -> Unit,
+    onCarregarDezenasClick: () -> Unit,
+    geradorViewModel: GeradorViewModel // Necessário para o FiltroCardMinMax
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = stringResource(R.string.repeticao_concurso_anterior_titulo), // Adicionar string
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            OutlinedTextField(
+                value = configFiltros.dezenasConcursoAnterior.joinToString(","),
+                onValueChange = {
+                    val numeros = it.split(Regex("[^\\d]+"))
+                        .filter { s -> s.isNotBlank() }
+                        .mapNotNull { s -> s.toIntOrNull()?.coerceIn(1,25) }
+                        .distinct()
+                        .sorted()
+                    if (numeros.size <= 15) { // Lotofácil tem 15 dezenas sorteadas
+                        onConfigChange(configFiltros.copy(dezenasConcursoAnterior = numeros))
+                    }
+                },
+                label = { Text(stringResource(R.string.label_dezenas_concurso_anterior)) }, // Reutilizar string existente
+                placeholder = { Text(stringResource(R.string.placeholder_dezenas_concurso_anterior)) }, // Reutilizar string existente
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = onCarregarDezenasClick,
+                enabled = temUltimoResultado,
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text(stringResource(R.string.carregar_dezenas_salvas_botao)) // Reutilizar string existente
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Usar o FiltroCardMinMax para a quantidade de dezenas a repetir
+            FiltroCardMinMax(
+                titulo = stringResource(R.string.filtro_repeticao_dezenas_titulo), // Reutilizar string
+                subtitulo = stringResource(R.string.filtro_repeticao_dezenas_subtitulo), // Reutilizar string
+                checado = configFiltros.filtroRepeticaoConcursoAnterior,
+                onCheckedChange = { ativado ->
+                    // Aqui, onConfigChange atualiza o filtro global. 
+                    // O geradorViewModel.atualizarFiltroRepeticaoDezenas é mais específico.
+                    // Para consistência, deveríamos ter um método no filtrosViewModel para atualizar partes do config,
+                    // ou o geradorViewModel deveria operar sobre o mesmo objeto configFiltros.
+                    // Por ora, mantendo a chamada ao geradorViewModel conforme estava antes da refatoração.
+                    geradorViewModel.atualizarFiltroRepeticaoDezenas(ativado, configFiltros.minRepeticaoConcursoAnterior, configFiltros.maxRepeticaoConcursoAnterior)
+                },
+                minInput = configFiltros.minRepeticaoConcursoAnterior.toString(),
+                onMinInputChange = { novoMinStr ->
+                    val novoMin = novoMinStr.toIntOrNull()
+                    val minToSet = if (novoMinStr.isEmpty()) ConfiguracaoFiltros().minRepeticaoConcursoAnterior else novoMin
+                    if (minToSet != null) {
+                        geradorViewModel.atualizarFiltroRepeticaoDezenas(configFiltros.filtroRepeticaoConcursoAnterior, minToSet, configFiltros.maxRepeticaoConcursoAnterior)
+                    }
+                },
+                maxInput = configFiltros.maxRepeticaoConcursoAnterior.toString(),
+                onMaxInputChange = { novoMaxStr ->
+                    val novoMax = novoMaxStr.toIntOrNull()
+                    val maxToSet = if (novoMaxStr.isEmpty()) ConfiguracaoFiltros().maxRepeticaoConcursoAnterior else novoMax
+                    if (maxToSet != null) {
+                       geradorViewModel.atualizarFiltroRepeticaoDezenas(configFiltros.filtroRepeticaoConcursoAnterior, configFiltros.minRepeticaoConcursoAnterior, maxToSet)
+                    }
+                },
+                labelMin = stringResource(R.string.filtro_min_repeticao_label), // Reutilizar string
+                labelMax = stringResource(R.string.filtro_max_repeticao_label), // Reutilizar string
+                rangeSliderValue = configFiltros.minRepeticaoConcursoAnterior.toFloat()..configFiltros.maxRepeticaoConcursoAnterior.toFloat(),
+                onRangeSliderValueChange = { novaRange ->
+                    geradorViewModel.atualizarFiltroRepeticaoDezenas(
+                        configFiltros.filtroRepeticaoConcursoAnterior,
+                        novaRange.start.toInt().coerceIn(0,15),
+                        novaRange.endInclusive.toInt().coerceIn(0,15)
+                    )
+                },
+                valueRangeSlider = 0f..15f,
+                stepsSlider = 14
+            )
+        }
+    }
+}
+
+// Novo Composable para Botões de Ação de Filtros
+@Composable
+fun AcoesConfiguracaoFiltrosButtons(
+    onSalvarClick: () -> Unit,
+    onResetarClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Button(onClick = onSalvarClick) {
+            Text(stringResource(R.string.salvar_filtros_botao)) // Reutilizar string de FiltrosScreen ou criar nova
+        }
+        Button(onClick = onResetarClick) {
+            Text(stringResource(R.string.resetar_filtros_botao)) // Reutilizar string de FiltrosScreen ou criar nova
+        }
+    }
 }

@@ -11,6 +11,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Style
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -139,52 +141,91 @@ fun PrincipalScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(text = stringResource(id = R.string.resumo_jogos_e_resultados), style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = stringResource(id = R.string.jogos_salvos_contagem, jogosGerados?.size ?: 0))
-                    ultimoResultado?.let { resultado ->
-                        Text(text = stringResource(id = R.string.resultado_concurso, resultado.id))
-                    } ?: Text(text = stringResource(id = R.string.nenhum_resultado_salvo))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Outlined.Style, 
+                            contentDescription = null, 
+                            modifier = Modifier.size(18.dp).padding(end = 4.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(text = stringResource(id = R.string.jogos_salvos_contagem, jogosGerados?.size ?: 0))
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info, 
+                            contentDescription = null, 
+                            modifier = Modifier.size(18.dp).padding(end = 4.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        ultimoResultado?.let { resultado ->
+                            Text(text = stringResource(id = R.string.resultado_concurso, resultado.id))
+                        } ?: Text(text = stringResource(id = R.string.nenhum_resultado_salvo))
+                    }
                 }
             }
 
             PrincipalScreenButton(
                 text = stringResource(id = R.string.gerador_de_jogos),
                 icon = Icons.Filled.AddCircle,
-                onClick = { navController.navigate(Screen.Gerador.createRoute()) }
+                onClick = { navController.navigate(Screen.Gerador.createRoute()) },
+                isPrimary = true
             )
             PrincipalScreenButton(
                 text = stringResource(id = R.string.conferir_jogos),
                 icon = Icons.Filled.CheckCircle,
-                onClick = { navController.navigate(Screen.Conferencia.route) }
+                onClick = { navController.navigate(Screen.Conferencia.route) },
+                isPrimary = false
             )
             PrincipalScreenButton(
                 text = stringResource(id = R.string.gerenciar_jogos_salvos),
                 icon = Icons.Filled.List,
-                onClick = { navController.navigate(Screen.JogosGerados.route) }
+                onClick = { navController.navigate(Screen.JogosGerados.route) },
+                isPrimary = false
             )
             PrincipalScreenButton(
                 text = stringResource(id = R.string.configuracoes_app),
                 icon = Icons.Filled.Settings,
-                onClick = { navController.navigate(Screen.Settings.route) }
+                onClick = { navController.navigate(Screen.Settings.route) },
+                isPrimary = false
             )
         }
     }
 }
 
 @Composable
-fun PrincipalScreenButton(text: String, icon: ImageVector, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp),
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+fun PrincipalScreenButton(text: String, icon: ImageVector, onClick: () -> Unit, isPrimary: Boolean) {
+    if (isPrimary) {
+        Button(
+            onClick = onClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp),
+            shape = MaterialTheme.shapes.medium
         ) {
-            Icon(imageVector = icon, contentDescription = null)
-            Text(text)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(imageVector = icon, contentDescription = null)
+                Text(text)
+            }
+        }
+    } else {
+        OutlinedButton(
+            onClick = onClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(imageVector = icon, contentDescription = null)
+                Text(text)
+            }
         }
     }
 }

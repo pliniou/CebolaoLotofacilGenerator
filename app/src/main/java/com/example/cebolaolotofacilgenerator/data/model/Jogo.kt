@@ -13,6 +13,7 @@ import java.util.Date
  * @property favorito Indica se o jogo foi marcado como favorito pelo usuário.
  * @property acertos Número de acertos do jogo quando conferido com um resultado. Nulo se não conferido.
  * @property concursoConferido ID do concurso ([Resultado.id]) com o qual este jogo foi conferido. Nulo se não conferido.
+ * @property dezenasSorteadasConferencia Dezenas sorteadas no concurso utilizado para conferência.
  * @property quantidadePares Quantidade de números pares no jogo.
  * @property quantidadeImpares Quantidade de números ímpares no jogo.
  * @property quantidadePrimos Quantidade de números primos no jogo.
@@ -40,6 +41,9 @@ data class Jogo(
 
         // ID do concurso com o qual o jogo foi conferido - null se não foi conferido
         val concursoConferido: Long? = null,
+
+        // Dezenas sorteadas no concurso utilizado para conferência
+        val dezenasSorteadasConferencia: List<Int>? = null,
 
         // Características estatísticas do jogo
         val quantidadePares: Int, // Renomeado para consistência
@@ -93,7 +97,8 @@ data class Jogo(
                     quantidadeMiolo = miolo,
                     quantidadeMoldura = moldura, // Usa a moldura calculada
                     quantidadeMultiplosDeTres = multiplosTres,
-                    soma = soma // Usa o nome consistente
+                    soma = soma, // Usa o nome consistente
+                    dezenasSorteadasConferencia = null, // Inicializa como nulo
                     // 'favorito', 'acertos', 'concursoConferido' terão valores padrão
                     )
         }

@@ -10,6 +10,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
+import com.google.gson.Gson
 
 /**
  * Gerenciador de preferências do usuário usando DataStore.
@@ -42,8 +44,16 @@ class PreferenciasManager(private val context: Context) {
         // Números fixos/excluídos (armazenados como string separada por vírgulas)
         val NUMEROS_FIXOS = stringPreferencesKey("numeros_fixos")
         val NUMEROS_EXCLUIDOS = stringPreferencesKey("numeros_excluidos")
+
+        // Salvar filtros automaticamente
+        val SALVAR_FILTROS_AUTOMATICAMENTE = booleanPreferencesKey("salvar_filtros_automaticamente")
+
+        // Chave para a configuração de filtros completa (armazenada como JSON)
+        val CONFIGURACAO_FILTROS_COMPLETA = stringPreferencesKey("configuracao_filtros_completa")
     }
     
+    private val gson = Gson()
+
     /**
      * Obtém a configuração de quantidade de números por jogo.
      */
@@ -159,6 +169,23 @@ class PreferenciasManager(private val context: Context) {
                 numerosString.split(",").map { it.toInt() }
             }
         }
+    
+    /**
+     * Indica se os filtros devem ser salvos automaticamente.
+     */
+    val salvarFiltrosAutomaticamente: Flow<Boolean> = context.dataStore.data
+        .map { preferences ->
+            preferences[SALVAR_FILTROS_AUTOMATICAMENTE] ?: false // Padrão é false
+        }
+
+    /**
+     * Define se os filtros devem ser salvos automaticamente.
+     */
+    suspend fun setSalvarFiltrosAutomaticamente(salvar: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[SALVAR_FILTROS_AUTOMATICAMENTE] = salvar
+        }
+    }
     
     /**
      * Salva a configuração de quantidade de números por jogo.
@@ -333,4 +360,33 @@ class PreferenciasManager(private val context: Context) {
             preferences.clear()
         }
     }
+
+    /**
+     * Salva a configuração de filtros completa como uma string JSON.
+     */
+    suspend fun salvarConfiguracaoFiltros(config: ConfiguracaoFiltros) {
+        val jsonConfig = gson.toJson(config)
+        context.dataStore.edit { preferences ->
+            preferences[CONFIGURACAO_FILTROS_COMPLETA] = jsonConfig
+        }
+    }
+
+    /**
+     * Carrega a configuração de filtros completa a partir de uma string JSON.
+     * Retorna null se não houver configuração salva.
+     */
+    val configuracaoFiltros: Flow<ConfiguracaoFiltros?> = context.dataStore.data
+        .map { preferences ->
+            val jsonConfig = preferences[CONFIGURACAO_FILTROS_COMPLETA]
+            if (jsonConfig != null) {
+                try {
+                    gson.fromJson(jsonConfig, ConfiguracaoFiltros::class.java)
+                } catch (e: Exception) {
+                    // Em caso de erro na desserialização, retorna null
+                    null
+                }
+            } else {
+                null
+            }
+        }
 }
