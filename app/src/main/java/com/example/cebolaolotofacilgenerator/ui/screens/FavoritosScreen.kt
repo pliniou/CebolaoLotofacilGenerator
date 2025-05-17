@@ -112,7 +112,7 @@ fun JogoFavoritoItem(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = stringResource(R.string.jogo_id_label, jogo.id.toString()),
+                text = stringResource(R.string.jogo_id_label, jogo.id),
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -128,7 +128,7 @@ fun JogoFavoritoItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(R.string.data_criacao_label, dateFormat.format(jogo.dataCriacao)),
+                    text = "Data de criação: ${dateFormat.format(jogo.dataCriacao)}",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Row {
@@ -147,14 +147,6 @@ fun JogoFavoritoItem(
                         )
                     }
                 }
-            }
-             if (jogo.acertos != null) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.acertos_label_com_valor, jogo.acertos),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
             }
         }
     }

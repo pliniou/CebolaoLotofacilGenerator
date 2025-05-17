@@ -15,10 +15,10 @@ import com.example.cebolaolotofacilgenerator.Screen
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
-        Screen.Principal,
-        Screen.Filtros,
+        Screen.BoasVindas,
+        Screen.Gerador,
         Screen.Favoritos,
-        Screen.Resultados,
+        Screen.Instrucoes,
         Screen.Settings
     )
     NavigationBar {
@@ -28,12 +28,14 @@ fun BottomNavigationBar(navController: NavController) {
             NavigationBarItem(
                 icon = { Icon(screen.icon, contentDescription = screen.title) },
                 label = { Text(screen.title) },
-                selected = currentRoute == screen.route || (currentRoute?.startsWith("filtros") == true && screen == Screen.Filtros),
+                selected = currentRoute == screen.route || 
+                           (currentRoute?.startsWith("gerador") == true && screen == Screen.Gerador) ||
+                           (currentRoute?.startsWith("filtros") == true && screen == Screen.Filtros),
                 onClick = {
-                    val route = if (screen is Screen.Filtros) {
-                        screen.createRoute(null)
-                    } else {
-                        screen.route
+                    val route = when (screen) {
+                        is Screen.Gerador -> screen.createRoute(null)
+                        is Screen.Filtros -> screen.createRoute(null)
+                        else -> screen.route
                     }
                     navController.navigate(route) {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }

@@ -5,57 +5,35 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asFlow // Necessário para converter LiveData para Flow
+// import androidx.lifecycle.asFlow // Não será mais usado para ResultadoRepository
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
-import com.example.cebolaolotofacilgenerator.data.model.Resultado
-import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
+// import com.example.cebolaolotofacilgenerator.data.model.Resultado // Não mais necessário
+// import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository // REMOVER
 import com.example.cebolaolotofacilgenerator.util.PreferenciasManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class FiltrosViewModel(
-    application: Application,
-    private val resultadoRepository: ResultadoRepository // Injetar ResultadoRepository
+    application: Application
+    // private val resultadoRepository: ResultadoRepository // REMOVER
 ) : AndroidViewModel(application) {
 
     private val preferenciasManager = PreferenciasManager(application)
 
     private val _configuracaoFiltros = MutableLiveData<ConfiguracaoFiltros>()
     val configuracaoFiltros: LiveData<ConfiguracaoFiltros> = _configuracaoFiltros
-
-    // Para compatibilidade com o fragmento que espera filtrosAplicados
-    val filtrosAplicados: LiveData<ConfiguracaoFiltros>
-        get() = _configuracaoFiltros
+    
+    // Expor dezenas do concurso anterior para a UI
+    val dezenasConcursoAnterior: LiveData<List<Int>> = MutableLiveData()
 
     // Para mensagens de feedback
     private val _mensagem = MutableLiveData<String?>()
     val mensagem: LiveData<String?> = _mensagem
-
-    // StateFlow para o último resultado salvo
-    val ultimoResultado: StateFlow<Resultado?> =
-        resultadoRepository
-            .ultimoResultado // Supõe que isso retorna LiveData<Resultado?>
-            .asFlow() // Converte LiveData para Flow
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = null
-            )
-
-    // StateFlow para indicar se existe um último resultado salvo
-    val temUltimoResultadoSalvo: StateFlow<Boolean> =
-        ultimoResultado
-            .map { it != null && it.numeros.isNotEmpty() }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = false
-            )
-
 
     init {
         carregarConfiguracoesIniciais()
@@ -63,59 +41,60 @@ class FiltrosViewModel(
 
     private fun carregarConfiguracoesIniciais() {
         viewModelScope.launch {
-            // TODO: Carregar de forma mais completa do PreferenciasManager
-            // Por enquanto, apenas carrega os defaults da data class
-            _configuracaoFiltros.value = ConfiguracaoFiltros()
+            val configSalva = preferenciasManager.configuracaoFiltros.firstOrNull()
+            _configuracaoFiltros.value = configSalva ?: ConfiguracaoFiltros()
+            (dezenasConcursoAnterior as MutableLiveData).value = _configuracaoFiltros.value?.dezenasConcursoAnterior ?: emptyList()
         }
     }
 
-    fun carregarDezenasDoUltimoResultadoSalvo() {
-        viewModelScope.launch {
-            val ultimo = ultimoResultado.value
-            if (ultimo != null && ultimo.numeros.isNotEmpty()) {
-                val currentConfig = _configuracaoFiltros.value ?: ConfiguracaoFiltros()
-                _configuracaoFiltros.value = currentConfig.copy(dezenasConcursoAnterior = ultimo.numeros.sorted())
-                _mensagem.value = getApplication<Application>().getString(R.string.dezenas_ultimo_resultado_carregadas)
-            } else {
-                _mensagem.value = getApplication<Application>().getString(R.string.nenhum_resultado_salvo_para_carregar_dezenas)
-            }
-        }
-    }
+    // Não precisamos mais de carregarDezenasDoUltimoResultadoSalvo, pois as dezenas já virão com ConfiguracaoFiltros
 
     fun atualizarFiltro(novoFiltro: ConfiguracaoFiltros) {
         _configuracaoFiltros.value = novoFiltro
+        // Atualizar o LiveData separado também, se necessário para observadores específicos
+         (dezenasConcursoAnterior as MutableLiveData).value = novoFiltro.dezenasConcursoAnterior
+        // Considerar salvar automaticamente se a preferência estiver ativa
+        // viewModelScope.launch {
+        //     if (preferenciasManager.salvarFiltrosAutomaticamente.firstOrNull() == true) {
+        //         salvarConfiguracaoFiltrosCompleta()
+        //     }
+        // }
+    }
+    
+    fun atualizarDezenasConcursoAnterior(novasDezenas: List<Int>) {
+        val currentConfig = _configuracaoFiltros.value ?: ConfiguracaoFiltros()
+        _configuracaoFiltros.value = currentConfig.copy(dezenasConcursoAnterior = novasDezenas.sorted())
+        (dezenasConcursoAnterior as MutableLiveData).value = novasDezenas.sorted()
+        // Salvar automaticamente ou via botão "Aplicar/Salvar Filtros"
+        // Se for salvar aqui, chamar salvarConfiguracaoFiltrosCompleta()
     }
 
-    fun salvarFiltros() {
+    private fun salvarConfiguracaoFiltrosCompleta() { // Tornar privado se chamado apenas internamente
         viewModelScope.launch {
             _configuracaoFiltros.value?.let {
-                // TODO: Implementar a lógica de salvar cada campo no PreferenciasManager
-                // Ex: preferenciasManager.salvarFiltrosPares(it.minPares, it.maxPares) // Adaptar
-                // para impares
-                // preferenciasManager.salvarFiltroBooleano(FILTRO_PARES_IMPARES_ATIVO,
-                // it.filtroParesImpares)
-                // Salvar também as dezenas do concurso anterior se necessário
-                // preferenciasManager.salvarDezenasConcursoAnterior(it.dezenasConcursoAnterior)
+                preferenciasManager.salvarConfiguracaoFiltros(it)
+                // _mensagem.value = getApplication<Application>().getString(R.string.filtros_salvos_com_sucesso) // Exemplo
             }
         }
     }
 
-    fun resetarFiltros() {
+    fun salvarConfiguracaoFiltros() { // Renomeado de aplicarFiltros para consistência com a UI
+        salvarConfiguracaoFiltrosCompleta()
+        _mensagem.value = "Configurações de filtro salvas com sucesso." // Placeholder para R.string.filtros_aplicados_com_sucesso ou R.string.filtros_salvos_com_sucesso
+    }
+    
+    fun resetarConfiguracaoFiltros() { // Renomeado de resetarFiltros
         val defaultConfig = ConfiguracaoFiltros()
         _configuracaoFiltros.value = defaultConfig
-        // TODO: Salvar os defaults no PreferenciasManager também
-        salvarFiltros() // Chama o salvar para persistir os defaults
+        (dezenasConcursoAnterior as MutableLiveData).value = defaultConfig.dezenasConcursoAnterior
+        salvarConfiguracaoFiltrosCompleta() // Salva a configuração resetada
     }
 
-    // Métodos chamados pelo Fragment (alguns podem ser substituídos por atualizações diretas no
-    // _configuracaoFiltros.value)
-    // TODO: Revisar a necessidade desses métodos específicos se a UI manipula o objeto completo.
-    fun setQuantidadePares(min: Int, max: Int) {
-        val currentConfig = _configuracaoFiltros.value ?: ConfiguracaoFiltros()
-        // Esta abordagem é um pouco estranha se ConfiguracaoFiltros não tem min/maxPares diretos.
-        // Assumindo que o fragmento quer atualizar minImpares/maxImpares com base nisso.
-        // Melhor seria o fragmento atualizar o objeto ConfiguracaoFiltros e chamar atualizarFiltro.
-    }
+    // Métodos como setQuantidadePares, setQuantidadeImpares, setFiltrarPrimos, setFiltrarFibonacci
+    // podem ser mantidos se a UI os chama individualmente, mas eles devem operar sobre
+    // _configuracaoFiltros.value e então, opcionalmente, acionar um salvamento.
+    // Idealmente, a UI construiria o objeto ConfiguracaoFiltros e chamaria atualizarFiltro().
+    // Por ora, vou mantê-los e garantir que atualizem _configuracaoFiltros.value.
 
     fun setQuantidadeImpares(min: Int, max: Int) {
         val currentConfig = _configuracaoFiltros.value ?: ConfiguracaoFiltros()
@@ -141,13 +120,8 @@ class FiltrosViewModel(
                         maxFibonacci = max ?: currentConfig.maxFibonacci
                 )
     }
-
-    fun aplicarFiltros() {
-        // A ação de "aplicar" geralmente significa usar os filtros para alguma operação.
-        // Neste contexto, pode ser apenas salvar as configurações atuais.
-        salvarFiltros()
-        _mensagem.value = getApplication<Application>().getString(R.string.filtros_aplicados_com_sucesso) // Adicionar esta string
-    }
+    // Adicionar outros setters se existirem e forem usados (ex: Soma, Miolo, Múltiplos de 3, etc.)
+    // seguindo o mesmo padrão.
 
     fun limparMensagem() {
         _mensagem.value = null

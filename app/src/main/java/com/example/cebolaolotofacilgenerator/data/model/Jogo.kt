@@ -36,15 +36,6 @@ data class Jogo(
         // Flag para marcar o jogo como favorito
         var favorito: Boolean = false, // Use var se for modificar diretamente
 
-        // Resultado da conferência (número de acertos) - null se não foi conferido
-        val acertos: Int? = null,
-
-        // ID do concurso com o qual o jogo foi conferido - null se não foi conferido
-        val concursoConferido: Long? = null,
-
-        // Dezenas sorteadas no concurso utilizado para conferência
-        val dezenasSorteadasConferencia: List<Int>? = null,
-
         // Características estatísticas do jogo
         val quantidadePares: Int, // Renomeado para consistência
         val quantidadeImpares: Int, // Renomeado para consistência
@@ -98,8 +89,8 @@ data class Jogo(
                     quantidadeMoldura = moldura, // Usa a moldura calculada
                     quantidadeMultiplosDeTres = multiplosTres,
                     soma = soma, // Usa o nome consistente
-                    dezenasSorteadasConferencia = null, // Inicializa como nulo
-                    // 'favorito', 'acertos', 'concursoConferido' terão valores padrão
+                    // Os campos acertos, concursoConferido e dezenasSorteadasConferencia foram removidos da entidade
+                    // 'favorito' terá valor padrão
                     )
         }
 

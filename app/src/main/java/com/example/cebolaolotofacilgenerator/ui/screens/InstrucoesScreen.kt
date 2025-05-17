@@ -3,6 +3,7 @@ package com.example.cebolaolotofacilgenerator.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -43,7 +44,7 @@ fun InstrucoesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.instrucoes_titulo)) },
+                title = { Text("Instruções") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -64,56 +65,82 @@ fun InstrucoesScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Seção Introdução
+            // Seção Conceito e Geração Aleatória
             InstrucaoCard(
-                titulo = stringResource(R.string.instrucoes_secao_introducao_titulo),
-                conteudo = stringResource(R.string.instrucoes_secao_introducao_conteudo)
+                titulo = "Conceito Básico",
+                conteudo = "Este aplicativo ajuda a gerar jogos para a Lotofácil utilizando diversos filtros para refinar suas escolhas. Explore as configurações para personalizar os jogos gerados."
             )
-            
             Spacer(modifier = Modifier.height(16.dp))
-            
-            // Seção Filtros
-            InstrucaoCard(
-                titulo = stringResource(R.string.instrucoes_secao_filtros_titulo),
-                conteudo = stringResource(R.string.instrucoes_secao_filtros_conteudo)
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // Seção Números Fixos
-            InstrucaoCard(
-                titulo = stringResource(R.string.instrucoes_secao_numeros_fixos_titulo),
-                conteudo = stringResource(R.string.instrucoes_secao_numeros_fixos_conteudo)
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // Seção Gerar Jogos
-            InstrucaoCard(
-                titulo = stringResource(R.string.instrucoes_secao_gerar_jogos_titulo),
-                conteudo = stringResource(R.string.instrucoes_secao_gerar_jogos_conteudo)
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // Seção Conferência
-            InstrucaoCard(
-                titulo = stringResource(R.string.instrucoes_secao_conferencia_titulo),
-                conteudo = stringResource(R.string.instrucoes_secao_conferencia_conteudo)
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // Seção Dicas
-            InstrucaoCard(
-                titulo = stringResource(R.string.instrucoes_secao_dicas_titulo),
-                conteudo = stringResource(R.string.instrucoes_secao_dicas_conteudo)
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
+
+            // As seções de filtros específicos serão comentadas por agora
+            // para evitar erros de strings não resolvidas. Revise e adicione as strings
+            // em strings.xml e descomente conforme necessário.
+
+            // // Filtro: Números Fixos
+            // InstrucaoCard(
+            //     titulo = stringResource(R.string.instrucoes_filtro_numeros_fixos_titulo),
+            //     conteudo = stringResource(R.string.instrucoes_filtro_numeros_fixos_conteudo)
+            // )
+            // Spacer(modifier = Modifier.height(16.dp))
+
+            // // Filtro: Números Excluídos
+            // InstrucaoCard(
+            //     titulo = stringResource(R.string.instrucoes_filtro_numeros_excluidos_titulo),
+            //     conteudo = stringResource(R.string.instrucoes_filtro_numeros_excluidos_conteudo)
+            // )
+            // Spacer(modifier = Modifier.height(16.dp))
+
+            // // Filtro: Pares e Ímpares
+            // InstrucaoCard(
+            //     titulo = stringResource(R.string.instrucoes_filtro_pares_impares_titulo),
+            //     conteudo = stringResource(R.string.instrucoes_filtro_pares_impares_conteudo)
+            // )
+            // Spacer(modifier = Modifier.height(16.dp))
+
+            // // Filtro: Soma Total das Dezenas
+            // InstrucaoCard(
+            //     titulo = stringResource(R.string.instrucoes_filtro_soma_total_titulo),
+            //     conteudo = stringResource(R.string.instrucoes_filtro_soma_total_conteudo)
+            // )
+            // Spacer(modifier = Modifier.height(16.dp))
+
+            // // Filtro: Números Primos
+            // InstrucaoCard(
+            //     titulo = stringResource(R.string.instrucoes_filtro_numeros_primos_titulo),
+            //     conteudo = stringResource(R.string.instrucoes_filtro_numeros_primos_conteudo)
+            // )
+            // Spacer(modifier = Modifier.height(16.dp))
+
+            // // Filtro: Números de Fibonacci
+            // InstrucaoCard(
+            //     titulo = stringResource(R.string.instrucoes_filtro_fibonacci_titulo),
+            //     conteudo = stringResource(R.string.instrucoes_filtro_fibonacci_conteudo)
+            // )
+            // Spacer(modifier = Modifier.height(16.dp))
+
+            // // Filtro: Miolo e Moldura
+            // InstrucaoCard(
+            //     titulo = stringResource(R.string.instrucoes_filtro_miolo_moldura_titulo),
+            //     conteudo = stringResource(R.string.instrucoes_filtro_miolo_moldura_conteudo)
+            // )
+            // Spacer(modifier = Modifier.height(16.dp))
+
+            // // Filtro: Múltiplos de Três
+            // InstrucaoCard(
+            //     titulo = stringResource(R.string.instrucoes_filtro_multiplos_de_tres_titulo),
+            //     conteudo = stringResource(R.string.instrucoes_filtro_multiplos_de_tres_conteudo)
+            // )
+            // Spacer(modifier = Modifier.height(16.dp))
+
+            // // Filtro: Repetição do Concurso Anterior
+            // InstrucaoCard(
+            //     titulo = stringResource(R.string.instrucoes_filtro_repeticao_concurso_anterior_titulo),
+            //     conteudo = stringResource(R.string.instrucoes_filtro_repeticao_concurso_anterior_conteudo)
+            // )
+            // Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -131,16 +158,16 @@ fun InstrucaoCard(
 ) {
     Card(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(16.dp)
         ) {
             Text(
@@ -154,7 +181,7 @@ fun InstrucaoCard(
             Text(
                 text = conteudo,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

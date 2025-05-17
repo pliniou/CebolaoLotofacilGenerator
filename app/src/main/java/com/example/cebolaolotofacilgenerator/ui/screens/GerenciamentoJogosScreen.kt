@@ -51,7 +51,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
-import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.ui.graphics.Color
@@ -61,11 +60,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.cebolaolotofacilgenerator.Screen
 import androidx.compose.foundation.background
 import androidx.compose.material3.*
+import androidx.compose.runtime.collectAsState
 
 enum class TipoListaJogo {
-    TODOS,
-    FAVORITOS,
-    CONFERIDOS
+    TODOS
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,22 +72,10 @@ fun GerenciamentoJogosScreen(
     mainViewModel: MainViewModel,
     navController: NavHostController
 ) {
-    val jogosViewModel = mainViewModel.jogosViewModel // Acessar via MainViewModel
-
-    val operacaoStatus by jogosViewModel.operacaoStatus.observeAsState()
-
+    val jogosViewModel = mainViewModel.jogosViewModel
     val context = LocalContext.current
-    var tipoListaSelecionada by remember { mutableStateOf(TipoListaJogo.TODOS) }
 
-    val todosJogos by jogosViewModel.todosJogos.observeAsState(emptyList())
-    val jogosFavoritos by jogosViewModel.jogosFavoritos.observeAsState(emptyList())
-    val jogosConferidos by jogosViewModel.jogosConferidos.observeAsState(emptyList())
-
-    val jogosParaExibir = when (tipoListaSelecionada) {
-        TipoListaJogo.TODOS -> todosJogos
-        TipoListaJogo.FAVORITOS -> jogosFavoritos
-        TipoListaJogo.CONFERIDOS -> jogosConferidos
-    }
+    val jogosParaExibir by jogosViewModel.todosOsJogos.collectAsState()
 
     var showDialogExcluirJogo by remember { mutableStateOf<Jogo?>(null) }
     var showDialogLimparTodos by remember { mutableStateOf(false) }
@@ -99,7 +85,9 @@ fun GerenciamentoJogosScreen(
 
     LaunchedEffect(Unit) {
         mainViewModel.snackbarMessage.collectLatest { message ->
-            snackbarHostState.showSnackbar(message)
+            if (message.isNotEmpty()) {
+                snackbarHostState.showSnackbar(message)
+            }
         }
     }
 
@@ -121,46 +109,11 @@ fun GerenciamentoJogosScreen(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            TabRow(selectedTabIndex = tipoListaSelecionada.ordinal) {
-                TipoListaJogo.values().forEach { tipo ->
-                    Tab(
-                        selected = tipoListaSelecionada == tipo,
-                        onClick = { tipoListaSelecionada = tipo },
-                        text = {
-                            Text(
-                                when (tipo) {
-                                    TipoListaJogo.TODOS -> stringResource(R.string.todos)
-                                    TipoListaJogo.FAVORITOS -> stringResource(R.string.favoritos)
-                                    TipoListaJogo.CONFERIDOS -> stringResource(R.string.conferidos)
-                                }
-                            )
-                        }
-                    )
-                }
-            }
-
-            if (jogosParaExibir.isNullOrEmpty()) {
-                val mensagem: String
-                val icone: ImageVector
-                var textoBotao: String? = null
-                var acaoBotao: (() -> Unit)? = null
-
-                when (tipoListaSelecionada) {
-                    TipoListaJogo.TODOS -> {
-                        mensagem = stringResource(R.string.empty_state_todos_jogos)
-                        icone = Icons.Outlined.PlaylistAdd
-                        textoBotao = stringResource(R.string.gerar_novos_jogos)
-                        acaoBotao = { navController.navigate(Screen.Gerador.createRoute()) }
-                    }
-                    TipoListaJogo.FAVORITOS -> {
-                        mensagem = stringResource(R.string.empty_state_favoritos)
-                        icone = Icons.Outlined.HourglassEmpty
-                    }
-                    TipoListaJogo.CONFERIDOS -> {
-                        mensagem = stringResource(R.string.empty_state_conferidos)
-                        icone = Icons.Outlined.SearchOff
-                    }
-                }
+            if (jogosParaExibir.isEmpty()) {
+                val mensagem = stringResource(R.string.sem_jogos_para_mostrar)
+                val icone = Icons.Outlined.SearchOff
+                val textoBotao = "Gerar Novos Jogos"
+                val acaoBotao = { navController.navigate(Screen.Gerador.createRoute()) }
 
                 EmptyStatePlaceholder(
                     mensagem = mensagem,
@@ -228,11 +181,11 @@ fun GerenciamentoJogosScreen(
         AlertDialog(
             onDismissRequest = { showDialogExcluirJogo = null },
             title = { Text(stringResource(R.string.confirmar_exclusao_titulo)) },
-            text = { Text(stringResource(R.string.mensagem_confirmar_exclusao_jogo, jogoParaExcluir.numeros.joinToString(" - "))) },
+            text = { Text(stringResource(R.string.mensagem_confirmar_exclusao_jogo, jogoParaExcluir.getNumerosFormatados())) },
             confirmButton = {
                 Button(
                     onClick = {
-                        jogosViewModel.deletarJogo(jogoParaExcluir)
+                        jogosViewModel.excluirJogo(jogoParaExcluir)
                         mainViewModel.showSnackbar(context.getString(R.string.jogo_excluido))
                         showDialogExcluirJogo = null
                     }
@@ -252,7 +205,7 @@ fun GerenciamentoJogosScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        jogosViewModel.limparTodosJogos()
+                        jogosViewModel.limparTodosOsJogos()
                         mainViewModel.showSnackbar(context.getString(R.string.todos_jogos_excluidos))
                         showDialogLimparTodos = false
                     }
@@ -268,7 +221,7 @@ fun GerenciamentoJogosScreen(
         val jogoParaDetalhes = showDialogDetalhesJogo!!
         val dateFormat = remember { SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()) }
         val detalhesText = buildString {
-            append(stringResource(R.string.numeros_jogados, jogoParaDetalhes.numeros.joinToString(" - ")))
+            append(stringResource(R.string.numeros_jogados, jogoParaDetalhes.getNumerosFormatados()))
             append("\n\n")
             append(stringResource(R.string.jogo_data_criacao, dateFormat.format(jogoParaDetalhes.dataCriacao)))
             append("\n\n")
@@ -285,10 +238,6 @@ fun GerenciamentoJogosScreen(
             append(stringResource(R.string.miolo_moldura, jogoParaDetalhes.quantidadeMiolo, jogoParaDetalhes.quantidadeMoldura))
             append("\n")
             append(stringResource(R.string.multiplos_tres, jogoParaDetalhes.quantidadeMultiplosDeTres))
-            if (jogoParaDetalhes.acertos != null) {
-                append("\n\n")
-                append(stringResource(R.string.resultado_conferencia, jogoParaDetalhes.acertos!!))
-            }
         }
 
         AlertDialog(
@@ -321,17 +270,6 @@ fun JogoGerenciamentoItem(
     onExcluirClick: () -> Unit,
     onJogoClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    val dateFormat = remember { SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()) }
-    val dezenasConferencia = jogo.dezenasSorteadasConferencia
-    val numerosAcertados = remember(jogo.numeros, dezenasConferencia) {
-        if (jogo.acertos != null && dezenasConferencia != null && dezenasConferencia.isNotEmpty()) {
-            jogo.numeros.filter { it in dezenasConferencia }.toSet()
-        } else {
-            emptySet()
-        }
-    }
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -341,21 +279,7 @@ fun JogoGerenciamentoItem(
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    buildAnnotatedString {
-                        jogo.numeros.forEachIndexed { index, numero ->
-                            val numeroStr = numero.toString().padStart(2, '0')
-                            if (numero in numerosAcertados) {
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.primary)) {
-                                    append(numeroStr)
-                                }
-                            } else {
-                                append(numeroStr)
-                            }
-                            if (index < jogo.numeros.size - 1) {
-                                append(" - ")
-                            }
-                        }
-                    },
+                    text = jogo.getNumerosFormatados(),
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.weight(1f)
                 )
@@ -375,6 +299,7 @@ fun JogoGerenciamentoItem(
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
+            val dateFormat = remember { SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()) }
             Text(
                 text = stringResource(R.string.jogo_data_criacao, dateFormat.format(jogo.dataCriacao)),
                 style = MaterialTheme.typography.bodySmall
@@ -391,84 +316,47 @@ fun JogoGerenciamentoItem(
                 ),
                 style = MaterialTheme.typography.bodyMedium
             )
-            if (jogo.acertos != null) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = stringResource(R.string.jogo_acertos, jogo.acertos!!),
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                )
-            }
         }
     }
 }
 
-@Preview(showBackground = true, name = "Gerenciamento Jogos Screen - Vazia")
+@Preview(showBackground = true)
 @Composable
-fun PreviewGerenciamentoJogosScreenEmpty() {
-    val context = LocalContext.current
-    val application = context.applicationContext as Application
-    val mockMainViewModel = MainViewModel(
-        application = application,
-        jogoRepository = JogoRepository(AppDatabase.getDatabase(application).jogoDao()),
-        resultadoRepository = ResultadoRepository(AppDatabase.getDatabase(application).resultadoDao()),
-        appDataStore = AppDataStore(application)
-    )
-    GerenciamentoJogosScreen(mainViewModel = mockMainViewModel, navController = NavHostController(context))
+fun EmptyStatePlaceholderPreview() {
+    CebolaoLotofacilGeneratorTheme {
+        EmptyStatePlaceholder(
+            mensagem = "Nenhum jogo encontrado.",
+            icone = Icons.Outlined.SearchOff,
+            textoBotao = "Gerar Jogos",
+            onAcaoBotaoClick = {}
+        )
+    }
 }
 
-@Preview(showBackground = true, name = "Gerenciamento Jogos Screen - Com Jogos")
+@Preview(showBackground = true)
 @Composable
-fun PreviewGerenciamentoJogosScreenWithData() {
-    val context = LocalContext.current
-    val application = context.applicationContext as Application
-    val db = AppDatabase.getDatabase(application)
-    val jogoRepository = JogoRepository(db.jogoDao())
-    val resultadoRepository = ResultadoRepository(db.resultadoDao())
-    val appDataStore = AppDataStore(application)
-
-    val mockMainViewModel = MainViewModel(
-        application = application,
-        jogoRepository = jogoRepository,
-        resultadoRepository = resultadoRepository,
-        appDataStore = appDataStore
+fun JogoGerenciamentoItemPreview() {
+    val sampleJogo = Jogo.fromList(
+        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
     )
-    // O JogosViewModel é parte do mockMainViewModel. Se precisar de dados específicos
-    // para o preview, o ideal seria uma forma de popular o mockMainViewModel.jogosViewModel.
-    // Ex: viewModelScope.launch { mockMainViewModel.jogosViewModel.todosJogos.value = listOfJocosMock } (isso não funciona em preview)
+    // Defina um sampleResultado aqui se necessário para o preview, ou passe null
+    // Exemplo: val sampleResultado: Resultado? = null
+    // Ou crie um Resultado de amostra:
+    // val sampleResultado = Resultado(id = 1, concurso = 100, data = Date(), dezenas = listOf(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15), ...)
 
-    GerenciamentoJogosScreen(mainViewModel = mockMainViewModel, navController = NavHostController(context))
+    CebolaoLotofacilGeneratorTheme {
+        JogoGerenciamentoItem(
+            jogo = sampleJogo,
+            onFavoritoClick = {},
+            onExcluirClick = {},
+            onJogoClick = {}
+        )
+    }
 }
-
-@Preview(showBackground = true, name = "JogoGerenciamentoItem")
-@Composable
-fun PreviewJogoGerenciamentoItem() {
-    val jogo = Jogo(
-        id = 1,
-        numeros = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
-        dataCriacao = Date(),
-        favorito = true,
-        acertos = 14,
-        quantidadePares = 7, quantidadeImpares = 8, soma = 180, quantidadePrimos = 6, quantidadeFibonacci = 5, quantidadeMiolo = 5, quantidadeMoldura = 10, quantidadeMultiplosDeTres = 5
-    )
-    JogoGerenciamentoItem(jogo = jogo, onFavoritoClick = {}, onExcluirClick = {}, onJogoClick = {})
-}
-
-// TODO: Verificar se todas as strings usadas já existem em strings.xml:
-// R.string.titulo_tela_gerenciamento, R.string.limpar_todos, R.string.todos, R.string.favoritos,
-// R.string.conferidos, R.string.nenhum_jogo_encontrado, R.string.confirmar_exclusao_titulo,
-// R.string.mensagem_confirmar_exclusao_jogo, R.string.excluir_jogo, R.string.cancelar,
-// R.string.confirmar_limpar_todos, R.string.mensagem_confirmar_limpar_todos, R.string.sim, R.string.nao,
-// R.string.jogo_excluido, R.string.todos_jogos_excluidos, R.string.detalhes_do_jogo,
-// R.string.numeros_jogados, R.string.data_geracao, R.string.caracteristicas_jogo,
-// R.string.pares_impares, R.string.soma_total, R.string.numeros_primos, R.string.numeros_fibonacci,
-// R.string.miolo_moldura, R.string.multiplos_tres, R.string.resultado_conferencia, R.string.fechar,
-// R.string.desmarcar_como_favorito, R.string.marcar_como_favorito, R.string.jogo_data_criacao,
-// R.string.jogo_caracteristicas_compacto, R.string.jogo_acertos
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreviewGerenciamentoJogosScreen() {
-    // GerenciamentoJogosScreen() // Comentado pois requer ViewModels
     CebolaoLotofacilGeneratorTheme {
         Text("Preview desabilitada: GerenciamentoJogosScreen requer ViewModels")
     }

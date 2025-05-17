@@ -63,7 +63,7 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavController) {
                                 description = "Crie novos jogos com base nas suas preferências",
                                 onClick = {
                                         // Navega para a tela Principal que agora lida com a geração
-                                        navController.navigate(Screen.Principal.route)
+                                        navController.navigate(Screen.Gerador.route)
                                 },
                                 icon = Icons.Default.Add
                         )

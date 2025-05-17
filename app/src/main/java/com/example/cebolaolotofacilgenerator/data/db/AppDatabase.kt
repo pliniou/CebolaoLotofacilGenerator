@@ -7,20 +7,20 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.cebolaolotofacilgenerator.data.converters.ListConverter
 import com.example.cebolaolotofacilgenerator.data.dao.JogoDao
-import com.example.cebolaolotofacilgenerator.data.dao.ResultadoDao
+// import com.example.cebolaolotofacilgenerator.data.dao.ResultadoDao // REMOVIDO
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
-import com.example.cebolaolotofacilgenerator.data.model.Resultado
+// import com.example.cebolaolotofacilgenerator.data.model.Resultado // REMOVIDO
 
 /** Classe principal do banco de dados Room para o aplicativo. */
-@Database(entities = [Jogo::class, Resultado::class], version = 1, exportSchema = false)
+@Database(entities = [Jogo::class], version = 1, exportSchema = false) // Resultado::class REMOVIDO
 @TypeConverters(Converters::class, ListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     /** Obtém o DAO para operações com jogos. */
     abstract fun jogoDao(): JogoDao
 
-    /** Obtém o DAO para operações com resultados. */
-    abstract fun resultadoDao(): ResultadoDao
+    // /** Obtém o DAO para operações com resultados. */
+    // abstract fun resultadoDao(): ResultadoDao // REMOVIDO
 
     companion object {
         // Instância singleton do banco de dados

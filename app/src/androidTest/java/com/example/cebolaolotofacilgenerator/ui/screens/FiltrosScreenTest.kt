@@ -12,7 +12,6 @@ import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.AppDataStore
 import com.example.cebolaolotofacilgenerator.data.AppDatabase
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
-import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import org.junit.Rule
 import org.junit.Test
@@ -36,12 +35,10 @@ class FiltrosScreenTest {
         application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as Application
         // Mocking ou instanciando dependências reais
         val jogoDao = AppDatabase.getDatabase(application).jogoDao()
-        val resultadoDao = AppDatabase.getDatabase(application).resultadoDao()
         val jogoRepository = JogoRepository(jogoDao)
-        val resultadoRepository = ResultadoRepository(resultadoDao)
         val appDataStore = AppDataStore(application)
 
-        mockMainViewModel = MainViewModel(application, jogoRepository, resultadoRepository, appDataStore)
+        mockMainViewModel = MainViewModel(application, jogoRepository, appDataStore)
     }
 
     @Test
@@ -66,6 +63,5 @@ class FiltrosScreenTest {
     // - Verificar valores padrão dos campos.
     // - Testar a atualização de um campo de texto e a reflexão no ViewModel (se possível mockar/observar).
     // - Testar a ativação/desativação de um filtro e o impacto nos controles associados.
-    // - Testar o clique no botão "Carregar Dezenas Salvas" e a atualização do campo correspondente
-    //   (requer mock do ResultadoRepository ou FiltrosViewModel).
+    // - O botão "Carregar Dezenas Salvas" foi removido, este teste não é mais necessário.
 } 

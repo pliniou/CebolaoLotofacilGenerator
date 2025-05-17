@@ -8,16 +8,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.cebolaolotofacilgenerator.ui.screens.BoasVindasScreen // Importar a nova tela
+// import com.example.cebolaolotofacilgenerator.ui.screens.ConferenciaScreen // REMOVIDO
 import com.example.cebolaolotofacilgenerator.ui.screens.FavoritosScreen
-// import com.example.cebolaolotofacilgenerator.ui.screens.HomeScreen // Não será mais usada como rota principal
-import com.example.cebolaolotofacilgenerator.ui.screens.PrincipalScreen // Nova tela principal
-import com.example.cebolaolotofacilgenerator.ui.screens.ResultadosScreen
-import com.example.cebolaolotofacilgenerator.ui.screens.SettingsScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.FiltrosScreen
-import com.example.cebolaolotofacilgenerator.ui.screens.GerenciamentoJogosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.GeradorScreen
-import com.example.cebolaolotofacilgenerator.ui.screens.ConferenciaScreen
+import com.example.cebolaolotofacilgenerator.ui.screens.GerenciamentoJogosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.InstrucoesScreen
+// import com.example.cebolaolotofacilgenerator.ui.screens.PrincipalScreen // Não é mais usada diretamente aqui
+// import com.example.cebolaolotofacilgenerator.ui.screens.ResultadosScreen // REMOVIDO
+import com.example.cebolaolotofacilgenerator.ui.screens.SettingsScreen
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -37,41 +37,40 @@ fun AppNavigation(
         modifier = modifier
     ) {
         composable(
-            Screen.Principal.route, // Rota principal agora é PrincipalScreen
+            Screen.BoasVindas.route, // Rota principal agora é BoasVindasScreen
             enterTransition = { slideInHorizontally { it } },
             exitTransition = { slideOutHorizontally { -it } },
             popEnterTransition = { slideInHorizontally { -it } },
             popExitTransition = { slideOutHorizontally { it } }
         ) {
-            PrincipalScreen(
-                navController = navController,
-                mainViewModel = mainViewModel
+            BoasVindasScreen(
+                navController = navController
             )
         }
 
         composable(
-            route = Screen.Gerador.route, // Atualizado para usar a rota que inclui o argumento opcional
+            route = Screen.Gerador.route, 
             arguments = listOf(navArgument("dezenasFixas") {
                 type = NavType.StringType
                 nullable = true
-                defaultValue = null // Ou "" dependendo de como GeradorScreen trata
+                defaultValue = null 
             }),
             enterTransition = { slideInHorizontally { it } },
             exitTransition = { slideOutHorizontally { -it } },
             popEnterTransition = { slideInHorizontally { -it } },
             popExitTransition = { slideOutHorizontally { it } }
-        ) { backStackEntry -> // Adicionado backStackEntry para acessar argumentos
+        ) { backStackEntry -> 
             val dezenasFixas = backStackEntry.arguments?.getString("dezenasFixas")
             GeradorScreen(
                 navController = navController,
                 mainViewModel = mainViewModel,
-                dezenasFixasArg = dezenasFixas // Passa o argumento extraído
+                dezenasFixasArg = dezenasFixas 
             )
         }
 
         composable(
-            route = Screen.Filtros.route, // Rota para a tela de Filtros - já está correta
-            arguments = listOf(navArgument("dezenasFixas") { // Adicionando argumento para Filtros também
+            route = Screen.Filtros.route, 
+            arguments = listOf(navArgument("dezenasFixas") { 
                 type = NavType.StringType
                 nullable = true
             }),
@@ -79,8 +78,7 @@ fun AppNavigation(
             exitTransition = { slideOutHorizontally { -it } },
             popEnterTransition = { slideInHorizontally { -it } },
             popExitTransition = { slideOutHorizontally { it } }
-        ) { backStackEntry -> // Adicionado backStackEntry para Filtros
-            // val dezenasFixasFiltro = backStackEntry.arguments?.getString("dezenasFixas") // Exemplo se FiltrosScreen precisasse
+        ) { backStackEntry -> 
             FiltrosScreen(mainViewModel = mainViewModel, navController = navController)
         }
 
@@ -104,18 +102,6 @@ fun AppNavigation(
             FavoritosScreen(mainViewModel = mainViewModel, navController = navController)
         }
 
-        composable(
-            Screen.Resultados.route,
-            enterTransition = { slideInHorizontally { it } },
-            exitTransition = { slideOutHorizontally { -it } },
-            popEnterTransition = { slideInHorizontally { -it } },
-            popExitTransition = { slideOutHorizontally { it } }
-        ) {
-            ResultadosScreen(mainViewModel = mainViewModel, navController = navController)
-        }
-        
-        // A rota Screen.JogosGerados não está sendo usada na BottomBar ou navegação principal por enquanto.
-        // Pode ser uma tela acessada de outro local ou integrada/removida.
         composable(Screen.JogosGerados.route) {
             GerenciamentoJogosScreen(
                 mainViewModel = mainViewModel,
@@ -124,20 +110,7 @@ fun AppNavigation(
         }
 
         composable(
-            Screen.Conferencia.route, // Rota para a tela de Conferência
-            enterTransition = { slideInHorizontally { it } },
-            exitTransition = { slideOutHorizontally { -it } },
-            popEnterTransition = { slideInHorizontally { -it } },
-            popExitTransition = { slideOutHorizontally { it } }
-        ) {
-            ConferenciaScreen(
-                mainViewModel = mainViewModel
-                // conferenciaViewModel é obtido via viewModel() dentro da tela
-            )
-        }
-        
-        composable(
-            Screen.Instrucoes.route, // Rota para a tela de Instruções
+            Screen.Instrucoes.route, 
             enterTransition = { slideInHorizontally { it } },
             exitTransition = { slideOutHorizontally { -it } },
             popEnterTransition = { slideInHorizontally { -it } },

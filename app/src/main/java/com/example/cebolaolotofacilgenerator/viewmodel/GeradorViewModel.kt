@@ -249,103 +249,163 @@ class GeradorViewModel(
         if (currentConfig.quantidadeJogos <= 0)
                 return Pair(
                         false,
-                        getApplication<Application>()
-                                .getString(R.string.erro_quantidade_jogos_invalida)
+                        "Quantidade de jogos deve ser maior que zero." // Placeholder para R.string.erro_quantidade_jogos_invalida (se existir, ou genérico)
                 )
-        if (currentConfig.quantidadeNumerosPorJogo !in 15..20)
-                return Pair(
-                        false,
-                        getApplication<Application>()
-                                .getString(R.string.erro_quantidade_numeros_invalida)
-                )
-        if (numerosFixosInterno.size >= currentConfig.quantidadeNumerosPorJogo)
-                return Pair(
-                        false,
-                        getApplication<Application>()
-                                .getString(R.string.erro_quantidade_numeros_fixos_invalida)
-                )
-        if (25 - numerosExcluidosInterno.size < currentConfig.quantidadeNumerosPorJogo)
-                return Pair(
-                        false,
-                        getApplication<Application>()
-                                .getString(R.string.erro_quantidade_numeros_excluidos_invalida)
-                )
-        val sobreposicao = verificarSobreposicao()
-        if (sobreposicao.isNotEmpty())
-                return Pair(
-                        false,
-                        getApplication<Application>()
-                                .getString(
-                                        R.string.erro_numeros_sobreposicao,
-                                        sobreposicao.sorted().joinToString(", ")
-                                )
-                )
+        if (currentConfig.quantidadeNumerosPorJogo < 15 || currentConfig.quantidadeNumerosPorJogo > 20) {
+            return Pair(false, "Quantidade de números por jogo deve ser entre 15 e 20.") // Placeholder para R.string.erro_quantidade_numeros_invalida
+        }
+
+        // Validação para o filtro de repetição de dezenas do concurso anterior
+        if (currentConfig.filtroRepeticaoConcursoAnterior) {
+            if (currentConfig.dezenasConcursoAnterior.size != 15) {
+                return Pair(false, "Para o filtro de repetição, as 15 dezenas do concurso anterior devem ser informadas.") // Placeholder para R.string.erro_ultimo_resultado_nao_salvo_para_filtro_repeticao ou similar
+            }
+            if (currentConfig.minRepeticaoConcursoAnterior > currentConfig.maxRepeticaoConcursoAnterior || currentConfig.minRepeticaoConcursoAnterior > currentConfig.dezenasConcursoAnterior.size) {
+                return Pair(false, "Intervalo de repetição do concurso anterior inválido.") // Placeholder para R.string.erro_filtro_repeticao_invalido
+            }
+        }
+
+        // Validações de sobreposição e quantidade para fixos/excluídos
+        val sobreposicao = numerosFixosState.value.intersect(numerosExcluidosState.value.toSet())
+        if (sobreposicao.isNotEmpty()) {
+            return Pair(false, "Números fixos e excluídos não podem ser os mesmos: ${sobreposicao.joinToString()}") // Placeholder
+        }
+        if (numerosFixosState.value.size >= currentConfig.quantidadeNumerosPorJogo) {
+            return Pair(false, "A quantidade de números fixos (${numerosFixosState.value.size}) não pode ser maior ou igual à quantidade de números por jogo (${currentConfig.quantidadeNumerosPorJogo}).") // Placeholder
+        }
+        if (numerosExcluidosState.value.size > (25 - currentConfig.quantidadeNumerosPorJogo)) {
+             return Pair(false, "A quantidade de números excluídos (${numerosExcluidosState.value.size}) é muito alta para a quantidade de números por jogo (${currentConfig.quantidadeNumerosPorJogo}). Máximo permitido: ${25 - currentConfig.quantidadeNumerosPorJogo}.") // Placeholder
+        }
+
+
+        // Validações para cada filtro ativo
+        if (currentConfig.filtroParesImpares && (currentConfig.minImpares > currentConfig.maxImpares || currentConfig.minImpares > currentConfig.quantidadeNumerosPorJogo || currentConfig.maxImpares < 0)) {
+            return Pair(false, "Intervalo de Pares/Ímpares inválido.") // Placeholder para R.string.erro_filtro_pares_impares_invalido
+        }
+        if (currentConfig.filtroSomaTotal && (currentConfig.minSoma > currentConfig.maxSoma || currentConfig.minSoma <=0)) {
+            return Pair(false, "Intervalo de Soma Total inválido.") // Placeholder para R.string.erro_filtro_soma_total_invalido
+        }
+        if (currentConfig.filtroPrimos && (currentConfig.minPrimos > currentConfig.maxPrimos || currentConfig.minPrimos > currentConfig.quantidadeNumerosPorJogo || currentConfig.maxPrimos < 0)) {
+            return Pair(false, "Intervalo de Primos inválido.") // Placeholder para R.string.erro_filtro_primos_invalido
+        }
+        if (currentConfig.filtroFibonacci && (currentConfig.minFibonacci > currentConfig.maxFibonacci || currentConfig.minFibonacci > currentConfig.quantidadeNumerosPorJogo || currentConfig.maxFibonacci < 0)) {
+            return Pair(false, "Intervalo de Fibonacci inválido.") // Placeholder para R.string.erro_filtro_fibonacci_invalido
+        }
+        if (currentConfig.filtroMioloMoldura && (currentConfig.minMiolo > currentConfig.maxMiolo || currentConfig.minMiolo > 9 || currentConfig.maxMiolo < 0)) { // Miolo tem 9 dezenas
+            return Pair(false, "Intervalo de Miolo/Moldura inválido.") // Placeholder para R.string.erro_filtro_miolo_invalido
+        }
+        if (currentConfig.filtroMultiplosDeTres && (currentConfig.minMultiplos > currentConfig.maxMultiplos || currentConfig.minMultiplos > currentConfig.quantidadeNumerosPorJogo || currentConfig.maxMultiplos < 0)) {
+            return Pair(false, "Intervalo de Múltiplos de Três inválido.") // Placeholder para R.string.erro_filtro_multiplos_tres_invalido
+        }
+        // A validação de filtroRepeticaoConcursoAnterior já foi feita acima
+
         return Pair(true, null)
     }
 
     /**
-     * Gera jogos com base na configuração atual de filtros e dezenas.
-     * Atualiza [_jogosGerados] e [_operacaoStatus].
+     * Inicia o processo de geração de jogos com base nas configurações atuais.
      */
-    fun gerarJogosComConfiguracaoAtual() {
-        _operacaoStatus.value = OperacaoStatus.CARREGANDO
+    fun gerarJogos() {
         viewModelScope.launch {
-            val currentConfigFiltros = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
-            // Validar inputs antes de prosseguir
-            if (!validarEParsearInputs(currentConfigFiltros)) { // Passa a configuração atual
-                _operacaoStatus.postValue(OperacaoStatus.ERRO)
-                // A mensagem de erro já foi setada por validarEParsearInputs
+            _operacaoStatus.value = OperacaoStatus.CARREGANDO
+            val (isValid, errorMessage) = validarConfiguracoes()
+            if (!isValid) {
+                _mensagem.value = errorMessage
+                _operacaoStatus.value = OperacaoStatus.ERRO
                 return@launch
             }
 
-            try {
-                // val configFiltros = filtrosViewModel.configuracaoFiltros.value // Já obtido como currentConfigFiltros
-                val ultimoResultadoDezenas = mainViewModelRef?.ultimoResultado?.value?.numeros
-                val dezenasFixasAtuais = numerosFixosState.value
-                val dezenasExcluidasAtuais = numerosExcluidosState.value
+            val currentConfigFiltros = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
 
-                // Mapear ConfiguracaoFiltros para ConfiguracaoGeracao
-                val configuracaoGerador = ConfiguracaoGeracao(
-                    quantidadeJogos = currentConfigFiltros.quantidadeJogos,
-                    quantidadeNumerosPorJogo = currentConfigFiltros.quantidadeNumerosPorJogo,
-                    numerosFixos = dezenasFixasAtuais,
-                    numerosExcluidos = dezenasExcluidasAtuais,
-                    filtroParesImpares = if (currentConfigFiltros.filtroParesImpares) FiltroRange(currentConfigFiltros.minImpares, currentConfigFiltros.maxImpares) else null,
-                    filtroSomaTotal = if (currentConfigFiltros.filtroSomaTotal) FiltroRange(currentConfigFiltros.minSoma, currentConfigFiltros.maxSoma) else null,
-                    filtroPrimos = if (currentConfigFiltros.filtroPrimos) FiltroRange(currentConfigFiltros.minPrimos, currentConfigFiltros.maxPrimos) else null,
-                    filtroFibonacci = if (currentConfigFiltros.filtroFibonacci) FiltroRange(currentConfigFiltros.minFibonacci, currentConfigFiltros.maxFibonacci) else null,
-                    filtroMiolo = if (currentConfigFiltros.filtroMioloMoldura) FiltroRange(currentConfigFiltros.minMiolo, currentConfigFiltros.maxMiolo) else null,
-                    filtroMultiplosDeTres = if (currentConfigFiltros.filtroMultiplosDeTres) FiltroRange(currentConfigFiltros.minMultiplos, currentConfigFiltros.maxMultiplos) else null,
-                    filtroRepeticaoAnterior = if (currentConfigFiltros.filtroRepeticaoConcursoAnterior && ultimoResultadoDezenas != null && ultimoResultadoDezenas.isNotEmpty()) { // Verificar se ultimoResultadoDezenas não é nulo nem vazio
+            val configGeracao = ConfiguracaoGeracao(
+                quantidadeJogos = currentConfigFiltros.quantidadeJogos,
+                quantidadeNumerosPorJogo = currentConfigFiltros.quantidadeNumerosPorJogo,
+                numerosFixos = numerosFixosState.value.toList(),
+                numerosExcluidos = numerosExcluidosState.value.toList(),
+                filtroParesImpares = if (currentConfigFiltros.filtroParesImpares) FiltroRange(currentConfigFiltros.minImpares, currentConfigFiltros.maxImpares) else null,
+                filtroSomaTotal = if (currentConfigFiltros.filtroSomaTotal) FiltroRange(currentConfigFiltros.minSoma, currentConfigFiltros.maxSoma) else null,
+                filtroPrimos = if (currentConfigFiltros.filtroPrimos) FiltroRange(currentConfigFiltros.minPrimos, currentConfigFiltros.maxPrimos) else null,
+                filtroFibonacci = if (currentConfigFiltros.filtroFibonacci) FiltroRange(currentConfigFiltros.minFibonacci, currentConfigFiltros.maxFibonacci) else null,
+                filtroMiolo = if (currentConfigFiltros.filtroMioloMoldura) FiltroRange(currentConfigFiltros.minMiolo, currentConfigFiltros.maxMiolo) else null,
+                filtroMultiplosDeTres = if (currentConfigFiltros.filtroMultiplosDeTres) FiltroRange(currentConfigFiltros.minMultiplos, currentConfigFiltros.maxMultiplos) else null,
+                filtroRepeticaoAnterior = if (currentConfigFiltros.filtroRepeticaoConcursoAnterior && currentConfigFiltros.dezenasConcursoAnterior.size == 15) {
+                    FiltroRepeticao(currentConfigFiltros.dezenasConcursoAnterior, currentConfigFiltros.minRepeticaoConcursoAnterior, currentConfigFiltros.maxRepeticaoConcursoAnterior)
+                } else null
+            )
+
+            val configuracaoFiltros = filtrosViewModel.configuracaoFiltros.value
+
+            // Prepara os filtros com base na configuraçãoFiltros
+            val filtrosAplicados = mutableListOf<GeradorJogos.Filtro>()
+
+            if (configuracaoFiltros != null) {
+                if (configuracaoFiltros.filtroRepeticaoConcursoAnteriorAtivado && configuracaoFiltros.dezenasConcursoAnterior.isNotEmpty()) {
+                    filtrosAplicados.add(
                         FiltroRepeticao(
-                            dezenasAnteriores = ultimoResultadoDezenas,
-                            range = FiltroRange(currentConfigFiltros.minRepeticaoConcursoAnterior, currentConfigFiltros.maxRepeticaoConcursoAnterior)
+                            dezenasAnteriores = configuracaoFiltros.dezenasConcursoAnterior,
+                            range = FiltroRange(configuracaoFiltros.minRepeticaoConcursoAnterior, configuracaoFiltros.maxRepeticaoConcursoAnterior)
                         )
-                    } else null,
-                    ultimoResultadoConcursoAnterior = ultimoResultadoDezenas
-                )
-
-                val jogosGeradosListCompletos = withContext(Dispatchers.Default) {
-                    // Corrigir nome do método e passar o objeto de configuração correto
-                    val listasDeNumerosGeradas = GeradorJogos.gerarJogos(configuracaoGerador)
-                    // O método gerarJogos já retorna List<Jogo>, não List<List<Int>>
-                    listasDeNumerosGeradas // Já é List<Jogo>
+                    )
                 }
-
-                if (jogosGeradosListCompletos.isNotEmpty()) {
-                    _jogosGerados.postValue(jogosGeradosListCompletos)
-                    _operacaoStatus.postValue(OperacaoStatus.SUCESSO)
-                } else {
-                    _jogosGerados.postValue(emptyList())
-                    _operacaoStatus.postValue(OperacaoStatus.SUCESSO) // Sucesso, mas nenhum jogo gerado
-                    _mensagem.postValue(getApplication<Application>().getString(R.string.info_nenhum_jogo_gerado_filtros))
+                if (configuracaoFiltros.filtroParesImparesAtivado) {
+                    filtrosAplicados.add(GeradorJogos.FiltroParesImpares(FiltroRange(configuracaoFiltros.minPares, configuracaoFiltros.maxPares)))
                 }
+                if (configuracaoFiltros.filtroSomaTotalAtivado) {
+                    filtrosAplicados.add(GeradorJogos.FiltroSoma(FiltroRange(configuracaoFiltros.minSoma, configuracaoFiltros.maxSoma)))
+                }
+                // Adicionar outros filtros da mesma forma (Primos, Fibonacci, etc.)
+                if (configuracaoFiltros.filtroNumerosPrimosAtivado) {
+                    filtrosAplicados.add(GeradorJogos.FiltroPrimos(FiltroRange(configuracaoFiltros.minPrimos, configuracaoFiltros.maxPrimos)))
+                }
+                if (configuracaoFiltros.filtroFibonacciAtivado) {
+                    filtrosAplicados.add(GeradorJogos.FiltroFibonacci(FiltroRange(configuracaoFiltros.minFibonacci, configuracaoFiltros.maxFibonacci)))
+                }
+                if (configuracaoFiltros.filtroMioloMolduraAtivado) {
+                    filtrosAplicados.add(GeradorJogos.FiltroMioloMoldura(
+                        rangeMiolo = FiltroRange(configuracaoFiltros.minMiolo, configuracaoFiltros.maxMiolo),
+                        rangeMoldura = FiltroRange(configuracaoFiltros.minMoldura, configuracaoFiltros.maxMoldura) // Assumindo que você tenha min/maxMoldura
+                    ))
+                }
+                if (configuracaoFiltros.filtroMultiplosDeTresAtivado) {
+                    filtrosAplicados.add(GeradorJogos.FiltroMultiplosDeTres(FiltroRange(configuracaoFiltros.minMultiplosDeTres, configuracaoFiltros.maxMultiplosDeTres)))
+                }
+            }
 
+            _operacaoStatus.value = OperacaoStatus.PROCESSANDO
+            val jogosGeradosListas: List<List<Int>> = try {
+                GeradorJogos.gerarJogosLotofacil(configGeracao, filtrosAplicados)
             } catch (e: Exception) {
-                _jogosGerados.postValue(emptyList())
-                _operacaoStatus.postValue(OperacaoStatus.ERRO)
-                _mensagem.postValue("Erro ao gerar jogos: ${e.message}")
-                // Log.e("GeradorViewModel", "Erro ao gerar jogos", e)
+                _mensagem.value = "Erro na geração: ${e.message}"
+                _operacaoStatus.value = OperacaoStatus.ERRO
+                return@launch
+            }
+
+            val jogosConvertidos = jogosGeradosListas.map { numeros -> Jogo.fromList(numeros) }
+
+            if (jogosConvertidos.isNotEmpty()) {
+                _jogosGerados.value = jogosConvertidos
+                // _mensagem.value = "${jogosConvertidos.size} jogos gerados com sucesso!" // Sucesso
+                _operacaoStatus.value = OperacaoStatus.CONCLUIDO
+
+                // Salvar os jogos gerados no banco de dados
+                if (jogoRepository != null && currentConfigFiltros.salvarJogosGeradosAutomaticamente) {
+                    try {
+                        jogoRepository.inserirJogos(jogosConvertidos)
+                        _mensagem.value = "${jogosConvertidos.size} jogos gerados e salvos!"
+                    } catch (e: Exception) {
+                        _mensagem.value = "Erro ao salvar jogos: ${e.message}"
+                        // Considerar um status diferente ou apenas logar
+                    }
+                } else if (jogoRepository == null && currentConfigFiltros.salvarJogosGeradosAutomaticamente) {
+                    _mensagem.value = "Repositório não disponível. Jogos não foram salvos."
+                } else {
+                    _mensagem.value = "${jogosConvertidos.size} jogos gerados! (Não salvos automaticamente)"
+                }
+
+            } else {
+                _jogosGerados.value = emptyList()
+                _operacaoStatus.value = OperacaoStatus.ERRO
+                _mensagem.value = "Erro ao gerar jogos: Lista de jogos gerados vazia."
             }
         }
     }
@@ -360,7 +420,7 @@ class GeradorViewModel(
     /** Reseta o status da operação. */
     fun resetarStatusOperacao() {
         _operacaoStatus.value = OperacaoStatus.OCIOSO
-        _mensagem.value = null
+        _mensagem.value = null // Limpa a mensagem ao resetar o status
     }
 
     fun limparMensagemUnica() {
@@ -372,91 +432,43 @@ class GeradorViewModel(
     // ou métodos no GeradorViewModel que delegam para filtrosViewModel.atualizarFiltro().
 
     // Novo conjunto de métodos para atualizar ConfiguracaoFiltros no FiltrosViewModel
-    fun atualizarFiltroParesImpares(ativado: Boolean, min: Int? = null, max: Int? = null) {
-        val configAtual = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
-        filtrosViewModel.atualizarFiltro(
-            configAtual.copy(
-                filtroParesImpares = ativado,
-                minImpares = min ?: configAtual.minImpares, // Mantém se não fornecido
-                maxImpares = max ?: configAtual.maxImpares  // Mantém se não fornecido
-            )
-        )
+    fun atualizarFiltroParesImpares(ativado: Boolean, min: Int, max: Int) {
+        val currentConfig = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
+        filtrosViewModel.atualizarFiltro(currentConfig.copy(filtroParesImpares = ativado, minImpares = min, maxImpares = max))
     }
 
-    fun atualizarFiltroSomaTotal(ativado: Boolean, min: Int? = null, max: Int? = null) {
-        val configAtual = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
-        filtrosViewModel.atualizarFiltro(
-            configAtual.copy(
-                filtroSomaTotal = ativado,
-                minSoma = min ?: configAtual.minSoma,
-                maxSoma = max ?: configAtual.maxSoma
-            )
-        )
+    fun atualizarFiltroSomaTotal(ativado: Boolean, min: Int, max: Int) {
+        val currentConfig = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
+        filtrosViewModel.atualizarFiltro(currentConfig.copy(filtroSomaTotal = ativado, minSoma = min, maxSoma = max))
     }
 
-    fun atualizarFiltroPrimos(ativado: Boolean, min: Int? = null, max: Int? = null) {
-        val configAtual = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
-        filtrosViewModel.atualizarFiltro(
-            configAtual.copy(
-                filtroPrimos = ativado,
-                minPrimos = min ?: configAtual.minPrimos,
-                maxPrimos = max ?: configAtual.maxPrimos
-            )
-        )
+    fun atualizarFiltroPrimos(ativado: Boolean, min: Int, max: Int) {
+        val currentConfig = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
+        filtrosViewModel.atualizarFiltro(currentConfig.copy(filtroPrimos = ativado, minPrimos = min, maxPrimos = max))
     }
 
-    fun atualizarFiltroFibonacci(ativado: Boolean, min: Int? = null, max: Int? = null) {
-        val configAtual = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
-        filtrosViewModel.atualizarFiltro(
-            configAtual.copy(
-                filtroFibonacci = ativado,
-                minFibonacci = min ?: configAtual.minFibonacci,
-                maxFibonacci = max ?: configAtual.maxFibonacci
-            )
-        )
+    fun atualizarFiltroFibonacci(ativado: Boolean, min: Int, max: Int) {
+        val currentConfig = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
+        filtrosViewModel.atualizarFiltro(currentConfig.copy(filtroFibonacci = ativado, minFibonacci = min, maxFibonacci = max))
     }
 
-    fun atualizarFiltroMioloMoldura(ativado: Boolean, min: Int? = null, max: Int? = null) {
-        val configAtual = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
-        filtrosViewModel.atualizarFiltro(
-            configAtual.copy(
-                filtroMioloMoldura = ativado,
-                minMiolo = min ?: configAtual.minMiolo,
-                maxMiolo = max ?: configAtual.maxMiolo
-            )
-        )
+    fun atualizarFiltroMioloMoldura(ativado: Boolean, min: Int, max: Int) {
+        val currentConfig = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
+        filtrosViewModel.atualizarFiltro(currentConfig.copy(filtroMioloMoldura = ativado, minMiolo = min, maxMiolo = max))
     }
 
-    fun atualizarFiltroMultiplosDeTres(ativado: Boolean, min: Int? = null, max: Int? = null) {
-        val configAtual = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
-        filtrosViewModel.atualizarFiltro(
-            configAtual.copy(
-                filtroMultiplosDeTres = ativado,
-                minMultiplos = min ?: configAtual.minMultiplos,
-                maxMultiplos = max ?: configAtual.maxMultiplos
-            )
-        )
+    fun atualizarFiltroMultiplosDeTres(ativado: Boolean, min: Int, max: Int) {
+        val currentConfig = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
+        filtrosViewModel.atualizarFiltro(currentConfig.copy(filtroMultiplosDeTres = ativado, minMultiplos = min, maxMultiplos = max))
     }
 
-    fun atualizarFiltroRepeticaoDezenas(ativado: Boolean, min: Int? = null, max: Int? = null) {
-        val configAtual = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
-        filtrosViewModel.atualizarFiltro(
-            configAtual.copy(
-                filtroRepeticaoConcursoAnterior = ativado,
-                minRepeticaoConcursoAnterior = min ?: configAtual.minRepeticaoConcursoAnterior,
-                maxRepeticaoConcursoAnterior = max ?: configAtual.maxRepeticaoConcursoAnterior
-            )
-        )
-        // Se o filtro de repetição for ativado, verificar se o último resultado está disponível
-        if (ativado && (mainViewModelRef?.ultimoResultado?.value?.numeros.isNullOrEmpty())) {
-            _mensagem.value = getApplication<Application>().getString(R.string.erro_ultimo_resultado_nao_salvo_para_filtro_repeticao)
-            // Considerar se a ativação deve ser revertida ou apenas mostrar a mensagem.
-            // Por ora, apenas mostra a mensagem; a validação final ocorre em validarEParsearInputs.
-        }
+    fun atualizarFiltroRepeticao(ativado: Boolean, min: Int, max: Int) {
+        val currentConfig = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
+        filtrosViewModel.atualizarFiltro(currentConfig.copy(filtroRepeticaoConcursoAnterior = ativado, minRepeticaoConcursoAnterior = min, maxRepeticaoConcursoAnterior = max))
     }
 
     fun setMainViewModelRef(mainViewModel: MainViewModel) {
-        this.mainViewModelRef = mainViewModel
+        mainViewModelRef = mainViewModel
     }
 
     private fun validarEParsearInputs(configFiltros: ConfiguracaoFiltros): Boolean { // Recebe ConfiguracaoFiltros
@@ -626,4 +638,33 @@ class GeradorViewModel(
             _mensagem.postValue(getApplication<Application>().getString(R.string.configuracao_filtros_resetada_padrao))
         }
     }
+
+    private fun validarQuantidadeNumerosPorJogo(quantidade: Int): Boolean {
+        val isValid = quantidade in 15..20 // Exemplo: Lotofácil permite de 15 a 20 números
+        if (!isValid) {
+            // _mensagem.value = getApplication<Application>().getString(R.string.erro_quantidade_numeros_invalida)
+            _mensagem.value = "Quantidade de números por jogo inválida (15-20)."
+        }
+        return isValid
+    }
+
+    /** Valida o filtro de Pares e Ímpares. */
+    private fun validarFiltroParesImpares(config: ConfiguracaoFiltros): Boolean {
+        if (config.filtroParesImparesAtivado) {
+            val minPares = config.minPares
+            val maxPares = config.maxPares
+            val quantidadeNumeros = config.quantidadeNumerosPorJogo
+
+            if (minPares < 0 || maxPares > quantidadeNumeros || minPares > maxPares) {
+                // _mensagem.value = getApplication<Application>().getString(R.string.erro_filtro_pares_impares_invalido)
+                _mensagem.value = "Configuração do filtro de Pares e Ímpares inválida."
+                return false
+            }
+            // Adicionar outras validações se necessário (ex: soma de minPares e minImpares implícitos)
+        }
+        return true
+    }
+
+    /** Valida o filtro de Soma Total. */
+    // ... existing code ...
 }

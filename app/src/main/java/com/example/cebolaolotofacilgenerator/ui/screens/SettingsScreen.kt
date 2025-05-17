@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DeleteForever
@@ -114,6 +116,7 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -126,6 +129,8 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
                 temaAtual = temaAtual,
                 onThemeSelected = { mainViewModel.salvarTemaAplicativo(it) }
             )
+            // Exibe o tema atual como texto simples para depuração ou informação
+            Text("Tema Atual: ${temaAtual.displayName}") // Usar displayName e placeholder para a string R.string.tema_atual_label
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -153,7 +158,7 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
 
             // Nova Seção: Configurações de Filtros
             Text(
-                stringResource(R.string.configuracoes_filtros_titulo_secao),
+                "Configurações de Filtros", // Placeholder para R.string.configuracoes_filtros_titulo_secao
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -166,8 +171,8 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
 
                     SwitchSettingItem(
                         icon = Icons.Filled.Save,
-                        title = stringResource(R.string.salvar_filtros_automaticamente_titulo),
-                        subtitle = stringResource(R.string.salvar_filtros_automaticamente_subtitulo),
+                        title = "Salvar Filtros Automaticamente", // Placeholder para R.string.salvar_filtros_automaticamente_titulo
+                        subtitle = "Salva as configurações de filtro ao sair da tela.", // Placeholder para R.string.salvar_filtros_automaticamente_subtitulo
                         checked = salvarFiltrosAutomaticamente,
                         onCheckedChange = { newState ->
                             mainViewModel.preferenciasViewModel.setSalvarFiltrosAutomaticamente(newState)
@@ -175,10 +180,11 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
                     )
                     ActionItem(
                         icon = Icons.Filled.Tune,
-                        title = stringResource(R.string.restaurar_filtros_padrao_titulo),
-                        subtitle = stringResource(R.string.restaurar_filtros_padrao_subtitulo),
+                        title = "Restaurar Filtros Padrão",
+                        subtitle = "Redefine todos os filtros para os valores iniciais.",
                         onClick = {
-                            mainViewModel.showSnackbar(context.getString(R.string.filtros_restaurados_confirmacao))
+                            mainViewModel.filtrosViewModel.resetarConfiguracaoFiltros()
+                            mainViewModel.showSnackbar("Filtros restaurados para o padrão.")
                         }
                     )
                 }
@@ -188,7 +194,7 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
 
             // Nova Seção: Gerenciamento de Dados
             Text(
-                stringResource(R.string.gerenciamento_dados_titulo_secao),
+                "Gerenciamento de Dados", // Placeholder para R.string.gerenciamento_dados_titulo_secao
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -196,15 +202,16 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
             if (showConfirmationDialogLimparJogos) {
                 AlertDialog(
                     onDismissRequest = { showConfirmationDialogLimparJogos = false },
-                    title = { Text(stringResource(R.string.confirmar_limpar_jogos_titulo)) },
-                    text = { Text(stringResource(R.string.confirmar_limpar_jogos_mensagem)) },
+                    title = { Text("Confirmar Limpeza") }, // Placeholder para R.string.confirmar_limpar_jogos_titulo
+                    text = { Text("Tem certeza que deseja excluir todos os jogos salvos?") }, // Placeholder para R.string.confirmar_limpar_jogos_mensagem
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                mainViewModel.showSnackbar(context.getString(R.string.todos_jogos_excluidos_confirmacao))
+                                mainViewModel.jogosViewModel.limparTodosOsJogos()
+                                mainViewModel.showSnackbar("Todos os jogos foram excluídos.")
                                 showConfirmationDialogLimparJogos = false
                             }
-                        ) { Text(stringResource(R.string.confirmar)) }
+                        ) { Text("Confirmar") }
                     },
                     dismissButton = {
                         TextButton(onClick = { showConfirmationDialogLimparJogos = false }) {
@@ -219,8 +226,8 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
             ) {
                 ActionItem(
                     icon = Icons.Filled.DeleteForever,
-                    title = stringResource(R.string.limpar_jogos_salvos_titulo),
-                    subtitle = stringResource(R.string.limpar_jogos_salvos_subtitulo),
+                    title = "Limpar Jogos Salvos", // Placeholder para R.string.limpar_jogos_salvos_titulo
+                    subtitle = "Exclui todos os jogos da sua lista.", // Placeholder para R.string.limpar_jogos_salvos_subtitulo
                     onClick = { showConfirmationDialogLimparJogos = true }
                 )
             }
@@ -235,7 +242,7 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
 
             // Item para a tela de Instruções
             SettingsItem(
-                title = stringResource(R.string.instrucoes_titulo),
+                title = "Instruções", // Placeholder para R.string.instrucoes_titulo
                 subtitle = "Saiba como usar o aplicativo",
                 icon = Icons.Filled.Info,
                 onClick = { navController.navigate(Screen.Instrucoes.route) }
@@ -288,24 +295,24 @@ fun ThemeSettingsGroup(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                stringResource(R.string.selecionar_tema_label), // Ex: "Tema do Aplicativo"
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
+                text = "Tema do Aplicativo", // Placeholder para R.string.selecionar_tema_label
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(bottom = 4.dp)
             )
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = { expanded = !expanded },
             ) {
                 OutlinedTextField(
-                    value = getNomeTema(temaAtual),
+                    value = "Tema Atual: ${temaAtual.displayName}",
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text(stringResource(R.string.tema_atual_label)) }, // Ex: "Tema Atual"
+                    label = { Text(stringResource(R.string.tema_atual_label)) },
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
                     modifier = Modifier
-                        .menuAnchor() // Importante para o dropdown
+                        .menuAnchor()
                         .fillMaxWidth()
                 )
                 ExposedDropdownMenu(

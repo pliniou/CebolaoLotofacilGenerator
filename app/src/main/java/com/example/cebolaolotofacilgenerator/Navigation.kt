@@ -3,21 +3,21 @@ package com.example.cebolaolotofacilgenerator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /** Rotas de navegação do aplicativo */
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
-    object Principal : Screen("principal", "Principal", Icons.Filled.Create)
+    object BoasVindas : Screen("boas_vindas", "Bem-vindo(a)", Icons.Filled.Home)
     object Gerador :
         Screen(
             route = "gerador?dezenasFixas={dezenasFixas}",
-            title = "Gerador",
+            title = "Gerar Jogos",
             icon = Icons.Filled.AddCircle
         ) {
         fun createRoute(dezenasFixas: List<Int>? = null): String {
@@ -37,9 +37,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
             return "filtros?dezenasFixas=$dezenasArg"
         }
     }
-    object Conferencia : Screen("conferencia", "Conferência", Icons.Filled.Checklist)
     object Favoritos : Screen("favoritos", "Favoritos", Icons.Filled.Favorite)
-    object Resultados : Screen("resultados", "Resultados", Icons.AutoMirrored.Filled.List)
     object Settings : Screen("settings", "Ajustes", Icons.Filled.Settings)
     object JogosGerados : Screen("jogos_gerados", "Jogos Gerados", Icons.Filled.Checklist)
     object Instrucoes : Screen("instrucoes", "Instruções", Icons.Filled.Info)

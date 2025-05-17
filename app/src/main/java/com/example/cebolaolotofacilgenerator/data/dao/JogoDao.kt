@@ -74,30 +74,6 @@ interface JogoDao {
     fun observarFavoritos(): LiveData<List<Jogo>>
 
     /**
-     * Busca todos os jogos que foram conferidos.
-     * @return Uma lista com todos os jogos conferidos.
-     */
-    @Query("SELECT * FROM jogos WHERE concursoConferido IS NOT NULL ORDER BY dataCriacao DESC")
-    suspend fun buscarConferidos(): List<Jogo>
-
-    /**
-     * Busca todos os jogos que foram conferidos e observa mudanças (LiveData).
-     * @return Um LiveData com a lista de jogos conferidos.
-     */
-    @Query("SELECT * FROM jogos WHERE concursoConferido IS NOT NULL ORDER BY dataCriacao DESC")
-    fun observarConferidos(): LiveData<List<Jogo>>
-
-    /**
-     * Busca jogos que foram conferidos com um determinado concurso.
-     * @param concursoId O ID do concurso.
-     * @return Uma lista de jogos conferidos com o concurso especificado.
-     */
-    @Query(
-            "SELECT * FROM jogos WHERE concursoConferido = :concursoId ORDER BY acertos DESC, dataCriacao DESC"
-    )
-    suspend fun buscarJogosConferidos(concursoId: Long): List<Jogo>
-
-    /**
      * Conta quantos jogos estão armazenados no banco de dados.
      * @return O número total de jogos.
      */

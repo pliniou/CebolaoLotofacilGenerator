@@ -4,232 +4,154 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.asFlow
 import com.example.cebolaolotofacilgenerator.data.model.Jogo
 import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
-import com.example.cebolaolotofacilgenerator.data.model.Resultado
 import com.example.cebolaolotofacilgenerator.data.repository.JogoRepository
-import com.example.cebolaolotofacilgenerator.ui.components.SnackbarManager
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class JogosViewModel(private val repository: JogoRepository) : ViewModel() {
+class JogosViewModel(private val jogoRepository: JogoRepository) : ViewModel() {
 
-    // LiveData para jogos
-    private val _todosJogos = MutableLiveData<List<Jogo>>()
-    val todosJogos: LiveData<List<Jogo>> = _todosJogos
+    // StateFlow para todos os jogos, obtido do repositório
+    val todosOsJogos: StateFlow<List<Jogo>> = jogoRepository.todosJogos
+        .asFlow() // Converte LiveData para Flow
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = emptyList()
+        )
 
-    // LiveData para jogos favoritos
-    private val _jogosFavoritos = MutableLiveData<List<Jogo>>()
-    val jogosFavoritos: LiveData<List<Jogo>> = _jogosFavoritos
+    private val _jogosGeradosNaoFavoritos = MutableStateFlow<List<Jogo>>(emptyList())
+    val jogosGeradosNaoFavoritos: StateFlow<List<Jogo>> = _jogosGeradosNaoFavoritos.asStateFlow()
 
-    // LiveData para jogos conferidos
-    private val _jogosConferidos = MutableLiveData<List<Jogo>>()
-    val jogosConferidos: LiveData<List<Jogo>> = _jogosConferidos
+    private val _jogosFavoritos = MutableStateFlow<List<Jogo>>(emptyList())
+    val jogosFavoritos: StateFlow<List<Jogo>> = _jogosFavoritos.asStateFlow()
+
+    // Estado para a aba selecionada (0 para Jogos Gerados, 1 para Favoritos)
+    private val _selectedTabIndex = MutableStateFlow(0)
+    val selectedTabIndex: StateFlow<Int> = _selectedTabIndex.asStateFlow()
+
+    // LiveData para controlar a visibilidade do diálogo de exclusão
+    private val _mostrarDialogoExclusao = MutableLiveData<Jogo?>(null)
+    val mostrarDialogoExclusao: LiveData<Jogo?> = _mostrarDialogoExclusao
+
+    // LiveData para controlar a visibilidade do diálogo de exclusão de todos os jogos
+    private val _mostrarDialogoExcluirTodos = MutableLiveData<Boolean>(false)
+    val mostrarDialogoExcluirTodos: LiveData<Boolean> = _mostrarDialogoExcluirTodos
+    
+    // LiveData para controlar a visibilidade do diálogo de exclusão de todos os jogos favoritos
+    private val _mostrarDialogoExcluirTodosFavoritos = MutableLiveData<Boolean>(false)
+    val mostrarDialogoExcluirTodosFavoritos: LiveData<Boolean> = _mostrarDialogoExcluirTodosFavoritos
 
     // LiveData para status da operação
     private val _operacaoStatus = MutableLiveData<OperacaoStatus>()
     val operacaoStatus: LiveData<OperacaoStatus> = _operacaoStatus
 
-    // StateFlow para controlar o estado de carregamento da conferência
-    private val _conferenciaEmAndamento = MutableStateFlow(false)
-    val conferenciaEmAndamento: StateFlow<Boolean> = _conferenciaEmAndamento.asStateFlow()
-
-    // StateFlow para armazenar o resultado selecionado para conferência
-    private val _resultadoSelecionado = MutableStateFlow<Resultado?>(null)
-    val resultadoSelecionado: StateFlow<Resultado?> = _resultadoSelecionado.asStateFlow()
-
     init {
-        carregarJogos()
+        carregarJogosNaoFavoritos()
         carregarJogosFavoritos()
-        carregarJogosConferidos()
+        // todosOsJogos será atualizado automaticamente pelo StateFlow
     }
 
-    fun carregarJogos() =
-            viewModelScope.launch {
-                try {
-                    _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                    _todosJogos.value = repository.buscarTodosJogos()
-                    _operacaoStatus.value = OperacaoStatus.SUCESSO
-                } catch (e: Exception) {
-                    _operacaoStatus.value = OperacaoStatus.ERRO
-                }
-            }
-
-    fun carregarJogosFavoritos() =
-            viewModelScope.launch {
-                try {
-                    _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                    _jogosFavoritos.value = repository.buscarJogosFavoritos()
-                    _operacaoStatus.value = OperacaoStatus.SUCESSO
-                } catch (e: Exception) {
-                    _operacaoStatus.value = OperacaoStatus.ERRO
-                }
-            }
-
-    fun carregarJogosConferidos() =
-            viewModelScope.launch {
-                try {
-                    _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                    _jogosConferidos.value = repository.buscarJogosConferidos()
-                    _operacaoStatus.value = OperacaoStatus.SUCESSO
-                } catch (e: Exception) {
-                    _operacaoStatus.value = OperacaoStatus.ERRO
-                }
-            }
-
-    fun marcarComoFavorito(jogo: Jogo, favorito: Boolean) =
-            viewModelScope.launch {
-                try {
-                    _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                    repository.atualizarJogo(jogo.copy(favorito = favorito))
-                    carregarJogos()
-                    carregarJogosFavoritos()
-                    _operacaoStatus.value = OperacaoStatus.SUCESSO
-                } catch (e: Exception) {
-                    _operacaoStatus.value = OperacaoStatus.ERRO
-                }
-            }
-
-    fun deletarJogo(jogo: Jogo) =
-            viewModelScope.launch {
-                try {
-                    _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                    repository.excluirJogo(jogo)
-                    carregarJogos()
-                    carregarJogosFavoritos()
-                    carregarJogosConferidos()
-                    _operacaoStatus.value = OperacaoStatus.SUCESSO
-                } catch (e: Exception) {
-                    _operacaoStatus.value = OperacaoStatus.ERRO
-                }
-            }
-
-    fun limparTodosJogos() =
-            viewModelScope.launch {
-                try {
-                    _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                    repository.excluirTodosJogos()
-                    carregarJogos()
-                    carregarJogosFavoritos()
-                    carregarJogosConferidos()
-                    _operacaoStatus.value = OperacaoStatus.SUCESSO
-                } catch (e: Exception) {
-                    _operacaoStatus.value = OperacaoStatus.ERRO
-                }
-            }
-            
-    /**
-     * Define o resultado que será usado para conferir os jogos
-     * @param resultado O resultado a ser usado para conferência
-     */
-    fun selecionarResultadoParaConferencia(resultado: Resultado?) {
-        _resultadoSelecionado.value = resultado
-    }
-    
-    /**
-     * Confere um ou mais jogos contra o resultado selecionado
-     * @param jogos Lista de jogos a serem conferidos
-     */
-    fun conferirJogos(jogos: List<Jogo>) {
-        val resultado = _resultadoSelecionado.value
-        
-        if (resultado == null) {
-            SnackbarManager.mostrarMensagem("Selecione um resultado para conferir os jogos")
-            return
-        }
-        
-        if (jogos.isEmpty()) {
-            SnackbarManager.mostrarMensagem("Nenhum jogo selecionado para conferência")
-            return
-        }
-        
+    fun carregarJogosNaoFavoritos() {
         viewModelScope.launch {
-            try {
-                _conferenciaEmAndamento.value = true
-                _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                
-                val jogosAtualizados = withContext(Dispatchers.Default) {
-                    jogos.map { jogo ->
-                        // Contagem de acertos - interseção entre números do jogo e do resultado
-                        val acertos = jogo.numeros.intersect(resultado.dezenas.toSet()).size
-                        
-                        // Cria uma cópia do jogo com os acertos e o ID do resultado
-                        jogo.copy(
-                            acertos = acertos,
-                            concursoConferido = resultado.concurso
-                        )
-                    }
-                }
-                
-                // Atualiza os jogos no banco de dados
-                for (jogo in jogosAtualizados) {
-                    repository.atualizarJogo(jogo)
-                }
-                
-                // Recarregar listas
-                carregarJogos()
-                carregarJogosFavoritos()
-                carregarJogosConferidos()
-                
-                // Resultado da conferência
-                val jogos11Mais = jogosAtualizados.count { it.acertos ?: 0 >= 11 }
-                val temPremio = jogosAtualizados.any { it.acertos ?: 0 >= 11 }
-                
-                if (temPremio) {
-                    SnackbarManager.mostrarMensagem(
-                        "Conferência concluída! Você tem $jogos11Mais jogo(s) com 11 ou mais acertos!"
-                    )
-                } else {
-                    SnackbarManager.mostrarMensagem("Conferência concluída. Nenhum jogo premiado.")
-                }
-                
-                _operacaoStatus.value = OperacaoStatus.SUCESSO
-            } catch (e: Exception) {
-                _operacaoStatus.value = OperacaoStatus.ERRO
-                SnackbarManager.mostrarMensagem("Erro ao conferir jogos: ${e.message}")
-            } finally {
-                _conferenciaEmAndamento.value = false
-            }
+            // Assumindo que o repositório tem um método para buscar apenas não favoritos
+            // Se não, será necessário filtrar a partir de todosOsJogos ou ajustar o repositório
+            // Por ora, vamos manter a lógica original se possível, mas isso precisa de revisão.
+            // Idealmente, JogoRepository deveria fornecer um Flow/LiveData para não favoritos também.
+            // Temporariamente, vamos simular que ele busca todos e filtra, ou que existe um método.
+            // Esta parte pode precisar de ajuste no JogoRepository.
+            // _jogosGeradosNaoFavoritos.value = jogoRepository.buscarTodosJogos().filter { !it.favorito }
+            // OU, se JogoRepository.todosJogos já é a fonte da verdade:
+             _jogosGeradosNaoFavoritos.value = jogoRepository.buscarTodosJogos().filter { !it.favorito }
+        }
+    }
+
+    fun carregarJogosFavoritos() {
+        viewModelScope.launch {
+            _jogosFavoritos.value = jogoRepository.buscarJogosFavoritos()
         }
     }
     
-    /**
-     * Limpa a conferência de todos os jogos (define acertos = null, concursoConferido = null)
-     */
-    fun limparConferencia() {
+    fun onTabSelecionada(index: Int) {
+        _selectedTabIndex.value = index
+    }
+
+    fun exibirDialogoExclusao(jogo: Jogo) {
+        _mostrarDialogoExclusao.value = jogo
+    }
+
+    fun esconderDialogoExclusao() {
+        _mostrarDialogoExclusao.value = null
+    }
+    
+    fun exibirDialogoExcluirTodos(confirmar: Boolean) {
+        _mostrarDialogoExcluirTodos.value = confirmar
+    }
+
+    fun esconderDialogoExcluirTodos() {
+        _mostrarDialogoExcluirTodos.value = false
+    }
+
+    fun exibirDialogoExcluirTodosFavoritos(confirmar: Boolean) {
+        _mostrarDialogoExcluirTodosFavoritos.value = confirmar
+    }
+
+    fun esconderDialogoExcluirTodosFavoritos() {
+        _mostrarDialogoExcluirTodosFavoritos.value = false
+    }
+
+
+    fun excluirJogo(jogo: Jogo) {
         viewModelScope.launch {
-            try {
-                _operacaoStatus.value = OperacaoStatus.CARREGANDO
-                
-                val jogosConferidos = _jogosConferidos.value ?: emptyList()
-                if (jogosConferidos.isEmpty()) {
-                    SnackbarManager.mostrarMensagem("Não há jogos conferidos para limpar")
-                    _operacaoStatus.value = OperacaoStatus.OCIOSO
-                    return@launch
-                }
-                
-                // Limpa a conferência de todos os jogos
-                for (jogo in jogosConferidos) {
-                    repository.atualizarJogo(
-                        jogo.copy(acertos = null, concursoConferido = null)
-                    )
-                }
-                
-                // Recarregar listas
-                carregarJogos()
-                carregarJogosFavoritos()
-                carregarJogosConferidos()
-                
-                SnackbarManager.mostrarMensagem("Conferência limpa com sucesso")
-                _operacaoStatus.value = OperacaoStatus.SUCESSO
-            } catch (e: Exception) {
-                _operacaoStatus.value = OperacaoStatus.ERRO
-                SnackbarManager.mostrarMensagem("Erro ao limpar conferência: ${e.message}")
-            }
+            jogoRepository.excluirJogo(jogo)
+            // As listas serão atualizadas automaticamente se estiverem observando todosOsJogos
+            // ou se carregarJogosNaoFavoritos/Favoritos for chamado e eles usarem sources atualizadas
+            carregarJogosNaoFavoritos() 
+            carregarJogosFavoritos()
+        }
+        esconderDialogoExclusao()
+    }
+
+    // Este método agora limpará TODOS os jogos (favoritos ou não)
+    fun limparTodosOsJogos() {
+        viewModelScope.launch {
+            jogoRepository.excluirTodosJogos() // Chama o método do repositório que limpa toda a tabela
+            // carregarJogosNaoFavoritos() e carregarJogosFavoritos() serão atualizados
+            // devido à observação de todosOsJogos ou recarga explícita.
+        }
+        esconderDialogoExcluirTodos()
+    }
+    
+    fun excluirTodosOsJogosFavoritos() {
+        viewModelScope.launch {
+            // Precisa de um método no repositório para excluir apenas os favoritos.
+            // Ex: jogoRepository.excluirApenasFavoritos()
+            // Por enquanto, vamos assumir que JogoRepository.excluirTodosJogosFavoritos() existe e faz isso.
+            // Esta lógica pode precisar de ajuste no JogoRepository.
+            // jogoRepository.excluirTodosJogosFavoritos() // Este método não existe no JogoRepository atual
+            // Solução temporária: buscar favoritos e excluí-los um a um (ineficiente)
+            // ou adicionar o método ao DAO/Repository.
+            val favoritos = jogoRepository.buscarJogosFavoritos()
+            favoritos.forEach { jogoRepository.excluirJogo(it) } // Ineficiente, mas funciona por agora
+            carregarJogosFavoritos() 
+            carregarJogosNaoFavoritos()
+        }
+        esconderDialogoExcluirTodosFavoritos()
+    }
+
+
+    fun marcarComoFavorito(jogo: Jogo, favorito: Boolean) {
+        viewModelScope.launch {
+            val jogoAtualizado = jogo.copy(favorito = favorito)
+            jogoRepository.atualizarJogo(jogoAtualizado)
+            carregarJogosNaoFavoritos() 
+            carregarJogosFavoritos()
         }
     }
 }

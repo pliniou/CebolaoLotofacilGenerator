@@ -19,9 +19,6 @@ class JogoRepository @Inject constructor(private val jogoDao: JogoDao) {
     // Observa apenas os jogos favoritos
     val jogosFavoritos: LiveData<List<Jogo>> = jogoDao.observarFavoritos()
 
-    // Observa apenas os jogos conferidos
-    val jogosConferidos: LiveData<List<Jogo>> = jogoDao.observarConferidos()
-
     /**
      * Busca todos os jogos do banco de dados.
      * @return Lista com todos os jogos.
@@ -36,14 +33,6 @@ class JogoRepository @Inject constructor(private val jogoDao: JogoDao) {
      */
     suspend fun buscarJogosFavoritos(): List<Jogo> {
         return jogoDao.buscarFavoritos()
-    }
-
-    /**
-     * Busca todos os jogos conferidos do banco de dados.
-     * @return Lista com todos os jogos conferidos.
-     */
-    suspend fun buscarJogosConferidos(): List<Jogo> {
-        return jogoDao.buscarConferidos()
     }
 
     /**
@@ -87,15 +76,6 @@ class JogoRepository @Inject constructor(private val jogoDao: JogoDao) {
      */
     suspend fun obterJogoPorId(jogoId: Long): Jogo? {
         return jogoDao.buscarPorId(jogoId)
-    }
-
-    /**
-     * Busca jogos que foram conferidos com um determinado concurso.
-     * @param concursoId O ID do concurso.
-     * @return Uma lista de jogos conferidos com o concurso especificado.
-     */
-    suspend fun buscarJogosConferidos(concursoId: Long): List<Jogo> {
-        return jogoDao.buscarJogosConferidos(concursoId)
     }
 
     /**

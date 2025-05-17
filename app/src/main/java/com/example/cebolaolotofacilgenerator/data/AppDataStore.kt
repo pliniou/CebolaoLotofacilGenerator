@@ -6,12 +6,16 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
 private val Context.dataStore by preferencesDataStore(name = "app_settings")
 
-class AppDataStore(private val context: Context) {
+@Singleton
+class AppDataStore @Inject constructor(@ApplicationContext private val context: Context) {
 
     private val FIRST_RUN_COMPLETED = booleanPreferencesKey("first_run_completed")
     private val TEMA_APLICATIVO_ORDINAL = intPreferencesKey("tema_aplicativo_ordinal")
