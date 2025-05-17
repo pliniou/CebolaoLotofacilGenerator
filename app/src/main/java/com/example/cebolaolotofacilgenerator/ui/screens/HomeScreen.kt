@@ -51,7 +51,7 @@ fun HomeScreen(/*mainViewModel: MainViewModel,*/ navController: NavController) {
                         )
 
                         Text(
-                                text = "Seu assistente para gerar jogos inteligentes.",
+                                text = "Seu assistente para gerar jogos inteligentes e automatizado.",
                                 style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(bottom = 32.dp)
@@ -69,7 +69,7 @@ fun HomeScreen(/*mainViewModel: MainViewModel,*/ navController: NavController) {
                         )
 
                         HomeCard(
-                                title = "Meus Favoritos",
+                                title = "Jogos Salvos",
                                 description = "Acesse os jogos que você salvou como favoritos",
                                 onClick = { navController.navigate(Screen.Favoritos.route) },
                                 icon = Icons.Default.Favorite

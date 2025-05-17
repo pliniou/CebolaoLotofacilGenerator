@@ -5,11 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-// import androidx.lifecycle.asFlow // Não será mais usado para ResultadoRepository
 import com.example.cebolaolotofacilgenerator.R
 import com.example.cebolaolotofacilgenerator.data.model.ConfiguracaoFiltros
-// import com.example.cebolaolotofacilgenerator.data.model.Resultado // Não mais necessário
-// import com.example.cebolaolotofacilgenerator.data.repository.ResultadoRepository // REMOVER
 import com.example.cebolaolotofacilgenerator.util.PreferenciasManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

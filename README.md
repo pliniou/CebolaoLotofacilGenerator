@@ -3,6 +3,29 @@
 Aplicativo Android 100% offline para geração de jogos da Lotofácil, desenvolvido em:
 Kotlin com Jetpack Compose, arquitetura MVVM, Room, DataStore e navegação moderna com transições animadas.
 
+## Funcionalidades Principais
+
+-   **Geração de Jogos com Filtros:** Criação de jogos da Lotofácil com base em aleatoriedade, refinada por um conjunto de filtros personalizáveis.
+-   **Filtros Estatísticos Detalhados:**
+    -   Números Fixos e Excluídos
+    -   Quantidade de Pares e Ímpares
+    -   Intervalo para Soma Total das Dezenas
+    -   Quantidade de Números Primos
+    -   Quantidade de Números de Fibonacci
+    -   Quantidade de Dezenas do Miolo (vs. Moldura)
+    -   Quantidade de Múltiplos de Três
+    -   Quantidade de Dezenas Repetidas do Concurso Anterior (usuário informa as 15 dezenas do concurso anterior e define a faixa de repetição).
+    *Para uma explicação detalhada de cada filtro, consulte a tela "Instruções" dentro do aplicativo.*
+-   **Gerenciamento de Jogos:** Salvar, visualizar, favoritar e excluir jogos gerados.
+-   **Armazenamento Local:**
+    -   Room Database: Para jogos salvos e jogos favoritos.
+    -   DataStore: Para preferências do usuário (tema do app) e persistência das configurações de filtros.
+-   **Interface Moderna e Intuitiva:** Desenvolvida com Jetpack Compose e Material 3.
+-   **Navegação Animada:** Transições suaves entre telas para uma melhor experiência do usuário.
+-   **Tema Claro/Escuro:** Suporte para tema dinâmico do sistema ou seleção manual.
+-   **100% Offline:** Funciona sem necessidade de conexão com a internet.
+-   **Instruções de Uso Integradas:** Tela dedicada com explicações detalhadas.
+
 ## Requisitos
 
 - Android Studio (mais recente)
@@ -91,29 +114,6 @@ O menu principal (Bottom Navigation Bar) e as telas são:
 -   **Tela de Gerar Jogos (`GeradorScreen.kt`):** Funcionalidade central para criar jogos. Permite selecionar dezenas fixas/excluídas, aplicar diversos filtros estatísticos e visualizar os jogos gerados.
 -   **Tela de Favoritos (`FavoritosScreen.kt`):** Lista e gerencia jogos que o usuário marcou como favoritos.
 -   **Tela de Ajustes (`SettingsScreen.kt`):** Permite acessar informações "Sobre" e outras configurações.
-
-## Funcionalidades Principais
-
--   **Geração de Jogos com Filtros:** Criação de jogos da Lotofácil com base em aleatoriedade, refinada por um conjunto de filtros personalizáveis.
--   **Filtros Estatísticos Detalhados:**
-    -   Números Fixos e Excluídos
-    -   Quantidade de Pares e Ímpares
-    -   Intervalo para Soma Total das Dezenas
-    -   Quantidade de Números Primos
-    -   Quantidade de Números de Fibonacci
-    -   Quantidade de Dezenas do Miolo (vs. Moldura)
-    -   Quantidade de Múltiplos de Três
-    -   Quantidade de Dezenas Repetidas do Concurso Anterior (usuário informa as 15 dezenas do concurso anterior e define a faixa de repetição).
-    *Para uma explicação detalhada de cada filtro, consulte a tela "Instruções" dentro do aplicativo.*
--   **Gerenciamento de Jogos:** Salvar, visualizar, favoritar e excluir jogos gerados.
--   **Armazenamento Local:**
-    -   Room Database: Para jogos salvos e jogos favoritos.
-    -   DataStore: Para preferências do usuário (tema do app) e persistência das configurações de filtros.
--   **Interface Moderna e Intuitiva:** Desenvolvida com Jetpack Compose e Material 3.
--   **Navegação Animada:** Transições suaves entre telas para uma melhor experiência do usuário.
--   **Tema Claro/Escuro:** Suporte para tema dinâmico do sistema ou seleção manual.
--   **100% Offline:** Funciona sem necessidade de conexão com a internet.
--   **Instruções de Uso Integradas:** Tela dedicada com explicações detalhadas.
 
 ## Algoritmo de Geração (Visão Geral)
 

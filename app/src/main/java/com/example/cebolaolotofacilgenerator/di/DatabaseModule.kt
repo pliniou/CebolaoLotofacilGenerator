@@ -3,7 +3,6 @@ package com.example.cebolaolotofacilgenerator.di
 import android.content.Context
 import androidx.room.Room
 import com.example.cebolaolotofacilgenerator.data.dao.JogoDao
-// import com.example.cebolaolotofacilgenerator.data.dao.ResultadoDao // REMOVIDO
 import com.example.cebolaolotofacilgenerator.data.db.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -45,15 +44,4 @@ object DatabaseModule {
     fun provideJogoDao(database: AppDatabase): JogoDao {
         return database.jogoDao()
     }
-
-    /**
-     * Fornece o DAO para resultados.
-     *
-     * @param database A instância do banco de dados
-     * @return Instância de ResultadoDao
-     */
-    // @Provides // REMOVIDO
-    // fun provideResultadoDao(database: AppDatabase): ResultadoDao { // REMOVIDO
-    //    return database.resultadoDao() // REMOVIDO
-    // } // REMOVIDO
-} 
+}

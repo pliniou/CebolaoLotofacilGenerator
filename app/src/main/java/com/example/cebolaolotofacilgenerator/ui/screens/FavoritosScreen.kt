@@ -79,7 +79,7 @@ fun FavoritosScreen(
                             onFavoritoClick = {
                                 favoritosViewModel.marcarComoFavorito(jogo, !jogo.favorito)
                                 val mensagem = if (!jogo.favorito) {
-                                     "" 
+                                     ""
                                 } else {
                                     context.getString(R.string.jogo_removido_favoritos)
                                 }

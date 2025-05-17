@@ -56,7 +56,20 @@ fun BoasVindasScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Este aplicativo ajuda você a gerar jogos aleatórios para a Lotofácil, com a opção de aplicar filtros para personalizar suas combinações e aumentar suas chances.",
+                text = "Este aplicativo ajuda você a gerar jogos aleatórios para a Lotofácil, com a opção de aplicar filtros para personalizar suas combinações e aumentar suas chances.
+                    Funcionalidades Principais
+                    -   **Geração de Jogos com Filtros:** Criação de jogos da Lotofácil com base em aleatoriedade, refinada por um conjunto de filtros personalizáveis.
+                    -   **Filtros Estatísticos Detalhados:**
+                        -   Números Fixos e Excluídos
+                        -   Quantidade de Pares e Ímpares
+                        -   Intervalo para Soma Total das Dezenas
+                        -   Quantidade de Números Primos
+                        -   Quantidade de Números de Fibonacci
+                        -   Quantidade de Dezenas do Miolo (vs. Moldura)
+                        -   Quantidade de Múltiplos de Três
+                        -   Quantidade de Dezenas Repetidas do Concurso Anterior (usuário informa as 15 dezenas do concurso anterior e define a faixa de repetição).
+                        *Para uma explicação detalhada de cada filtro, consulte a tela "Instruções" dentro do aplicativo.*
+                    -   **Gerenciamento de Jogos:** Salvar, visualizar, favoritar e excluir jogos gerados.",
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )
@@ -80,4 +93,4 @@ fun BoasVindasScreenPreview() {
         // BoasVindasScreen(navController = mockNavController)
         Text("Preview BoasVindasScreen") // Placeholder simples para o preview inicial
     }
-} 
+}

@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
     <!-- Gerais -->
-    <string name="app_name">Cebolão Lotofácil Generator</string>
-    <string name="app_version">1.0.0</string>
+    <string name="app_name">Lotofácil Generator</string>
+    <string name="app_version">Versão 1.0.0</string>
     <string name="app_version_name">1.0.1</string>
     <string name="concurso">Concurso</string>
 
@@ -41,7 +42,6 @@
         <item>Padrão do Sistema</item>
     </string-array>
     <string name="preferencias_salvas">Preferências salvas.</string>
-
     <string name="title_activity_main">MainActivity</string>
 
     <!-- Strings para o Bottom Navigation -->
@@ -55,15 +55,9 @@
     <string name="aviso">Aviso</string>
     <string name="erro">Erro</string>
     <string name="aguarde">Aguarde…</string>
-
-    <string name="numero_concurso">Número do Concurso</string> <!-- Pode ser útil, manter por
-    enquanto -->
-    <string name="numeros_sorteados">Números Sorteados (separados por espaço, vírgula ou traço)</string> <!--
-    Manter, pode ser usado para input manual de dezenas do concurso anterior, embora o label em
-    FiltrosScreen seja mais específico -->
-    <string name="selecionar_data">Selecionar Data</string> <!-- Pode ser útil, manter por enquanto -->
-
-
+    <string name="numero_concurso">Número do Concurso</string>
+    <string name="numeros_sorteados">Números Sorteados (separados por espaço, vírgula ou traço)</string>
+    <string name="selecionar_data">Selecionar Data</string>
     <string name="titulo_tela_configuracoes">Configurações</string>
     <string name="icone_tema">Ícone de tema</string>
     <string name="tema_aplicativo">Tema do Aplicativo</string>
@@ -73,7 +67,6 @@
     <string name="titulo_tela_gerenciamento">Gerenciamento de Jogos</string>
     <string name="todos">Todos</string>
     <string name="favoritos">Favoritos</string>
-    <!-- <string name="conferidos">Conferidos</string> --> <!-- REMOVIDA (Aba de jogos conferidos) -->
     <string name="nenhum_jogo_encontrado">Nenhum jogo encontrado.</string>
     <string name="limpar_todos">Limpar Todos os Jogos</string>
     <string name="marcar_como_favorito">Marcar como favorito</string>
@@ -84,8 +77,6 @@
     <string name="jogo_caracteristicas_detalhes">Primos: %1$d | Fib: %2$d\nMiolo: %3$d | Moldura:
         %4$d\nMúlt. 3: %5$d</string>
     <string name="jogo_caracteristicas_compacto">P/I: %1$d/%2$d | Soma: %3$d | Pri: %4$d | Fib: %5$d</string>
-    <!-- <string name="jogo_acertos">Acertos: %1$d</string> --> <!--
-    REMOVIDA -->
     <string name="jogo_data_criacao">Criado em: %1$s</string>
 
     <!-- Strings para ConfiguracoesFragment -->
@@ -95,22 +86,19 @@
     <string name="selecionar_tema">Selecionar Tema</string>
     <string name="cancelar">Cancelar</string>
     <string name="versao_app">Versão do aplicativo: %s</string>
-    <string name="descricao_app">Cebolão Lotofácil Generator ajuda você a criar seus
-        jogos da Lotofácil.</string> <!-- Simplificada -->
-    <string name="desenvolvido_por">Desenvolvido por Um Programador Entusiasta</string>
+    <string name="descricao_app">Cebolão Lotofácil Generator ajuda você a criar seus jogos da
+        Lotofácil.</string>
+    <string name="desenvolvido_por">Desenvolvido por Cebola Studios</string>
     <string name="fechar">Fechar</string>
-    <!-- Fim das strings para ConfiguracoesFragment -->
 
     <!-- Strings para FiltrosFragment -->
     <string name="filtros_resetados">Filtros resetados para os valores padrão.</string>
-    <string name="valor_filtro_pares_impares">Ímpares: %1$d-%2$d</string> <!-- Ajustado para Ímpares,
-    já que os sliders são minImpares/maxImpares -->
+    <string name="valor_filtro_pares_impares">Ímpares: %1$d-%2$d</string>
     <string name="valor_filtro_soma_total">Soma: %1$d-%2$d</string>
     <string name="valor_filtro_primos">Primos: %1$d-%2$d</string>
     <string name="valor_filtro_fibonacci">Fibonacci: %1$d-%2$d</string>
     <string name="valor_filtro_miolo_moldura">Miolo: %1$d-%2$d</string>
     <string name="valor_filtro_multiplos_tres">Múltiplos de 3: %1$d-%2$d</string>
-    <!-- Fim das strings para FiltrosFragment -->
 
     <!-- Strings mencionadas como faltantes -->
     <string name="erro_quantidade_jogos_invalida">Quantidade de jogos inválida</string>
@@ -139,8 +127,7 @@
         desta lista? Esta ação não pode ser desfeita.</string>
     <string name="todos_jogos_excluidos">Todos os jogos foram excluídos.</string>
     <string name="numeros_jogados">Números Jogados: %s</string>
-    <string name="data_geracao">Gerado em: %s</string> <!-- Mantendo 'data_geracao' como no fragment,
-    mas o ideal seria alinhar com 'data_criacao' do model no futuro -->
+    <string name="data_geracao">Gerado em: %s</string>
     <string name="caracteristicas_jogo">Características do Jogo:</string>
     <string name="pares_impares">Pares: %1$d | Ímpares: %2$d</string>
     <string name="soma_total">Soma Total: %d</string>
@@ -149,7 +136,6 @@
     <string name="miolo_moldura">Miolo: %1$d | Moldura: %2$d</string>
     <string name="multiplos_tres">Múltiplos de 3: %d</string>
     <string name="detalhes_do_jogo">Detalhes do Jogo</string>
-
     <string name="erro_gerar_jogos">Erro ao gerar jogos. Verifique os filtros ou tente novamente.</string>
     <string name="nenhum_jogo_para_salvar">Nenhum jogo gerado para salvar.</string>
     <string name="jogos_salvos_com_sucesso">Jogos salvos com sucesso!</string>
@@ -178,10 +164,10 @@
     <string name="tela_configuracoes_titulo">Configurações</string>
     <string name="preferencias_aparencia_titulo">Preferências de Aparência</string>
     <string name="tema_app_titulo_grupo">Tema do Aplicativo</string>
-    <string name="tema_azul">Azul</string>
-    <string name="tema_verde">Verde</string>
-    <string name="tema_laranja">Laranja</string>
-    <string name="tema_ciano">Ciano</string>
+    <string name="tema_azul">Tema Azul</string>
+    <string name="tema_verde">Tema Verde</string>
+    <string name="tema_laranja">Tema Laranja</string>
+    <string name="tema_ciano">Tema Ciano</string>
     <string name="acoes_app_titulo">Ações do Aplicativo</string>
     <string name="resetar_configuracoes_app_titulo">Resetar Configurações</string>
     <string name="resetar_configuracoes_app_subtitulo">Restaura todas as configurações para o padrão</string>
@@ -194,7 +180,6 @@
     <string name="sobre_app_desenvolvido_por">Desenvolvido por: %1$s</string>
     <string name="sobre_app_descricao">Seu assistente inteligente para criar e analisar jogos da
         Lotofácil com base em estatísticas e suas preferências!</string>
-    <!-- Fim das strings para SettingsScreen -->
 
     <!-- Novas strings para o seletor de tema em SettingsScreen -->
     <string name="tema_dialog_title">Escolha um tema</string>
@@ -227,18 +212,17 @@
     <string name="filtro_miolo_moldura_titulo">Miolo e Moldura</string>
     <string name="filtro_multiplos_de_tres_titulo">Múltiplos de Três</string>
     <string name="erro_filtros_conflitantes_titulo">Filtros Conflitantes</string>
-    <string name="erro_filtros_conflitantes_mensagem">A combinação de filtros selecionada
-        (especialmente números fixos/excluídos e quantidade de números por jogo) tornou impossível
-        gerar jogos. Por favor, ajuste os filtros.</string>
+    <string name="erro_filtros_conflitantes_mensagem">A combinação de filtros selecionada tornou
+        impossível a geração de jogos. Por favor, ajuste os filtros.</string>
     <string name="erro_max_fixos_excluidos">A soma de números fixos e excluídos não pode exceder 10.</string>
     <string name="erro_fixos_excluidos_sobrepostos">Números fixos e excluídos não podem ser os
         mesmos.</string>
 
     <!-- Strings para BoasVindasScreen -->
-    <string name="boas_vindas_titulo">Bem-vindo(a) ao Cebolão Lotofácil!</string>
-    <string name="boas_vindas_texto_1">Seu novo assistente para gerar jogos inteligentes da
+    <string name="boas_vindas_titulo">Bem-vindo(a) ao Cebolão Lotofácil Generator!</string>
+    <string name="boas_vindas_texto_1">Seu novo assistente para criar jogos inteligentes da
         Lotofácil.</string>
-    <string name="boas_vindas_texto_2">Use filtros estatísticos, defina seus números da sorte e
+    <string name="boas_vindas_texto_2">Use filtros estatísticos, gere seus números da sorte e
         aumente suas chances!</string>
     <string name="boas_vindas_texto_3">O aplicativo é 100% offline. Seus jogos e configurações são
         salvos apenas no seu dispositivo.</string>
@@ -276,7 +260,7 @@
         dezenas.</string>
 
     <string name="instrucoes_filtros_titulo">Usando os Filtros</string>
-    <string name="instrucoes_filtros_p1">A tela "Filtros" é poderosa! Cada filtro tem um checkbox
+    <string name="instrucoes_filtros_p1">A tela "Filtros" é importante! Cada filtro tem um checkbox
         para ativá-lo e sliders ou campos para definir os parâmetros.</string>
     <string name="instrucoes_filtros_p2">**Números Fixos:** Dezenas que DEVEM aparecer em todos os
         jogos gerados.</string>
@@ -326,11 +310,9 @@
     <!-- Placeholder para quando a lista de jogos gerados/favoritos está vazia -->
     <string name="sem_jogos_para_mostrar">Nenhum jogo para mostrar aqui.</string>
     <string name="sem_jogos_favoritos_para_mostrar">Você ainda não marcou nenhum jogo como favorito.</string>
-
     <string name="filtros_importados_sucesso">Dezenas fixas importadas para os filtros.</string>
     <string name="filtros_importados_falha">Falha ao importar dezenas para os filtros.</string>
     <string name="maximo_dezenas_fixas_para_importar">Você pode importar no máximo 10 dezenas fixas.</string>
-
     <string name="abrir_filtros_com_dezenas">Abrir Filtros com Dezenas</string>
     <string name="passar_para_filtros_fixos">Passar para Filtros como Fixas</string>
 
@@ -379,61 +361,60 @@
         filtros atual é nula.</string>
     <string name="configuracao_filtros_resetada_padrao">Configuração de filtros resetada para os
         valores padrão.</string>
-    <!-- Fim das novas strings -->
 
     <string name="limpar_dezenas_anteriores">Limpar Dezenas Anteriores</string>
     <string name="ajuda_filtros_titulo">Ajuda dos Filtros</string>
     <string name="hint_numero_concurso_opcional">Número do concurso (opcional)</string>
 
     <!-- InstrucoesScreen - Filtros -->
-    <string name="instrucoes_filtro_numeros_fixos_titulo">Filtro: Números Fixos</string>
+    <string name="instrucoes_filtro_numeros_fixos_titulo">Números Fixos</string>
     <string name="instrucoes_filtro_numeros_fixos_conteudo">Selecione de 1 a 10 dezenas que você
         deseja que estejam presentes em todos os jogos gerados. Essas dezenas são garantidas em suas
         apostas.</string>
 
-    <string name="instrucoes_filtro_numeros_excluidos_titulo">Filtro: Números Excluídos</string>
+    <string name="instrucoes_filtro_numeros_excluidos_titulo">Números Excluídos</string>
     <string name="instrucoes_filtro_numeros_excluidos_conteudo">Escolha de 1 a 10 dezenas que você
         NÃO quer que apareçam em nenhum dos seus jogos. Útil para evitar números que você considera
         "azarados" ou que saíram recentemente com muita frequência.</string>
 
-    <string name="instrucoes_filtro_pares_impares_titulo">Filtro: Pares e Ímpares</string>
+    <string name="instrucoes_filtro_pares_impares_titulo">Pares e Ímpares</string>
     <string name="instrucoes_filtro_pares_impares_conteudo">Distribuição entre números pares e
         ímpares em um sorteio. O volante contém mais números ímpares, o que naturalmente resulta em
         uma predominância destes nos sorteios.\n\nPadrão estatístico: Predominância de \"7 pares e 8
         ímpares\" ou \"8 pares e 7 ímpares\"\nFaixa recomendada: 7 a 9 números ímpares e 6 a 8
         números pares</string>
 
-    <string name="instrucoes_filtro_soma_total_titulo">Filtro: Soma Total das Dezenas</string>
+    <string name="instrucoes_filtro_soma_total_titulo">Soma Total das Dezenas</string>
     <string name="instrucoes_filtro_soma_total_conteudo">Valor total ao somar todas as 15 dezenas
         sorteadas. A análise de sorteios anteriores indica uma concentração de resultados nesta
         faixa de valores.\n\nFaixa recomendada: Entre 171 e 220</string>
 
-    <string name="instrucoes_filtro_numeros_primos_titulo">Filtro: Números Primos</string>
+    <string name="instrucoes_filtro_numeros_primos_titulo">Números Primos</string>
     <string name="instrucoes_filtro_numeros_primos_conteudo">Números divisíveis apenas por 1 e por
         eles mesmos. Na Lotofácil, são 9 números primos: 2, 3, 5, 7, 11, 13, 17, 19 e 23.\n\nPadrão
         estatístico: Maioria dos sorteios contém de 3 a 7 números primos\nFaixa ideal: Entre 4 e 6
         números primos</string>
 
-    <string name="instrucoes_filtro_fibonacci_titulo">Filtro: Números de Fibonacci</string>
+    <string name="instrucoes_filtro_fibonacci_titulo">Números de Fibonacci</string>
     <string name="instrucoes_filtro_fibonacci_conteudo">Números pertencentes à sequência de
         Fibonacci presentes no volante. Na Lotofácil, são 7 números: 1, 2, 3, 5, 8, 13 e
         21.\n\nPadrão estatístico: De 3 a 6 números dessa sequência aparecem em cada sorteio\nFaixa
         recomendada: Entre 3 e 6 números da sequência</string>
 
-    <string name="instrucoes_filtro_miolo_moldura_titulo">Filtro: Miolo e Moldura</string>
+    <string name="instrucoes_filtro_miolo_moldura_titulo">Miolo e Moldura</string>
     <string name="instrucoes_filtro_miolo_moldura_conteudo">Divisão do volante em duas áreas - miolo
         (centro) e moldura (laterais e parte superior). A distribuição espacial dos números no
         volante parece influenciar os resultados.\n\nPadrão estatístico:\nMiolo: 4 a 6 números por
         sorteio\nMoldura: 9 a 11 números por sorteio\n\nFaixa recomendada: Respeitar estas
         proporções</string>
 
-    <string name="instrucoes_filtro_multiplos_de_tres_titulo">Filtro: Múltiplos de Três</string>
+    <string name="instrucoes_filtro_multiplos_de_tres_titulo">Múltiplos de Três</string>
     <string name="instrucoes_filtro_multiplos_de_tres_conteudo">Números divisíveis por 3. Na
         Lotofácil, são 8 números: 3, 6, 9, 12, 15, 18, 21 e 24.\n\nPadrão estatístico: De 3 a 6
         múltiplos de 3 por sorteio\nFaixa recomendada: Entre 3 e 6 múltiplos de 3</string>
 
-    <string name="instrucoes_filtro_repeticao_concurso_anterior_titulo">Filtro: Repetição do
-        Concurso Anterior</string>
+    <string name="instrucoes_filtro_repeticao_concurso_anterior_titulo">Repetição do Concurso
+        Anterior</string>
     <string name="instrucoes_filtro_repeticao_concurso_anterior_conteudo">Dezenas que aparecem em um
         sorteio e se repetem no sorteio seguinte. Este é um dos padrões mais consistentes da
         Lotofácil, com estatísticas mostrando que em média 9 dezenas do sorteio anterior voltam a

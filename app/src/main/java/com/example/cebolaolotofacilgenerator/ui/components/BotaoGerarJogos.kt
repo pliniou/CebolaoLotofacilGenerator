@@ -39,7 +39,7 @@ import com.example.cebolaolotofacilgenerator.data.model.OperacaoStatus
 
 /**
  * Botão dinâmico para geração de jogos com feedback visual
- * 
+ 
  * @param status Status atual da operação
  * @param quantidadeJogos Quantidade de jogos a serem gerados
  * @param quantidadeNumeros Quantidade de números por jogo
@@ -212,4 +212,4 @@ fun BotaoGerarJogos(
             }
         }
     }
-} 
+}

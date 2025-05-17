@@ -380,4 +380,4 @@ fun PreviewFiltroEstatisticoItem() {
         onCheckedChange = {},
         enabled = true
     )
-} 
+}

@@ -119,8 +119,8 @@ class GeradorViewModel(
      * mantidas.
      */
     fun inicializarComNumerosFixos(dezenas: List<Int>?) {
-        if (dezenas != null) { 
-            numerosFixosInterno.clear() 
+        if (dezenas != null) {
+            numerosFixosInterno.clear()
             val currentConfig = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
             if (dezenas.isNotEmpty()) {
                 dezenas.forEach { dezena ->
@@ -352,8 +352,8 @@ class GeradorViewModel(
                 _operacaoStatus.value = OperacaoStatus.ERRO
                 mainViewModelRef?.showSnackbar(_mensagem.value!!)
             } finally {
-                 if (_operacaoStatus.value == OperacaoStatus.CARREGANDO) { 
-                    _operacaoStatus.value = OperacaoStatus.OCIOSO 
+                 if (_operacaoStatus.value == OperacaoStatus.CARREGANDO) {
+                    _operacaoStatus.value = OperacaoStatus.OCIOSO
                 }
             }
         }
@@ -369,7 +369,7 @@ class GeradorViewModel(
     /** Reseta o status da operação. */
     fun resetarStatusOperacao() {
         _operacaoStatus.value = OperacaoStatus.OCIOSO
-        _mensagem.value = null 
+        _mensagem.value = null
     }
 
     fun limparMensagemUnica() {
@@ -415,8 +415,8 @@ class GeradorViewModel(
         val currentConfig = filtrosViewModel.configuracaoFiltros.value ?: ConfiguracaoFiltros()
         val dezenasParaUsar = dezenas ?: currentConfig.dezenasConcursoAnterior
         filtrosViewModel.atualizarFiltro(currentConfig.copy(
-            filtroRepeticaoConcursoAnterior = ativado, 
-            minRepeticaoConcursoAnterior = min, 
+            filtroRepeticaoConcursoAnterior = ativado,
+            minRepeticaoConcursoAnterior = min,
             maxRepeticaoConcursoAnterior = max,
             dezenasConcursoAnterior = dezenasParaUsar
             ))
@@ -431,7 +431,7 @@ class GeradorViewModel(
     fun salvarJogosGerados() {
         viewModelScope.launch {
             val jogosParaSalvar = _jogosGerados.value
-            val repo = jogoRepository 
+            val repo = jogoRepository
             if (repo == null) {
                 val msgErroRepo = getApplication<Application>().getString(R.string.erro_repositorio_indisponivel)
                 _mensagem.value = msgErroRepo
@@ -441,12 +441,12 @@ class GeradorViewModel(
             if (!jogosParaSalvar.isNullOrEmpty()) {
                 try {
                     repo.inserirJogos(jogosParaSalvar)
-                    _operacaoStatus.value = OperacaoStatus.SUCESSO 
+                    _operacaoStatus.value = OperacaoStatus.SUCESSO
                     val msgSucesso = getApplication<Application>().getString(R.string.jogos_salvos_com_sucesso)
                     _mensagem.value = msgSucesso
                     mainViewModelRef?.showSnackbar(msgSucesso)
                 } catch (e: Exception) {
-                    _operacaoStatus.value = OperacaoStatus.ERRO 
+                    _operacaoStatus.value = OperacaoStatus.ERRO
                     val msgErro = getApplication<Application>().getString(R.string.erro_salvar_jogos) + ": " + e.message
                     _mensagem.value = msgErro
                     mainViewModelRef?.showSnackbar(msgErro)
@@ -462,7 +462,7 @@ class GeradorViewModel(
     /**
      * Salva a configuração de filtros atual (obtida de [FiltrosViewModel]) nas preferências do usuário.
      */
-    fun salvarFiltrosConfigAtual() { 
+    fun salvarFiltrosConfigAtual() {
         viewModelScope.launch {
             val configAtual = filtrosViewModel.configuracaoFiltros.value
             if (configAtual != null) {
@@ -479,7 +479,7 @@ class GeradorViewModel(
         viewModelScope.launch {
             // A função resetarConfiguracoesParaPadrao() deve existir em FiltrosViewModel
             // Se não existir, precisamos criá-la ou chamar filtrosViewModel.atualizarFiltro(ConfiguracaoFiltros())
-            filtrosViewModel.resetarConfiguracaoFiltros() 
+            filtrosViewModel.resetarConfiguracaoFiltros()
             mainViewModelRef?.showSnackbar(getApplication<Application>().getString(R.string.configuracao_filtros_resetada_padrao))
         }
     }

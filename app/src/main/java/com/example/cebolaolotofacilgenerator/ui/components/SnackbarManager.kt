@@ -54,7 +54,7 @@ data class MensagemSnackbar(
 
 /**
  * Composable para observar as mensagens do SnackbarManager e exibi-las
- * 
+ 
  * @param snackbarHostState O estado do SnackbarHost onde as mensagens serão exibidas
  */
 @Composable
@@ -80,4 +80,4 @@ fun ObservarMensagensSnackbar(snackbarHostState: SnackbarHostState) {
             }
         }
     }
-} 
+}

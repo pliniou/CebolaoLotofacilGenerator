@@ -106,4 +106,4 @@ class FiltrosViewModel(application: Application) : AndroidViewModel(application)
             // Resetar outros StateFlows aqui
         }
     }
-} 
+}

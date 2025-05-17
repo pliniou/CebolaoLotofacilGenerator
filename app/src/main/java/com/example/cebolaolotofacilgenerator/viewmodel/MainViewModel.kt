@@ -57,21 +57,21 @@ class MainViewModel @Inject constructor(
     }
 
     val temaAplicativo: StateFlow<TemaAplicativo> =
-            appDataStore 
-                    .temaAplicativo 
+            appDataStore
+                    .temaAplicativo
                     .map { ordinal ->
                         TemaAplicativo.values().getOrElse(ordinal) {
                             TemaAplicativo.SISTEMA
-                        } 
+                        }
                     }
                     .stateIn(
-                            scope = viewModelScope, 
+                            scope = viewModelScope,
                             started = SharingStarted.WhileSubscribed(5000),
-                            initialValue = TemaAplicativo.SISTEMA 
+                            initialValue = TemaAplicativo.SISTEMA
                     )
 
     fun salvarTemaAplicativo(tema: TemaAplicativo) {
-        viewModelScope.launch { appDataStore.salvarTemaAplicativo(tema.ordinal) } 
+        viewModelScope.launch { appDataStore.salvarTemaAplicativo(tema.ordinal) }
     }
 
     val preferenciasViewModel: PreferenciasViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(PreferenciasViewModel::class.java)
@@ -81,21 +81,21 @@ class MainViewModel @Inject constructor(
     // val jogosFavoritos: LiveData<List<Jogo>> = jogoRepository.jogosFavoritos
 
     // fun marcarComoFavorito(jogo: Jogo, favorito: Boolean) {
-    //     viewModelScope.launch { 
+    //     viewModelScope.launch {
     //         val jogoAtualizado = jogo.copy(favorito = favorito)
-    //         jogoRepository.atualizarJogo(jogoAtualizado) 
+    //         jogoRepository.atualizarJogo(jogoAtualizado)
     //     }
     // }
 
     // fun completeFirstRun() {
-    //     viewModelScope.launch { appDataStore.setFirstRunCompleted() } 
+    //     viewModelScope.launch { appDataStore.setFirstRunCompleted() }
     // }
 
     private val _snackbarMessage = MutableSharedFlow<String>()
     val snackbarMessage = _snackbarMessage.asSharedFlow()
 
     fun showSnackbar(message: String) {
-        viewModelScope.launch { 
+        viewModelScope.launch {
             _snackbarMessage.emit(message)
         }
     }

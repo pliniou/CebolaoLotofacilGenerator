@@ -36,4 +36,4 @@ class FavoritosViewModelFactory(
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
-} 
+}

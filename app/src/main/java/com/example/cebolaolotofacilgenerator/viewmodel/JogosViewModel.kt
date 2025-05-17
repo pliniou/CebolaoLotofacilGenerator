@@ -106,13 +106,12 @@ class JogosViewModel(private val jogoRepository: JogoRepository) : ViewModel() {
         _mostrarDialogoExcluirTodosFavoritos.value = false
     }
 
-
     fun excluirJogo(jogo: Jogo) {
         viewModelScope.launch {
             jogoRepository.excluirJogo(jogo)
             // As listas serão atualizadas automaticamente se estiverem observando todosOsJogos
             // ou se carregarJogosNaoFavoritos/Favoritos for chamado e eles usarem sources atualizadas
-            carregarJogosNaoFavoritos() 
+            carregarJogosNaoFavoritos()
             carregarJogosFavoritos()
         }
         esconderDialogoExclusao()
@@ -139,18 +138,17 @@ class JogosViewModel(private val jogoRepository: JogoRepository) : ViewModel() {
             // ou adicionar o método ao DAO/Repository.
             val favoritos = jogoRepository.buscarJogosFavoritos()
             favoritos.forEach { jogoRepository.excluirJogo(it) } // Ineficiente, mas funciona por agora
-            carregarJogosFavoritos() 
+            carregarJogosFavoritos()
             carregarJogosNaoFavoritos()
         }
         esconderDialogoExcluirTodosFavoritos()
     }
 
-
     fun marcarComoFavorito(jogo: Jogo, favorito: Boolean) {
         viewModelScope.launch {
             val jogoAtualizado = jogo.copy(favorito = favorito)
             jogoRepository.atualizarJogo(jogoAtualizado)
-            carregarJogosNaoFavoritos() 
+            carregarJogosNaoFavoritos()
             carregarJogosFavoritos()
         }
     }

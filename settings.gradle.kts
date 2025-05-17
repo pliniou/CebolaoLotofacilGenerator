@@ -12,9 +12,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
-    
-    // Configuração para evitar avisos de mutação de dependências
-    // Usando o catálogo de versões já definido pelo Gradle, não é necessário criar outro
 }
 
 rootProject.name = "CebolaoLotofacilGenerator"

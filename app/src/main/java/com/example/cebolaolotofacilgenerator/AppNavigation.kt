@@ -9,14 +9,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.cebolaolotofacilgenerator.ui.screens.BoasVindasScreen // Importar a nova tela
-// import com.example.cebolaolotofacilgenerator.ui.screens.ConferenciaScreen // REMOVIDO
 import com.example.cebolaolotofacilgenerator.ui.screens.FavoritosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.FiltrosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.GeradorScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.GerenciamentoJogosScreen
 import com.example.cebolaolotofacilgenerator.ui.screens.InstrucoesScreen
-// import com.example.cebolaolotofacilgenerator.ui.screens.PrincipalScreen // Não é mais usada diretamente aqui
-// import com.example.cebolaolotofacilgenerator.ui.screens.ResultadosScreen // REMOVIDO
 import com.example.cebolaolotofacilgenerator.ui.screens.SettingsScreen
 import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -49,28 +46,28 @@ fun AppNavigation(
         }
 
         composable(
-            route = Screen.Gerador.route, 
+            route = Screen.Gerador.route,
             arguments = listOf(navArgument("dezenasFixas") {
                 type = NavType.StringType
                 nullable = true
-                defaultValue = null 
+                defaultValue = null
             }),
             enterTransition = { slideInHorizontally { it } },
             exitTransition = { slideOutHorizontally { -it } },
             popEnterTransition = { slideInHorizontally { -it } },
             popExitTransition = { slideOutHorizontally { it } }
-        ) { backStackEntry -> 
+        ) { backStackEntry ->
             val dezenasFixas = backStackEntry.arguments?.getString("dezenasFixas")
             GeradorScreen(
                 navController = navController,
                 mainViewModel = mainViewModel,
-                dezenasFixasArg = dezenasFixas 
+                dezenasFixasArg = dezenasFixas
             )
         }
 
         composable(
-            route = Screen.Filtros.route, 
-            arguments = listOf(navArgument("dezenasFixas") { 
+            route = Screen.Filtros.route,
+            arguments = listOf(navArgument("dezenasFixas") {
                 type = NavType.StringType
                 nullable = true
             }),
@@ -78,7 +75,7 @@ fun AppNavigation(
             exitTransition = { slideOutHorizontally { -it } },
             popEnterTransition = { slideInHorizontally { -it } },
             popExitTransition = { slideOutHorizontally { it } }
-        ) { backStackEntry -> 
+        ) { backStackEntry ->
             FiltrosScreen(mainViewModel = mainViewModel)
         }
 
@@ -110,7 +107,7 @@ fun AppNavigation(
         }
 
         composable(
-            Screen.Instrucoes.route, 
+            Screen.Instrucoes.route,
             enterTransition = { slideInHorizontally { it } },
             exitTransition = { slideOutHorizontally { -it } },
             popEnterTransition = { slideInHorizontally { -it } },

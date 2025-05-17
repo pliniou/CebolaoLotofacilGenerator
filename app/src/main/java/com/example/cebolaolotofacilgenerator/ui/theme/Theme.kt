@@ -58,7 +58,6 @@ val OnCyanPrimary = Color.White
 val OnCyanSecondary = Color.Black
 val OnCyanTertiary = Color.Black
 
-
 private val DarkColorScheme =
         darkColorScheme(
             primary = Purple80,

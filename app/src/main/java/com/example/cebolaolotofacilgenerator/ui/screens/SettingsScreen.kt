@@ -1,6 +1,5 @@
 package com.example.cebolaolotofacilgenerator.ui.screens
 
-// import android.content.Context // Não é mais usado diretamente aqui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

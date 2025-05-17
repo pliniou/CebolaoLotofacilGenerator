@@ -1,9 +1,5 @@
 package com.example.cebolaolotofacilgenerator.ui.screens
 
-// único import de
-// OperacaoStatus
-// import androidx.compose.foundation.layout.wrapContentHeight // Não é mais necessário com
-// LazyVerticalGrid
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -531,7 +527,7 @@ fun GeradorScreen(
                                         }
                                         
                                         Button(
-                                            onClick = { 
+                                            onClick = {
                                                 geradorViewModel.salvarJogosGerados()
                                                 SnackbarManager.mostrarMensagem("Jogos salvos com sucesso!")
                                             }
