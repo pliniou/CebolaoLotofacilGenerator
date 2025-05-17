@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <!-- Gerais -->
-    <string name="app_name">Lotofácil Generator</string>
-    <string name="app_version">Versão 1.0.0</string>
-    <string name="app_version_name">1.0.1</string>
+    <string name="app_name">Lotofácil Gen</string>
+    <string name="app_version">Versão 1.0</string>
+    <string name="app_version_name">1.0</string>
     <string name="concurso">Concurso</string>
 
     <!-- Strings relacionadas à funcionalidade de salvar/carregar configurações de filtros -->
@@ -15,7 +15,7 @@
     <string name="nenhum_filtro_salvo">Nenhuma configuração de filtro salva anteriormente.</string>
 
     <!-- Strings para a tela de Gerenciamento de Jogos -->
-    <string name="titulo_gerenciamento_jogos">Gerenciar Jogos Salvos</string>
+    <string name="titulo_gerenciamento_jogos">Jogos Salvos</string>
     <string name="salvar_jogo_atual">Salvar Jogo Atual</string>
     <string name="carregar_ultimo_jogo">Carregar Último Jogo</string>
     <string name="excluir_todos_jogos">Excluir Todos os Jogos</string>

@@ -3,6 +3,8 @@ package com.example.cebolaolotofacilgenerator.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -56,21 +58,20 @@ fun BoasVindasScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Este aplicativo ajuda você a gerar jogos aleatórios para a Lotofácil, com a opção de aplicar filtros para personalizar suas combinações e aumentar suas chances.
-                    Funcionalidades Principais
-                    -   **Geração de Jogos com Filtros:** Criação de jogos da Lotofácil com base em aleatoriedade, refinada por um conjunto de filtros personalizáveis.
-                    -   **Filtros Estatísticos Detalhados:**
-                        -   Números Fixos e Excluídos
-                        -   Quantidade de Pares e Ímpares
-                        -   Intervalo para Soma Total das Dezenas
-                        -   Quantidade de Números Primos
-                        -   Quantidade de Números de Fibonacci
-                        -   Quantidade de Dezenas do Miolo (vs. Moldura)
-                        -   Quantidade de Múltiplos de Três
-                        -   Quantidade de Dezenas Repetidas do Concurso Anterior (usuário informa as 15 dezenas do concurso anterior e define a faixa de repetição).
-                        *Para uma explicação detalhada de cada filtro, consulte a tela "Instruções" dentro do aplicativo.*
-                    -   **Gerenciamento de Jogos:** Salvar, visualizar, favoritar e excluir jogos gerados.",
+                text = "Este aplicativo ajuda você a gerar jogos aleatórios para a Lotofácil, com a opção de aplicar filtros para personalizar suas combinações e aumentar suas chances.",
                 style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Funcionalidades Principais:\n• Geração de Jogos com Filtros\n• Filtros Estatísticos Detalhados\n• Gerenciamento de Jogos",
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Para mais detalhes sobre cada funcionalidade, consulte a tela de Instruções.",
+                style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(32.dp))
@@ -88,9 +89,8 @@ fun BoasVindasScreen(
 @Composable
 fun BoasVindasScreenPreview() {
     CebolaoLotofacilGeneratorTheme {
-        // Mock NavController para o preview, se necessário, ou pode omitir se não interagir com ele no preview.
-        // val mockNavController = rememberNavController()
-        // BoasVindasScreen(navController = mockNavController)
-        Text("Preview BoasVindasScreen") // Placeholder simples para o preview inicial
+        // Mock NavController para o preview
+        val mockNavController = rememberNavController()
+        BoasVindasScreen(navController = mockNavController)
     }
 }
