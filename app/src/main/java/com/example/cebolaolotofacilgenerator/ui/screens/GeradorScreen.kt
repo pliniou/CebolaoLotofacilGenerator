@@ -87,8 +87,8 @@ fun GeradorScreen(
 
         // Observar configurações de filtro para passar para BotaoGerarJogos
         // val configFiltros by mainViewModel.filtrosViewModel.configuracaoFiltros.observeAsState(ConfiguracaoFiltros()) // Substituído por configFiltrosGlobais
-        val quantidadeJogos = configFiltrosGlobais.quantidadeJogos
-        val quantidadeNumeros = configFiltrosGlobais.quantidadeNumerosPorJogo
+        // val quantidadeJogos = configFiltrosGlobais.quantidadeJogos
+        // val quantidadeNumeros = configFiltrosGlobais.quantidadeNumerosPorJogo
 
         // Determinar se algum filtro estatístico está ativo
         val filtrosEstatisticosAtivos = remember(configFiltrosGlobais) {
@@ -445,10 +445,10 @@ fun GeradorScreen(
                         // Botões de Ação para Configuração de Filtros
                         AcoesConfiguracaoFiltrosButtons(
                             onSalvarClick = {
-                                geradorViewModel.salvarFiltrosConfigAtualTemp()
+                                geradorViewModel.salvarFiltrosConfigAtual()
                             },
                             onResetarClick = {
-                                geradorViewModel.resetarFiltrosPadraoTemp()
+                                geradorViewModel.resetarConfiguracaoFiltrosParaPadrao()
                             }
                         )
                         Spacer(modifier = Modifier.height(16.dp))

@@ -79,7 +79,7 @@ fun AppNavigation(
             popEnterTransition = { slideInHorizontally { -it } },
             popExitTransition = { slideOutHorizontally { it } }
         ) { backStackEntry -> 
-            FiltrosScreen(mainViewModel = mainViewModel, navController = navController)
+            FiltrosScreen(mainViewModel = mainViewModel)
         }
 
         composable(
@@ -117,8 +117,7 @@ fun AppNavigation(
             popExitTransition = { slideOutHorizontally { it } }
         ) {
             InstrucoesScreen(
-                navController = navController,
-                mainViewModel = mainViewModel
+                navController = navController
             )
         }
     }

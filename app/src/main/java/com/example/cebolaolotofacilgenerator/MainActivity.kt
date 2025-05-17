@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(key1 = mainViewModel) {
                     mainViewModel.snackbarMessage.collect { message ->
                         if (message.isNotEmpty()) {
-                            snackbarHostState.showSnackbar(message)
+                            snackbarHostState.showSnackbar(message = message)
                         }
                     }
                 }

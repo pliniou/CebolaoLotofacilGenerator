@@ -240,19 +240,11 @@ fun SettingsScreen(mainViewModel: MainViewModel, navController: NavController) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            // Item para a tela de Instruções
-            SettingsItem(
-                title = "Instruções", // Placeholder para R.string.instrucoes_titulo
-                subtitle = "Saiba como usar o aplicativo",
-                icon = Icons.Filled.Info,
-                onClick = { navController.navigate(Screen.Instrucoes.route) }
-            )
-
             // Item para Sobre o App
             SettingsItem(
                 title = stringResource(R.string.sobre_app_label),
-                subtitle = stringResource(R.string.sobre_app_versao_subtitulo, "1.0.0", "Cebolão"),
-                icon = Icons.Default.Info,
+                subtitle = stringResource(R.string.sobre_app_versao_subtitulo, stringResource(R.string.app_version_name), "Cebola Studios"), // Usar stringResource e passar args
+                icon = Icons.Filled.Info,
                 onClick = { showSobreDialog = true }
             )
         }
@@ -286,6 +278,8 @@ fun ThemeSettingsGroup(
             MainViewModel.TemaAplicativo.VERDE -> stringResource(R.string.tema_verde)
             MainViewModel.TemaAplicativo.LARANJA -> stringResource(R.string.tema_laranja)
             MainViewModel.TemaAplicativo.CIANO -> stringResource(R.string.tema_ciano)
+            // Adicionar um else para garantir que o when é exaustivo, embora todos os casos pareçam cobertos
+            // else -> tema.key // Ou uma string padrão
         }
     }
 
@@ -307,7 +301,7 @@ fun ThemeSettingsGroup(
                     value = "Tema Atual: ${temaAtual.displayName}",
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text(stringResource(R.string.tema_atual_label)) },
+                    label = { Text(stringResource(R.string.label_tema_app)) }, // Alterado de tema_atual_label
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
@@ -319,7 +313,7 @@ fun ThemeSettingsGroup(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
                 ) {
-                    opcoesTema.forEach { tema ->
+                    opcoesTema.forEach { tema: MainViewModel.TemaAplicativo -> // Especificar tipo aqui
                         DropdownMenuItem(
                             text = { Text(getNomeTema(tema)) },
                             onClick = {

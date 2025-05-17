@@ -1,1 +1,0 @@
-class AppDatabaseInstance // Arquivo legado, esvaziado para evitar conflitos

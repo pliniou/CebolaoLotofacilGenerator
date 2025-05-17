@@ -86,7 +86,7 @@ fun GerenciamentoJogosScreen(
     LaunchedEffect(Unit) {
         mainViewModel.snackbarMessage.collectLatest { message ->
             if (message.isNotEmpty()) {
-                snackbarHostState.showSnackbar(message)
+                snackbarHostState.showSnackbar(message = message)
             }
         }
     }
@@ -127,7 +127,7 @@ fun GerenciamentoJogosScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(jogosParaExibir, key = { jogo -> jogo.id }) { jogo ->
+                    items(jogosParaExibir, key = { jogo: Jogo -> jogo.id }) { jogo ->
                         val dismissState = rememberSwipeToDismissBoxState(
                             confirmValueChange = {
                                 if (it == SwipeToDismissBoxValue.EndToStart) {

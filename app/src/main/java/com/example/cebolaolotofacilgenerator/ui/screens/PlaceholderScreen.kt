@@ -37,4 +37,4 @@ fun PlaceholderScreen(screenName: String) {
 @Composable
 fun PreviewPlaceholderScreen() {
     PlaceholderScreen(screenName = "Exemplo Placeholder")
-} 
+}

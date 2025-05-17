@@ -42,51 +42,11 @@
     </string-array>
     <string name="preferencias_salvas">Preferências salvas.</string>
 
-    <!-- Strings para o Fragmento de Conferência de Jogos -->
-    <!--
-    <string name="titulo_conferencia">Conferir Resultado</string>
-    <string name="label_concurso">Número do Concurso (Opcional)</string>
-    <string name="hint_concurso">Ex: 2500</string>
-    <string name="label_numeros_sorteados">Números Sorteados (15 dezenas)</string>
-    <string name="hint_numeros_sorteados">Selecione 15 números</string>
-    <string name="label_seus_jogos">Seus Jogos para Conferência</string>
-    <string name="hint_seus_jogos">Insira seus jogos, um por linha, separados por vírgula ou espaço.
-        Ex: 01,02,03...</string>
-    <string name="botao_conferir">Conferir Jogos</string>
-    <string name="resultado_conferencia">Resultado da conferência: %1$d acertos</string>
-    <string name="erro_entrada_numeros_sorteados">Por favor, insira 15 números sorteados
-    válidos.</string>
-    <string name="erro_entrada_seus_jogos">Por favor, insira pelo menos um jogo para conferir.</string>
-    <string name="erro_numeros_invalidos_jogo">Jogo inválido: %s. Verifique os números.</string>
-    <string name="acertos_label">Acertos: %d</string>
-    <string name="jogo_n_label">Jogo %d:</string>
-    <string name="importar_jogos_salvos">Importar Jogos Salvos</string>
-    <string name="jogos_importados_sucesso">Jogos salvos importados para conferência!</string>
-    <string name="nenhum_jogo_salvo_importar">Nenhum jogo salvo para importar.</string>
-    <string name="falha_importar_jogos">Falha ao importar jogos salvos.</string>
-    -->
     <string name="title_activity_main">MainActivity</string>
-    <!--
-    <string name="informe_15_dezenas_sorteadas">Informe as 15 dezenas sorteadas.</string>
-    <string name="informe_jogos_para_conferencia">Informe os jogos para conferência.</string>
-    -->
-
-    <!-- Novas strings para ConferenciaFragment -->
-    <!--
-    <string name="concurso_numero_formatado">Concurso N° %d</string>
-    <string name="erro_conferir_jogos">Erro ao conferir os jogos. Tente novamente.</string>
-    <string name="erro_numero_concurso_invalido">Número do concurso inválido.</string>
-    <string name="erro_quantidade_numeros_invalida">Quantidade de números inválida. Selecione 15
-        números.</string>
-    <string name="resultado_salvo_com_sucesso">Resultado salvo com sucesso!</string>
-    <string name="concurso_nao_selecionado">Nenhum concurso selecionado</string>
-    -->
-    <!-- Fim das novas strings para ConferenciaFragment -->
 
     <!-- Strings para o Bottom Navigation -->
     <string name="bottom_nav_item_principal">Principal</string>
     <string name="bottom_nav_item_filtros">Filtros</string>
-    <!-- <string name="bottom_nav_item_conferencia">Conferência</string> --> <!-- REMOVIDA -->
     <string name="bottom_nav_item_gerenciamento">Jogos</string>
     <string name="bottom_nav_item_configuracoes">Ajustes</string>
 
@@ -94,22 +54,8 @@
     <string name="ok">OK</string>
     <string name="aviso">Aviso</string>
     <string name="erro">Erro</string>
-    <string name="aguarde">Aguarde...</string>
+    <string name="aguarde">Aguarde…</string>
 
-    <!-- Strings restauradas que estavam causando 'Cannot resolve symbol' e outras necessárias -->
-    <!-- Muitas destas serão removidas ou já não são necessárias -->
-    <!--
-    <string name="titulo_tela_conferencia">Conferência de Resultados</string>
-    <string name="resultados_anteriores">Resultados Anteriores</string>
-    <string name="nenhum_resultado_anterior">Nenhum resultado anterior cadastrado.</string>
-    <string name="adicionar_novo_resultado">Adicionar Novo Resultado</string>
-    <string name="salvar_resultado">Salvar Resultado</string>
-    <string name="resultado_atual">Resultado Atual</string>
-    <string name="conferir_jogos">Conferir Jogos</string>
-    <string name="jogos_conferidos">Jogos Conferidos</string>
-    <string name="nenhum_jogo_conferido">Nenhum jogo conferido. Use o botão acima para conferir seus
-        jogos.</string>
-    -->
     <string name="numero_concurso">Número do Concurso</string> <!-- Pode ser útil, manter por
     enquanto -->
     <string name="numeros_sorteados">Números Sorteados (separados por espaço, vírgula ou traço)</string> <!--
@@ -141,21 +87,6 @@
     <!-- <string name="jogo_acertos">Acertos: %1$d</string> --> <!--
     REMOVIDA -->
     <string name="jogo_data_criacao">Criado em: %1$s</string>
-    <!--
-    <string name="resultado_concurso">Concurso %1$d</string>
-    <string name="resultado_data">Data: %1$s</string>
-    <string name="resultado_numeros_parciais">%1$s…</string>
-    -->
-
-    <!-- Strings para prêmios -->
-    <!--
-    <string name="premio_15_acertos">15 acertos - Prêmio principal!</string>
-    <string name="premio_14_acertos">14 acertos - Prêmio secundário</string>
-    <string name="premio_13_acertos">13 acertos - Prêmio terciário</string>
-    <string name="premio_12_acertos">12 acertos</string>
-    <string name="premio_11_acertos">11 acertos</string>
-    <string name="sem_premio">Sem prêmio</string>
-    -->
 
     <!-- Strings para ConfiguracoesFragment -->
     <string name="tema_claro">Claro</string>
@@ -183,7 +114,7 @@
 
     <!-- Strings mencionadas como faltantes -->
     <string name="erro_quantidade_jogos_invalida">Quantidade de jogos inválida</string>
-    <string name="na_aplicado">N/A - Não aplicado</string>
+    <string name="na_aplicado">N/A – Não aplicado</string>
     <string name="info_nenhum_jogo_gerado_filtros">Nenhum jogo foi gerado com os filtros atuais.
         Considere relaxar os critérios.</string>
     <string name="erro_numero_excluido_nao_pode_ser_fixo">Um número excluído não pode ser fixo.</string>
@@ -224,17 +155,13 @@
     <string name="jogos_salvos_com_sucesso">Jogos salvos com sucesso!</string>
 
     <!-- Novas strings adicionadas -->
-    <!-- <string name="nenhum_resultado_selecionado">Nenhum resultado selecionado</string> --> <!-- REMOVIDA -->
-    <string name="nenhum_jogo_conferido_para_exibir">Nenhum jogo conferido para exibir</string> <!--
-    Manter, pode ser usado como placeholder se a aba "Conferidos" for removida de
-    GerenciamentoJogosScreen -->
+    <string name="nenhum_jogo_conferido_para_exibir">Nenhum jogo conferido para exibir</string>
     <string name="jogo_adicionado_favoritos">Jogo adicionado aos favoritos</string>
     <string name="jogo_removido_favoritos">Jogo removido dos favoritos</string>
     <string name="jogo_id_label_prefix">Jogo #</string>
     <string name="na_maiusculo">N/A</string>
     <string name="desmarcar_como_favorito">Desmarcar como favorito</string>
-    <!-- <string name="acertos_label_com_valor">Acertos: %d</string> --> <!-- REMOVIDA -->
-    <string name="gerando_jogos">Gerando jogos...</string>
+    <string name="gerando_jogos">Gerando jogos…</string>
     <string name="gerar_jogos">Gerar Jogos</string>
     <string name="tela_favoritos_titulo">Jogos Favoritos</string>
     <string name="voltar">Voltar</string>
@@ -261,7 +188,7 @@
     <string name="configuracoes_resetadas_confirmacao">Configurações resetadas para o padrão!</string>
     <string name="informacoes_titulo">Informações</string>
     <string name="sobre_app_label">Sobre o App</string>
-    <string name="sobre_app_versao_subtitulo">Versão %1$s - %2$s</string>
+    <string name="sobre_app_versao_subtitulo">Versão %1$s – %2$s</string>
     <string name="sobre_app_titulo">Sobre o Cebolão Lotofácil</string>
     <string name="sobre_app_versao">Versão: %1$s</string>
     <string name="sobre_app_desenvolvido_por">Desenvolvido por: %1$s</string>
@@ -324,13 +251,15 @@
     <string name="botao_gerar_novos_jogos">Gerar Novos Jogos</string>
     <string name="botao_salvar_jogos_gerados">Salvar Jogos Gerados</string>
     <string name="aviso_nenhum_jogo_gerado">Nenhum jogo gerado ainda. Clique em "Gerar Novos Jogos".</string>
-    <string name="jogos_foram_gerados_com_sucesso"> jogos foram gerados com sucesso!</string> <!--
-    %1$d no início -->
     <string name="nenhum_jogo_pode_ser_gerado">Nenhum jogo pôde ser gerado com os filtros atuais.
         Tente ajustá-los.</string>
     <string name="confirmacao_salvar_jogos_titulo">Salvar Jogos Gerados</string>
-    <string name="confirmacao_salvar_jogos_mensagem">Deseja salvar os %1$d jogos gerados atualmente?
-        Eles serão adicionados à sua lista de jogos salvos.</string>
+    <plurals name="confirmacao_salvar_jogos_mensagem">
+        <item quantity="one">Deseja salvar o %1$d jogo gerado atualmente? Esta ação o adicionará à
+            lista de jogos salvos para consulta posterior.</item>
+        <item quantity="other">Deseja salvar os %1$d jogos gerados atualmente? Esta ação os
+            adicionará à lista de jogos salvos para consulta posterior.</item>
+    </plurals>
     <string name="tooltip_filtros_rapidos">Filtros Rápidos</string>
     <string name="tooltip_salvar_jogos">Salvar Jogos</string>
 
@@ -369,16 +298,6 @@
         coração. Exclua jogos individualmente ou todos de uma vez.</string>
     <string name="instrucoes_gerenciamento_p3">Lembre-se: o app é offline. Seus jogos estão seguros
         apenas no seu dispositivo.</string>
-
-    <!-- REMOVIDO: Seção de Instruções de Conferência
-    <string name="instrucoes_conferencia_titulo">Conferindo Seus Jogos</string>
-    <string name="instrucoes_conferencia_p1">Na tela "Conferência", você pode verificar quantos acertos
-    seus jogos teriam feito em um concurso real.</string>
-    <string name="instrucoes_conferencia_p2">Insira as 15 dezenas sorteadas no concurso desejado. Você
-    também pode importar seus jogos salvos para a área de conferência.</string>
-    <string name="instrucoes_conferencia_p3">O app mostrará quantos números cada jogo acertou.</string>
-    -->
-
     <string name="instrucoes_dicas_gerais_titulo">Dicas Gerais</string>
     <string name="instrucoes_dicas_gerais_p1">A Lotofácil é um jogo de sorte. Este app é uma
         ferramenta para auxiliar na criação de jogos, mas não garante prêmios.</string>
@@ -414,5 +333,118 @@
 
     <string name="abrir_filtros_com_dezenas">Abrir Filtros com Dezenas</string>
     <string name="passar_para_filtros_fixos">Passar para Filtros como Fixas</string>
+
+    <!-- Novas strings adicionadas para GeradorViewModel e outras validações -->
+    <string name="erro_configuracao_filtros_nao_carregada">Configuração de filtros não carregada.
+        Por favor, tente novamente.</string>
+    <string name="erro_quantidade_numeros_invalida">A quantidade de números por jogo deve ser entre
+        %1$d e %2$d.</string>
+    <string name="erro_muitos_numeros_fixos">A quantidade de números fixos não pode ser maior ou
+        igual à quantidade de números por jogo (%1$d).</string>
+    <string name="erro_sobreposicao_fixos_excluidos">Os seguintes números estão selecionados como
+        fixos e excluídos ao mesmo tempo: %1$s. Por favor, corrija.</string>
+    <string name="erro_muitos_numeros_excluidos">A quantidade de números excluídos é muito alta,
+        impossibilitando a geração da quantidade de números desejada por jogo.</string>
+    <string name="erro_filtro_impares_invalido">Configuração do filtro de números ímpares inválida.
+        Verifique os valores mínimo e máximo.</string>
+    <string name="erro_filtro_soma_total_invalido">Configuração do filtro de soma total inválida.
+        Verifique os valores mínimo e máximo.</string>
+    <string name="erro_filtro_primos_invalido">Configuração do filtro de números primos inválida.
+        Verifique os valores mínimo e máximo.</string>
+    <string name="erro_filtro_fibonacci_invalido">Configuração do filtro de números Fibonacci
+        inválida. Verifique os valores mínimo e máximo.</string>
+    <string name="erro_filtro_miolo_invalido">Configuração do filtro de números do miolo inválida.
+        Verifique os valores mínimo e máximo.</string>
+    <string name="erro_filtro_multiplos_tres_invalido">Configuração do filtro de múltiplos de três
+        inválida. Verifique os valores mínimo e máximo.</string>
+    <string name="erro_filtro_repeticao_invalido">Configuração do filtro de repetição do concurso
+        anterior inválida. Verifique os valores mínimo e máximo.</string>
+    <string name="erro_ultimo_resultado_nao_salvo_para_filtro_repeticao">O último resultado do
+        concurso não foi salvo. O filtro de repetição não pode ser aplicado.</string>
+    <string name="erro_validacao_configuracao_geral">Erro na validação da configuração geral dos
+        filtros.</string>
+    <plurals name="jogos_gerados_sucesso_contagem">
+        <item quantity="one">%1$d jogo gerado com sucesso.</item>
+        <item quantity="other">%1$d jogos gerados com sucesso.</item>
+    </plurals>
+    <string name="nenhum_jogo_gerado_filtros_restritivos">Nenhum jogo pôde ser gerado com os filtros
+        atuais. Tente combinações de filtros menos restritivas.</string>
+    <string name="erro_geracao_jogos_argumento_invalido">Erro ao gerar jogos: argumento inválido.
+        Verifique as configurações.</string>
+    <string name="erro_desconhecido_geracao_jogos">Ocorreu um erro desconhecido ao tentar gerar os
+        jogos.</string>
+    <string name="erro_salvar_jogos">Erro ao tentar salvar os jogos.</string>
+    <string name="configuracao_filtros_salva_sucesso">Configuração de filtros salva com sucesso!</string>
+    <string name="erro_salvar_configuracao_filtros_null">Não foi possível salvar. Configuração de
+        filtros atual é nula.</string>
+    <string name="configuracao_filtros_resetada_padrao">Configuração de filtros resetada para os
+        valores padrão.</string>
+    <!-- Fim das novas strings -->
+
+    <string name="limpar_dezenas_anteriores">Limpar Dezenas Anteriores</string>
+    <string name="ajuda_filtros_titulo">Ajuda dos Filtros</string>
+    <string name="hint_numero_concurso_opcional">Número do concurso (opcional)</string>
+
+    <!-- InstrucoesScreen - Filtros -->
+    <string name="instrucoes_filtro_numeros_fixos_titulo">Filtro: Números Fixos</string>
+    <string name="instrucoes_filtro_numeros_fixos_conteudo">Selecione de 1 a 10 dezenas que você
+        deseja que estejam presentes em todos os jogos gerados. Essas dezenas são garantidas em suas
+        apostas.</string>
+
+    <string name="instrucoes_filtro_numeros_excluidos_titulo">Filtro: Números Excluídos</string>
+    <string name="instrucoes_filtro_numeros_excluidos_conteudo">Escolha de 1 a 10 dezenas que você
+        NÃO quer que apareçam em nenhum dos seus jogos. Útil para evitar números que você considera
+        "azarados" ou que saíram recentemente com muita frequência.</string>
+
+    <string name="instrucoes_filtro_pares_impares_titulo">Filtro: Pares e Ímpares</string>
+    <string name="instrucoes_filtro_pares_impares_conteudo">Distribuição entre números pares e
+        ímpares em um sorteio. O volante contém mais números ímpares, o que naturalmente resulta em
+        uma predominância destes nos sorteios.\n\nPadrão estatístico: Predominância de \"7 pares e 8
+        ímpares\" ou \"8 pares e 7 ímpares\"\nFaixa recomendada: 7 a 9 números ímpares e 6 a 8
+        números pares</string>
+
+    <string name="instrucoes_filtro_soma_total_titulo">Filtro: Soma Total das Dezenas</string>
+    <string name="instrucoes_filtro_soma_total_conteudo">Valor total ao somar todas as 15 dezenas
+        sorteadas. A análise de sorteios anteriores indica uma concentração de resultados nesta
+        faixa de valores.\n\nFaixa recomendada: Entre 171 e 220</string>
+
+    <string name="instrucoes_filtro_numeros_primos_titulo">Filtro: Números Primos</string>
+    <string name="instrucoes_filtro_numeros_primos_conteudo">Números divisíveis apenas por 1 e por
+        eles mesmos. Na Lotofácil, são 9 números primos: 2, 3, 5, 7, 11, 13, 17, 19 e 23.\n\nPadrão
+        estatístico: Maioria dos sorteios contém de 3 a 7 números primos\nFaixa ideal: Entre 4 e 6
+        números primos</string>
+
+    <string name="instrucoes_filtro_fibonacci_titulo">Filtro: Números de Fibonacci</string>
+    <string name="instrucoes_filtro_fibonacci_conteudo">Números pertencentes à sequência de
+        Fibonacci presentes no volante. Na Lotofácil, são 7 números: 1, 2, 3, 5, 8, 13 e
+        21.\n\nPadrão estatístico: De 3 a 6 números dessa sequência aparecem em cada sorteio\nFaixa
+        recomendada: Entre 3 e 6 números da sequência</string>
+
+    <string name="instrucoes_filtro_miolo_moldura_titulo">Filtro: Miolo e Moldura</string>
+    <string name="instrucoes_filtro_miolo_moldura_conteudo">Divisão do volante em duas áreas - miolo
+        (centro) e moldura (laterais e parte superior). A distribuição espacial dos números no
+        volante parece influenciar os resultados.\n\nPadrão estatístico:\nMiolo: 4 a 6 números por
+        sorteio\nMoldura: 9 a 11 números por sorteio\n\nFaixa recomendada: Respeitar estas
+        proporções</string>
+
+    <string name="instrucoes_filtro_multiplos_de_tres_titulo">Filtro: Múltiplos de Três</string>
+    <string name="instrucoes_filtro_multiplos_de_tres_conteudo">Números divisíveis por 3. Na
+        Lotofácil, são 8 números: 3, 6, 9, 12, 15, 18, 21 e 24.\n\nPadrão estatístico: De 3 a 6
+        múltiplos de 3 por sorteio\nFaixa recomendada: Entre 3 e 6 múltiplos de 3</string>
+
+    <string name="instrucoes_filtro_repeticao_concurso_anterior_titulo">Filtro: Repetição do
+        Concurso Anterior</string>
+    <string name="instrucoes_filtro_repeticao_concurso_anterior_conteudo">Dezenas que aparecem em um
+        sorteio e se repetem no sorteio seguinte. Este é um dos padrões mais consistentes da
+        Lotofácil, com estatísticas mostrando que em média 9 dezenas do sorteio anterior voltam a
+        aparecer no próximo, com variações ocasionais (8, 9, 10 ou 11 dezenas).\n\nPadrão
+        estatístico: Em média, 9 dezenas do sorteio anterior se repetem no próximo\nFaixa
+        recomendada: Incluir entre 8 a 10 dezenas do sorteio anterior</string>
+
+    <string name="instrucoes_observacao_importante_titulo">Observação Importante</string>
+    <string name="instrucoes_observacao_importante_conteudo">Estes filtros são ferramentas
+        estatísticas que podem otimizar as apostas, mas não garantem acertos. Um mesmo número pode
+        pertencer a várias categorias simultaneamente (exemplo: o número 3 é primo, faz parte da
+        sequência de Fibonacci, é múltiplo de 3 e é ímpar).</string>
 
 </resources>

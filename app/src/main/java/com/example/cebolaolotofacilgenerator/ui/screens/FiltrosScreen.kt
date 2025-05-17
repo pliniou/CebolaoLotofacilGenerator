@@ -40,9 +40,8 @@ data class FiltroConfigItem(
 @Composable
 fun FiltrosScreen(
     mainViewModel: MainViewModel,
-    navController: NavController
 ) {
-    val application = LocalContext.current.applicationContext as Application
+    //val application = LocalContext.current.applicationContext as Application
 
     val filtrosViewModel: FiltrosViewModel = mainViewModel.filtrosViewModel
 
@@ -275,7 +274,7 @@ fun FiltrosEstatisticosSection(
             },
             enabled = filtroItem.isChecked
         )
-        Divider(modifier = Modifier.padding(vertical = 8.dp))
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
     }
 }
 
@@ -364,7 +363,7 @@ fun FiltrosScreenPreview() {
     val appDataStore = AppDataStore(application)
     val mainViewModel = MainViewModel(application, jogoRepository, appDataStore)
 
-    FiltrosScreen(mainViewModel = mainViewModel, navController = NavController(context))
+    FiltrosScreen(mainViewModel = mainViewModel)
 }
 
 @Preview(showBackground = true, name = "Filtro Estatístico Item")

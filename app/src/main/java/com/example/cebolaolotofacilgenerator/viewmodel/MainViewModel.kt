@@ -31,57 +31,50 @@ class MainViewModel @Inject constructor(
     // TODO: O restante do conteúdo original ainda está comentado.
     // Vamos restaurá-lo gradualmente.
 
-    // // ViewModels secundários para compartilhar entre as telas
-    // val jogosViewModel = JogosViewModel(jogoRepository) 
-    // val filtrosViewModel = FiltrosViewModel(application) 
-    // val geradorViewModel = GeradorViewModel(application, filtrosViewModel, jogoRepository)
+    // ViewModels secundários para compartilhar entre as telas
+    val jogosViewModel = JogosViewModel(jogoRepository) 
+    val filtrosViewModel = FiltrosViewModel(application) 
+    val geradorViewModel = GeradorViewModel(application, filtrosViewModel, jogoRepository)
 
-    // // LiveData para observar se o primeiro run foi completado
-    // val firstRunCompleted: LiveData<Boolean> 
-    //     get() =
-    //             MutableLiveData<Boolean>().apply {
-    //                 viewModelScope.launch { appDataStore.firstRunCompleted.collect { value = it } } 
-    //             }
+    enum class TemaAplicativo(val key: String) {
+        CLARO("light"),
+        ESCURO("dark"),
+        SISTEMA("system"),
+        AZUL("blue"),
+        VERDE("green"),
+        LARANJA("orange"),
+        CIANO("cyan");
+        val displayName: String
+            get() = when (this) {
+                SISTEMA -> "Padrão do Sistema"
+                CLARO -> "Claro"
+                ESCURO -> "Escuro"
+                AZUL -> "Azul"
+                VERDE -> "Verde"
+                LARANJA -> "Laranja"
+                CIANO -> "Ciano"
+            }
+    }
 
-    // enum class TemaAplicativo(val key: String) {
-    //     CLARO("light"),
-    //     ESCURO("dark"),
-    //     SISTEMA("system"),
-    //     AZUL("blue"),
-    //     VERDE("green"),
-    //     LARANJA("orange"),
-    //     CIANO("cyan");
-    //     val displayName: String
-    //         get() = when (this) {
-    //             SISTEMA -> "Padrão do Sistema"
-    //             CLARO -> "Claro"
-    //             ESCURO -> "Escuro"
-    //             AZUL -> "Azul"
-    //             VERDE -> "Verde"
-    //             LARANJA -> "Laranja"
-    //             CIANO -> "Ciano"
-    //         }
-    // }
+    val temaAplicativo: StateFlow<TemaAplicativo> =
+            appDataStore 
+                    .temaAplicativo 
+                    .map { ordinal ->
+                        TemaAplicativo.values().getOrElse(ordinal) {
+                            TemaAplicativo.SISTEMA
+                        } 
+                    }
+                    .stateIn(
+                            scope = viewModelScope, 
+                            started = SharingStarted.WhileSubscribed(5000),
+                            initialValue = TemaAplicativo.SISTEMA 
+                    )
 
-    // val temaAplicativo: StateFlow<TemaAplicativo> =
-    //         appDataStore 
-    //                 .temaAplicativo 
-    //                 .map { ordinal ->
-    //                     TemaAplicativo.values().getOrElse(ordinal) {
-    //                         TemaAplicativo.SISTEMA
-    //                     } 
-    //                 }
-    //                 .stateIn(
-    //                         scope = viewModelScope, 
-    //                         started = SharingStarted.WhileSubscribed(5000),
-    //                         initialValue = TemaAplicativo.SISTEMA 
-    //                 )
+    fun salvarTemaAplicativo(tema: TemaAplicativo) {
+        viewModelScope.launch { appDataStore.salvarTemaAplicativo(tema.ordinal) } 
+    }
 
-    // fun salvarTemaAplicativo(tema: TemaAplicativo) {
-    //     viewModelScope.launch { appDataStore.salvarTemaAplicativo(tema.ordinal) } 
-    // }
-
-    // val preferenciasViewModel: PreferenciasViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(PreferenciasViewModel::class.java)
+    val preferenciasViewModel: PreferenciasViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(PreferenciasViewModel::class.java)
 
     // val todosJogos: LiveData<List<Jogo>> = jogoRepository.todosJogos
 
@@ -98,14 +91,14 @@ class MainViewModel @Inject constructor(
     //     viewModelScope.launch { appDataStore.setFirstRunCompleted() } 
     // }
 
-    // private val _snackbarMessage = MutableSharedFlow<String>()
-    // val snackbarMessage = _snackbarMessage.asSharedFlow()
+    private val _snackbarMessage = MutableSharedFlow<String>()
+    val snackbarMessage = _snackbarMessage.asSharedFlow()
 
-    // fun showSnackbar(message: String) {
-    //     viewModelScope.launch { 
-    //         _snackbarMessage.emit(message)
-    //     }
-    // }
+    fun showSnackbar(message: String) {
+        viewModelScope.launch { 
+            _snackbarMessage.emit(message)
+        }
+    }
 }
 
 /* Removida MainViewModelFactory duplicada מכאן

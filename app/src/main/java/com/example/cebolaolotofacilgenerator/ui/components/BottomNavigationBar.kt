@@ -15,10 +15,9 @@ import com.example.cebolaolotofacilgenerator.Screen
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
-        Screen.BoasVindas,
+        Screen.Instrucoes,
         Screen.Gerador,
         Screen.Favoritos,
-        Screen.Instrucoes,
         Screen.Settings
     )
     NavigationBar {

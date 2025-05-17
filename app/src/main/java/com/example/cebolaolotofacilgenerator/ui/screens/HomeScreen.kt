@@ -19,7 +19,7 @@ import com.example.cebolaolotofacilgenerator.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel, navController: NavController) {
+fun HomeScreen(/*mainViewModel: MainViewModel,*/ navController: NavController) {
         Scaffold(
                 topBar = {
                         TopAppBar(
@@ -120,6 +120,38 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavController) {
                                                 style = MaterialTheme.typography.bodyMedium
                                         )
                                 }
+                        }
+
+                        // Novo Card: Entendendo a Lotofácil
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer // Cor diferenciada
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                Text(
+                                    text = "Entendendo a Lotofácil",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
+                                Text(
+                                    text = "A Lotofácil é uma modalidade de loteria onde você escolhe de 15 a 20 números, dentre os 25 disponíveis no volante. São sorteados 15 números por concurso.\n\nPara ganhar, você precisa acertar 11, 12, 13, 14 ou os 15 números sorteados. Quanto mais números você acertar, maior o prêmio!\n\nEste aplicativo te ajuda a escolher seus números de forma mais estratégica, utilizando filtros e analisando padrões, mas lembre-se: a sorte é o fator principal!",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
+                                Text(
+                                    text = "Boa sorte!",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.End,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(16.dp)) // Espaço no final da coluna
